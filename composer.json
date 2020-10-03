@@ -1,0 +1,48 @@
+{
+    "name": "hexadog/laravel-themes-manager",
+    "description": "Laravel Themes management package",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/hexadog/laravel-themes-manager/issues",
+        "source": "https://github.com/hexadog/laravel-themes-manager"
+    },
+    "authors": [
+        {
+            "name": "Gaetan",
+            "email": "gaetan@hexadog.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "hexadog/laravel-theme-installer": "^1.0",
+        "illuminate/view": "^7.0|^8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.0|^8.0|^9.0",
+        "orchestra/testbench": "~5.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Hexadog\\ThemesManager\\": "src"
+        },
+        "files": [
+            "helpers/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Hexadog\\ThemesManager\\Test\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Hexadog\\ThemesManager\\Providers\\PackageServiceProvider"
+            ],
+            "aliases": {
+                "Theme": "Hexadog\\ThemesManager\\Facades\\ThemesManager"
+            },
+            "dont-discover": []
+        }
+    }
+}

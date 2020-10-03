@@ -1,0 +1,10 @@
+image: registry.git.hexadog.com/docker/php:7.4
+
+stages:
+  - test
+
+codestyle:
+  stage: test
+  script:
+    - phpcs --config-set show_warnings 0
+    - phpcs --extensions=php ./src

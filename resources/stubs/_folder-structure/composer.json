@@ -1,0 +1,17 @@
+{
+    "name": "DummyVendor/DummyName",
+    "description": "DummyDescription",
+    "type": "laravel-theme",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "DummyAuthor"
+        }
+    ],
+    "extra": {
+        "theme": {
+            "parent": "DummyParent",
+            "active": true
+        }
+    }
+}
