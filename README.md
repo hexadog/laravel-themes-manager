@@ -105,7 +105,7 @@ class ThemeLoader extends HexadogThemeLoader
         }
 
 	    // Call parent Middleware handle method
-        parent::handle($request, $next, $theme);
+        return parent::handle($request, $next, $theme);
     }
 }
 ```
