@@ -36,36 +36,36 @@ This is the default contents of the configuration:
 <?php
 
 return [
-	/*
-	|--------------------------------------------------------------------------
-	| Path to lookup theme
-	|--------------------------------------------------------------------------
-	|
-	| The root path containing themes collection.
-	|
-	*/
-	'directory' => env('THEMES_DIR', 'themes'),
-    
-	/*
-	|--------------------------------------------------------------------------
-	| Symbolic path
-	|--------------------------------------------------------------------------
-	|
-	| you can change the public themes path used for assets
-	|
-	*/
-	'symlink_path' => 'themes',
+    /*
+    |--------------------------------------------------------------------------
+    | Path to lookup theme
+    |--------------------------------------------------------------------------
+    |
+    | The root path containing themes collection.
+    |
+    */
+    'directory' => env('THEMES_DIR', 'themes'),
 
-	/*
-	|--------------------------------------------------------------------------
-	| Fallback Theme
-	|--------------------------------------------------------------------------
-	|
-	| If you don't set a theme at runtime (through middleware for example)
-	| the fallback theme will be used automatically.
-	|
-	*/
-	'fallback_theme' => null,
+    /*
+    |--------------------------------------------------------------------------
+    | Symbolic path
+    |--------------------------------------------------------------------------
+    |
+    | you can change the public themes path used for assets
+    |
+    */
+    'symlink_path' => 'themes',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Fallback Theme
+    |--------------------------------------------------------------------------
+    |
+    | If you don't set a theme at runtime (through middleware for example)
+    | the fallback theme will be used automatically.
+    |
+    */
+    'fallback_theme' => null,
 ];
 ```
 
@@ -92,19 +92,18 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Hexadog\ThemesManager\Http\Middleware\ThemeLoader as HexadogThemeLoader;
-use Illuminate\Support\Str;
 
 class ThemeLoader extends HexadogThemeLoader
 {
     public function handle($request, Closure $next)
     {
         // Check if request url starts with admin prefix
-	    if (!is_null(Request()->getPathInfo()) && Str::startsWith(ltrim(Request()->getPathInfo(), '/'), 'admin')) {
+        if (!is_null(Request()->getPathInfo()) && Str::startsWith(ltrim(Request()->getPathInfo(), '/'), 'admin')) {
             // Set a specific theme for matching urls
             $theme = 'backend';
         }
 
-	    // Call parent Middleware handle method
+        // Call parent Middleware handle method
         return parent::handle($request, $next, $theme);
     }
 }
@@ -129,10 +128,10 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         // ...
-        \App\Http\Middleware\ThemeLoader::class,
-	];
-	
-	// ...
+    	\App\Http\Middleware\ThemeLoader::class,
+    ];
+
+    // ...
 }
 ```
 
@@ -163,10 +162,10 @@ Route::middleware('theme:two')->group(function() {
 ## Assets
 A theme can have its own assets (images, stylesheets, javascript, ...). Theme's specific assets should be stored within <code>themes/themeVendor/themeName/public</code> folder of the theme.
 
-When a theme is activted, this directory is linked (using symbolic link) into <code>public/themes</code> folder of the Laravel application so assets will be available publicly.
+When a theme is activated, this directory is linked (using symbolic link) into <code>public/themes</code> folder of the Laravel application so assets will be available publicly.
 
 ### Asset url
-Ask the theme manager to generate the stylesheet HTML tag:
+Ask the theme manager to generate an asset URL:
 ```php
 {!! Theme::asset('css/app.min.css') !!}
 
@@ -220,18 +219,76 @@ This call will generate the following code:
 <img src="/themes/hexadog/default/img/logo.png" alt="My Theme logo" />
 ```
 
-## Blade Directives
+## Blade
+
+### Components
+Clean up you theme layouts with our integrated Blade Components.
+#### Page Title
+```html
+<x-theme-page-title title="Home" /> <!-- <title>Home - AppName</title> -->
+
+<!-- Without App name -->
+<x-theme-page-title title="Home" withAppName=false > <!-- <title>Home</title> -->
+
+<!-- Custom separator -->
+<x-theme-page-title title="Home" separator="|" /> <!-- <title>Home | AppName</title> -->
+
+<!-- Invert order -->
+<x-theme-page-title title="Home" invert=true > <!-- <title>AppName - Home</title> -->
+```
+
+### Theme Asset
+```html
+<x-theme-asset source="css/app.css"/> <!-- themes/hexadog/default/css/app.css -->
+
+<!-- Absolute url -->
+<x-theme-script source="css/app.css" absolutePath=true/> <!-- http://laravel.test/themes/hexadog/default/css/app.css -->
+```
+
+### Theme Image
+```html
+<x-theme-image source="img/logo.png"/> <!-- <img src="themes/hexadog/default/img/logo.png" /> -->
+
+<!-- Absolute url -->
+<x-theme-image source="img/logo.png" absolutePath=true/> <!-- <img src="http://laravel.test/themes/hexadog/default/img/logo.png" /> -->
+
+<!-- Add any HTML attribute -->
+<x-theme-image source="img/logo.png" class="image" alt="Logo" /> <!-- <img src="themes/hexadog/default/img/logo.png" class="image" alt="logo" /> -->
+```
+
+### Theme Script
+```html
+<x-theme-script source="Home"/> <!-- <script src="">Home - AppName</title> -->
+
+<x-theme-script source="Home" absolutePath=true/> <!-- <title>Home - AppName</title> -->
+```
+
+### Theme Style
+```html
+<x-theme-style source="css/app.css"/> <!-- <link src="themes/hexadog/default/css/app.css" rel="stylehseet"> -->
+
+<!-- Absolute url -->
+<x-theme-style source="css/app.css" absolutePath=true/> <!-- <link src="http://laravel.test/themes/hexadog/default/css/app.css" rel="stylehseet"> -->
+
+<!-- Media -->
+<x-theme-style source="css/app.css" media="print"/> <!-- <link src="themes/hexadog/default/css/app.css" rel="stylehseet" media="print"> -->
+```
+
+### Directives
 This package provides some blade helpers:
 
 ### Display page title
-```php
-@pagetitle('My page') // display "My page - Site Name"
+```html
+@pagetitle('Home') <!-- <title>Home - AppName</title> -->
 
-// Only display page title without site name
-@pagetitle('My page', false) // display "My page"
+<!-- Without App name -->
+@pagetitle('Home', false) <!-- <title>Home</title> -->
 
-// Customize page title, site name separator
-@pagetitle('My page', true, ' | ') // display "My page | Site Name"
+<!-- Custom separator -->
+@pagetitle('Home', true, '|') <!-- <title>Home | AppName</title> -->
+
+<!-- Invert order -->
+@pagetitle('Home', true, '|', true) <!-- <title>AppName - Home</title> -->
 ```
 
 ## Artisan Command
@@ -241,14 +298,59 @@ This package provides some artisan commands in order to manage themes.
 You can easily create a new Theme by using the following command and follow the steps:
 ```shell
 php artisan theme:make
+
+ Theme Name:
+ > 
+
+ Vendor name:
+ > 
+
+ Author name:
+ >  
+
+ Description:
+ > 
+
+ Version:
+ > 
+
+ Is it a child theme? (yes/no) [no]:
+ > y
+
+ Parent theme name:
+ > 
 ```
 
 This command will create a new Theme directory with all necessary files within the `themes` folder.
+
+
+    themes
+        ├── vendorName
+        │   ├── themeName
+        │   │   ├── public
+        │   │   │   ├── css
+        │   │   │   ├── js
+        │   │   │   ├── img
+        │   │   └── resources
+        │   │   │   ├── views
+        │   │   │   │   ├── layouts
+        │   │   │   │   │   └── app.blade.php
+        │   │   │   │   │   └── guest.blade.php
+        │   │   └── composer.json
+        │   └── ...
+        └── ...
 
 ### List Themes
 List all existing themes in your application with their details.
 ```shell
 php artisan theme:list
+
++-----------+---------+---------+------------------------------------+-----------+---------+
+| Name      | Vendor  | Version | Description                        |  Extends  | Default |
++-----------+---------+---------+------------------------------------+-----------+---------+
+| theme-one | hexadog |   1.0   | Default Hexadog CMS frontend theme |           |    X    |
+| theme-two | hexadog |   1.0   | Default Hexadog CMS frontend theme | theme-one |         |
++-----------+---------+---------+------------------------------------+-----------+---------+
 ```
 
 ## View
@@ -264,7 +366,7 @@ return view('welcome');
 3. If the view is still not found then search laravel default view folder `resources/views`
 
 ## Related projects
-- [Laravel Theme Installer](https://github.com/hexadog/laravel-theme-installer): Composer plugin to install `laravel-theme` packages outside vendor directory.
+- [Laravel Theme Installer](https://github.com/hexadog/laravel-theme-installer): Composer plugin to install `laravel-theme` packages outside vendor directory .
 
 ## Credits
 - Logo made by [DesignEvo free logo creator](https://www.designevo.com/logo-maker/)
