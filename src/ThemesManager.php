@@ -303,11 +303,11 @@ class ThemesManager
 		}
 		
 		// If no Theme set, return /$asset
-		if (!isset($name) && !$this->current()) {
+		if (empty($name) && !$this->current()) {
 			return '/' . ltrim($asset, '/');
 		}
 
-		if ($name) {
+		if (!empty($name)) {
 			return optional($this->get($name))->url($asset, $absolutePath);
 		} else {
 			return optional($this->current())->url($asset, $absolutePath);
