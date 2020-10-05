@@ -92,7 +92,7 @@ class PackageServiceProvider extends ServiceProvider
 			);
 		});
 
-		AliasLoader::getInstance()->alias('ThemeManager', ThemesManagerFacade::class);
+		AliasLoader::getInstance()->alias('ThemesManager', ThemesManagerFacade::class);
 		AliasLoader::getInstance()->alias('Theme', ThemesManagerFacade::class);
 
 		$this->app->register(BladeServiceProvider::class);
