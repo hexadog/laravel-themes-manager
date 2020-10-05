@@ -1,4 +1,4 @@
-<p align="center">Laravel Themes Manager</p>
+<p align="center"><img src="https://i.ibb.co/RbnsDrr/logo.png"></p>
 
 <p align="center">
     <a href="https://packagist.org/packages/hexadog/laravel-themes-manager">
@@ -46,15 +46,15 @@ return [
 	*/
 	'directory' => env('THEMES_DIR', 'themes'),
     
-    /*
-    |--------------------------------------------------------------------------
-    | Symbolic path
-    |--------------------------------------------------------------------------
-    |
-    | you can change the public themes path used for assets
-    |
-    */
-    'symlink_path' => 'themes',
+	/*
+	|--------------------------------------------------------------------------
+	| Symbolic path
+	|--------------------------------------------------------------------------
+	|
+	| you can change the public themes path used for assets
+	|
+	*/
+	'symlink_path' => 'themes',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -92,18 +92,19 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Hexadog\ThemesManager\Http\Middleware\ThemeLoader as HexadogThemeLoader;
+use Illuminate\Support\Str;
 
 class ThemeLoader extends HexadogThemeLoader
 {
     public function handle($request, Closure $next)
     {
         // Check if request url starts with admin prefix
-		if (!is_null(Request()->getPathInfo()) && Str::startsWith(ltrim(Request()->getPathInfo(), '/'), 'admin') {
+	    if (!is_null(Request()->getPathInfo()) && Str::startsWith(ltrim(Request()->getPathInfo(), '/'), 'admin')) {
             // Set a specific theme for matching urls
             $theme = 'backend';
         }
 
-		// Call parent Middleware handle method
+	    // Call parent Middleware handle method
         parent::handle($request, $next, $theme);
     }
 }
@@ -263,7 +264,10 @@ return view('welcome');
 3. If the view is still not found then search laravel default view folder `resources/views`
 
 ## Related projects
-- [Laravel Theme Installer](https://github.com/hexadog/laravel-theme-installer): Composer plugin to install `laravel-theme` packages outside vendor directory .
+- [Laravel Theme Installer](https://github.com/hexadog/laravel-theme-installer): Composer plugin to install `laravel-theme` packages outside vendor directory.
+
+## Credits
+- Logo made by [DesignEvo free logo creator](https://www.designevo.com/logo-maker/)
 
 ## License
 
