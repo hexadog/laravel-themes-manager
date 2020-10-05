@@ -25,7 +25,7 @@ class ListThemes extends Command
 	 *
 	 * @var array
 	 */
-	protected $headers = ['Default', 'Namespace', 'Extends', 'Vendor', 'Name', 'Description', 'Version', 'Author'];
+	protected $headers = ['Name', 'Vendor', 'Version', 'Description', 'Extends', 'Default'];
 
 	/**
 	 * Create a new command instance.
@@ -49,14 +49,12 @@ class ListThemes extends Command
 
 		foreach ($themes as $theme) {
 			$this->themes[] = [
-				'default'		=> $theme->getName() === config('themes-manager.fallback_theme') ? 'X' : '',
-				'namespace'		=> $theme->getNamespace(),
-				'extends'		=> $theme->getParent() ? $theme->getParent() : '',
-				'vendor'		=> $theme->getVendor(),
 				'name'			=> $theme->getName(),
-				'description'	=> $theme->get('description'),
+				'vendor'		=> $theme->getVendor(),
 				'version'		=> $theme->get('version'),
-				'author'		=> $theme->get('author')
+				'description'	=> $theme->get('description'),
+				'extends'		=> $theme->getParent() ? $theme->getParent() : '',
+				'default'		=> $theme->getName() === config('themes-manager.fallback_theme') ? 'X' : '',
 			];
 		}
 		

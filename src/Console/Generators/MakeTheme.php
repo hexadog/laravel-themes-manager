@@ -5,7 +5,7 @@ namespace Hexadog\ThemesManager\Console\Generators;
 use Exception;
 use Hexadog\ThemesManager\Console\Commands\Traits\BlockMessage;
 use Hexadog\ThemesManager\Console\Commands\Traits\SectionMessage;
-use Hexadog\ThemesManager\Facades\ThemeManager;
+use Hexadog\ThemesManager\Facades\ThemesManager;
 use Illuminate\Console\Command;
 use Illuminate\Config\Repository;
 use Illuminate\Filesystem\Filesystem;
@@ -81,6 +81,7 @@ class MakeTheme extends Command
 		if ($this->validateName()) {
 			$this->askAuthor();
 			$this->askDescription();
+			$this->askVersion();
 			$this->askParent();
 
 			try {
@@ -118,7 +119,7 @@ class MakeTheme extends Command
 			}
 		}
 
-		if (ThemeManager::has($this->theme['name'])) {
+		if (ThemesManager::has($this->theme['name'])) {
 			$this->error("Theme with name {$this->theme['vendor']}/{$this->theme['name']} already exists!");
 
 			return false;
@@ -170,6 +171,7 @@ class MakeTheme extends Command
 			'DummyName',
 			'DummyParent',
 			'DummyVendor',
+			'DummyVersion'
 		];
 
 		$replace = [
@@ -178,6 +180,7 @@ class MakeTheme extends Command
 			Arr::get($this->theme, 'name', ''),
 			Arr::get($this->theme, 'parent', ''),
 			Arr::get($this->theme, 'vendor', ''),
+			Arr::get($this->theme, 'version', '1.0'),
 		];
 
 		return str_replace($find, $replace, $file->getContents());
@@ -198,7 +201,7 @@ class MakeTheme extends Command
 		while (empty(Arr::get($this->theme, 'name', null))) {
 			$this->theme['name'] = $this->ask('Theme Name');
 			
-			if (ThemeManager::has($this->theme['name'])) {
+			if (ThemesManager::has($this->theme['name'])) {
 				$this->error("Theme with name {$this->theme['name']} already exists!");
 				
 				unset($this->theme['name']);
@@ -217,5 +220,10 @@ class MakeTheme extends Command
 	protected function askVendor()
 	{
 		$this->theme['vendor'] = mb_strtolower($this->ask('Vendor name'));
+	}
+
+	protected function askVersion()
+	{
+		$this->theme['version'] = $this->ask('Version number');
 	}
 }

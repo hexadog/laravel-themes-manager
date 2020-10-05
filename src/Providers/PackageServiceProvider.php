@@ -3,6 +3,10 @@
 namespace Hexadog\ThemesManager\Providers;
 
 use File;
+use Hexadog\ThemesManager\Components\Image;
+use Hexadog\ThemesManager\Components\PageTitle;
+use Hexadog\ThemesManager\Components\Script;
+use Hexadog\ThemesManager\Components\Style;
 use ReflectionClass;
 use Illuminate\Support\Str;
 use Illuminate\Routing\Router;
@@ -71,6 +75,14 @@ class PackageServiceProvider extends ServiceProvider
 			app(Filesystem::class)->makeDirectory($publicPath, 0755);
 		}
 		
+		$this->loadViewsFrom($this->getPath('resources/views'), 'themes-manager');
+		$this->loadViewComponentsAs('theme', [
+			Image::class,
+			PageTitle::class,
+			Script::class,
+			Style::class,
+		]);
+
 		$this->strapPublishers();
 		$this->strapCommands();
 
@@ -131,6 +143,10 @@ class PackageServiceProvider extends ServiceProvider
 		$this->publishes([
 			"{$configPath}/config.php" => config_path($this->getNormalizedNamespace() . '.php'),
 		], 'config');
+
+		$this->publishes([
+			$this->getPath('resources/views') => resource_path('views/vendor/themes-manager'),
+		], 'views');
 	}
 
 	/**

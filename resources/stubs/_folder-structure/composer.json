@@ -2,6 +2,7 @@
     "name": "DummyVendor/DummyName",
     "description": "DummyDescription",
     "type": "laravel-theme",
+    "version": "DummyVersion",
     "minimum-stability": "stable",
     "authors": [
         {
