@@ -10,17 +10,21 @@ if (!function_exists('page_title')) {
 	 * @param  string  $separator
 	 * @return string
 	 */
-	function page_title(string $title, bool $with_app_name = true, $separator = '-'): string
+	function page_title(string $title, bool $withAppName = true, $separator = '-', $invert = false): string
 	{
 		if (View::hasSection('title')) {
 			$title = View::getSection('title');
 		}
 
-		if (!empty($title) && $with_app_name) {
-			return $title . " " . trim(e($separator)) . " " . app_name();
-		}
-
-		return app_name();
+		if (!empty($title) && $withAppName) {
+            if ($invert) {
+                return $title . " " . trim(e($separator)) . " " . config('app.name');
+            } else {
+                return config('app.name') . " " . trim(e($separator)) . " " . $title;
+            }
+		} else {
+            return config('app.name');
+        }
 	}
 }
 
