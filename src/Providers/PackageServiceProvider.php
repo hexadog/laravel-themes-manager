@@ -15,7 +15,7 @@ use Hexadog\ThemesManager\Http\Middleware;
 use Hexadog\ThemesManager\Console\Commands;
 use Hexadog\ThemesManager\Console\Generators;
 use Illuminate\Contracts\Translation\Translator;
-use Hexadog\ThemesManager\Facades\ThemeManager as ThemeManagerFacade;
+use Hexadog\ThemesManager\Facades\ThemesManager as ThemesManagerFacade;
 
 class PackageServiceProvider extends ServiceProvider
 {
@@ -92,8 +92,8 @@ class PackageServiceProvider extends ServiceProvider
 			);
 		});
 
-		AliasLoader::getInstance()->alias('ThemeManager', ThemeManagerFacade::class);
-		AliasLoader::getInstance()->alias('Theme', ThemeManagerFacade::class);
+		AliasLoader::getInstance()->alias('ThemeManager', ThemesManagerFacade::class);
+		AliasLoader::getInstance()->alias('Theme', ThemesManagerFacade::class);
 
 		$this->app->register(BladeServiceProvider::class);
 	}
