@@ -68,7 +68,7 @@ class PackageServiceProvider extends ServiceProvider
 		$publicPath = public_path(config('themes-manager.symlink_path', 'themes'));
 
 		if (!File::exists($publicPath)) {
-			app(Filesystem::class)->makeDirectory($publicPath);
+			app(Filesystem::class)->makeDirectory($publicPath, 0755);
 		}
 		
 		$this->strapPublishers();
