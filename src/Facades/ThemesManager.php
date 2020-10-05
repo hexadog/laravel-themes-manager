@@ -4,7 +4,7 @@ namespace Hexadog\ThemesManager\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class ThemeManager extends Facade
+class ThemesManager extends Facade
 {
 	/**
 	 * @return string
