@@ -3,10 +3,6 @@
 namespace Hexadog\ThemesManager\Providers;
 
 use File;
-use Hexadog\ThemesManager\Components\Image;
-use Hexadog\ThemesManager\Components\PageTitle;
-use Hexadog\ThemesManager\Components\Script;
-use Hexadog\ThemesManager\Components\Style;
 use ReflectionClass;
 use Illuminate\Support\Str;
 use Illuminate\Routing\Router;
@@ -16,8 +12,12 @@ use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use Hexadog\ThemesManager\ThemesManager;
 use Hexadog\ThemesManager\Http\Middleware;
+use Hexadog\ThemesManager\Components\Image;
+use Hexadog\ThemesManager\Components\Style;
 use Hexadog\ThemesManager\Console\Commands;
+use Hexadog\ThemesManager\Components\Script;
 use Hexadog\ThemesManager\Console\Generators;
+use Hexadog\ThemesManager\Components\PageTitle;
 use Illuminate\Contracts\Translation\Translator;
 use Hexadog\ThemesManager\Facades\ThemesManager as ThemesManagerFacade;
 
@@ -74,7 +74,7 @@ class PackageServiceProvider extends ServiceProvider
 		if (!File::exists($publicPath)) {
 			app(Filesystem::class)->makeDirectory($publicPath, 0755);
 		}
-		
+
 		$this->loadViewsFrom($this->getPath('resources/views'), 'themes-manager');
 		$this->loadViewComponentsAs('theme', [
 			Image::class,
@@ -88,7 +88,7 @@ class PackageServiceProvider extends ServiceProvider
 
 		$router->aliasMiddleware('theme', Middleware\ThemeLoader::class);
 	}
-	
+
 	/**
 	 * Register the application services.
 	 */
@@ -116,7 +116,7 @@ class PackageServiceProvider extends ServiceProvider
 	protected function registerConfigs()
 	{
 		$configPath = $this->getPath('config');
-		
+
 		$this->mergeConfigFrom(
 			"{$configPath}/config.php",
 			$this->getNormalizedNamespace()

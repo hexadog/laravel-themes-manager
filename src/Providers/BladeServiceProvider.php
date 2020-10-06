@@ -30,25 +30,25 @@ class BladeServiceProvider extends ServiceProvider
 			return "<?php echo '<title>' . page_title({$with_app_name}, '{$separator}') . '</title>'; ?>";
 		});
 
-		Blade::directive('themeAsset', function($expression) {
+		Blade::directive('themeAsset', function ($expression) {
 			$expression = self::parseMultipleArgs($expression);
 
 			return "<?php theme_asset(...{$expression}); ?>";
 		});
 
-		Blade::directive('themeImage', function($expression) {
+		Blade::directive('themeImage', function ($expression) {
 			$expression = self::parseMultipleArgs($expression);
 
 			return "<?php theme_image(...{$expression}); ?>";
 		});
 
-		Blade::directive('themeScript', function($expression) {
+		Blade::directive('themeScript', function ($expression) {
 			$expression = self::parseMultipleArgs($expression);
 
 			return "<?php theme_script(...{$expression}); ?>";
 		});
 
-		Blade::directive('themeStyle', function($expression) {
+		Blade::directive('themeStyle', function ($expression) {
 			$expression = self::parseMultipleArgs($expression);
 			list($asset, $absolutePath) = $expression;
 			
