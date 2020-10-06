@@ -4,11 +4,8 @@ namespace Hexadog\ThemesManager;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\View;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Support\Facades\Config;
 use Hexadog\ThemesManager\Traits\ComposerTrait;
 use Illuminate\Contracts\Translation\Translator;
 use Hexadog\ThemesManager\Exceptions\ThemeNotFoundException;
@@ -172,43 +169,6 @@ class ThemesManager
 	{
 		if ($theme = $this->get($name)) {
 			$theme->enable($withEvent);
-
-			// Create symlink for public resources if not existing yet
-			$assetsPath = $theme->getPath('public');
-			$publicAssetsPath = public_path($theme->getAssetsPath());
-			if (!File::exists($publicAssetsPath) && File::exists($assetsPath)) {
-				app(Filesystem::class)->link($assetsPath, rtrim($publicAssetsPath, DIRECTORY_SEPARATOR));
-			}
-
-			// Register theme views path
-			$paths = $theme->getViewPaths();
-			array_map(function ($path) {
-				View::getFinder()->prependLocation("{$path}");
-				View::addNamespace('theme', "{$path}");
-			}, $paths);
-
-			// Register all vendor views
-			$vendorViews = $theme->getPath('resources/views/vendor');
-			if (File::exists($vendorViews)) {
-				$directories = scandir($vendorViews);
-				foreach ($directories as $namespace) {
-					if ($namespace != '.' && $namespace != '..') {
-						$path = "{$vendorViews}{$namespace}";
-
-						if (!empty(Config::get('view.paths')) &&
-							is_array(Config::get('view.paths'))
-						) {
-							foreach (Config::get('view.paths') as $viewPath) {
-								if (is_dir($appPath = $viewPath . '/vendor/' . $namespace)) {
-									View::prependNamespace($namespace, $appPath);
-								}
-							}
-						}
-
-						View::prependNamespace($namespace, $path);
-					}
-				}
-			}
 
 			// Add Theme language files
 			$this->lang->addNamespace('theme', $theme->getPath('lang'));

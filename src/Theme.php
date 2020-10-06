@@ -4,6 +4,10 @@ namespace Hexadog\ThemesManager;
 
 use Illuminate\Support\Str;
 use Illuminate\Container\Container;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\View;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Config;
 use Hexadog\ThemesManager\Events\ThemeEnabled;
 use Hexadog\ThemesManager\Events\ThemeDisabled;
 use Hexadog\ThemesManager\Events\ThemeEnabling;
@@ -200,6 +204,7 @@ class Theme
 		}
 
 		$this->setStatus(true);
+		$this->registerViews();
 
 		if ($withEvent) {
 			event(new ThemeEnabled($this->getName()));
@@ -264,6 +269,53 @@ class Theme
 		}
 
 		return $layouts;
+	}
+
+	protected function registerViews()
+	{
+		// Create symlink for public resources if not existing yet
+		$assetsPath = $this->getPath('public');
+		$publicAssetsPath = public_path($this->getAssetsPath());
+		if (!File::exists($publicAssetsPath) && File::exists($assetsPath)) {
+			app(Filesystem::class)->link($assetsPath, rtrim($publicAssetsPath, DIRECTORY_SEPARATOR));
+		}
+
+		// Register theme views path
+		$paths = $this->getViewPaths();
+		$paths = array_map(function ($path) {
+			$path = rtrim($path, DIRECTORY_SEPARATOR);
+			View::getFinder()->prependLocation("{$path}");
+
+			return $path;
+		}, $paths);
+
+		// Update config view.paths to work with errors views
+		if (is_array(Config::get('view.paths'))) {
+			Config::set('view.paths', array_merge(Config::get('view.paths'), $paths));
+		} else {
+			Config::set('view.paths', $paths);
+		}
+
+		// Register all vendor views
+		$vendorViewsPath = $this->getPath('resources/views/vendor');
+		if (File::exists($vendorViewsPath)) {
+			$directories = scandir($vendorViewsPath);
+			foreach ($directories as $namespace) {
+				if ($namespace != '.' && $namespace != '..') {
+					$path = "{$vendorViewsPath}{$namespace}";
+
+					if (!empty(Config::get('view.paths')) && is_array(Config::get('view.paths'))) {
+						foreach (Config::get('view.paths') as $viewPath) {
+							if (is_dir($appPath = $viewPath . '/vendor/' . $namespace)) {
+								View::prependNamespace($namespace, $appPath);
+							}
+						}
+					}
+			
+					View::prependNamespace($namespace, $path);
+				}
+			}
+		}
 	}
 
 	/**
