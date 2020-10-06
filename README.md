@@ -57,7 +57,7 @@ Themes Manager has many features to help you working with themes
   - [Create Theme](#create-theme)
   - [List Themes](#list-themes)
 - [View flow](#view-flow)
-  - [Error views](#error-views)
+  - [Errors views](#errors-views)
   - [Package views](#package-views)
 
 ### Configuration
@@ -392,7 +392,7 @@ return view('welcome');
 2. If the view is not found in active theme then search into parents themes recursively
 3. If the view is still not found then search laravel default view folder `resources/views`
 
-#### Error views
+#### Errors views
 **Themes Manager** allows you to override error views by creating Theme's specific error views into `resources/views/errors` directory of your theme.
 
 For example, if you want to override `404.blade.php` error view:
