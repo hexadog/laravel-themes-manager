@@ -46,13 +46,14 @@ Themes Manager has many features to help you working with themes
   - [Theme Script](#theme-script)
   - [Theme Image](#theme-image)
 - [Blade](#blade)
-  - [Page Title](#page-title)
-  - [Theme Asset](#theme-asset)
-  - [Theme Image](#theme-image-1)
-  - [Theme Script](#theme-script-1)
-  - [Theme Style](#theme-style-1)
+  - [Components](#components)
+    - [Page Title](#page-title)
+    - [Theme Asset](#theme-asset)
+    - [Theme Image](#theme-image-1)
+    - [Theme Script](#theme-script-1)
+    - [Theme Style](#theme-style-1)
   - [Directives](#directives)
-- [Display page title](#display-page-title)
+    - [Display page title](#display-page-title)
 - [Artisan Commands](#artisan-commands)
   - [Create Theme](#create-theme)
   - [List Themes](#list-themes)
@@ -249,8 +250,9 @@ This call will generate the following code:
 
 ### Blade
 
+#### Components
 Clean up you theme layouts with our integrated Blade Components.
-#### Page Title
+##### Page Title
 ```html
 <x-theme-page-title title="Home" /> <!-- <title>Home - AppName</title> -->
 
@@ -264,7 +266,7 @@ Clean up you theme layouts with our integrated Blade Components.
 <x-theme-page-title title="Home" invert=true > <!-- <title>AppName - Home</title> -->
 ```
 
-#### Theme Asset
+##### Theme Asset
 ```html
 <x-theme-asset source="css/app.css"/> <!-- themes/hexadog/default/css/app.css -->
 
@@ -272,7 +274,7 @@ Clean up you theme layouts with our integrated Blade Components.
 <x-theme-script source="css/app.css" absolutePath=true/> <!-- http://laravel.test/themes/hexadog/default/css/app.css -->
 ```
 
-#### Theme Image
+##### Theme Image
 ```html
 <x-theme-image source="img/logo.png"/> <!-- <img src="themes/hexadog/default/img/logo.png" /> -->
 
@@ -283,14 +285,14 @@ Clean up you theme layouts with our integrated Blade Components.
 <x-theme-image source="img/logo.png" class="image" alt="Logo" /> <!-- <img src="themes/hexadog/default/img/logo.png" class="image" alt="logo" /> -->
 ```
 
-#### Theme Script
+##### Theme Script
 ```html
 <x-theme-script source="Home"/> <!-- <script src="">Home - AppName</title> -->
 
 <x-theme-script source="Home" absolutePath=true/> <!-- <title>Home - AppName</title> -->
 ```
 
-#### Theme Style
+##### Theme Style
 ```html
 <x-theme-style source="css/app.css"/> <!-- <link src="themes/hexadog/default/css/app.css" rel="stylehseet"> -->
 
@@ -304,7 +306,7 @@ Clean up you theme layouts with our integrated Blade Components.
 #### Directives
 This package provides some blade helpers:
 
-### Display page title
+##### Display page title
 ```html
 @pagetitle('Home') <!-- <title>Home - AppName</title> -->
 
