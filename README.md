@@ -407,8 +407,7 @@ For example, if you want to override `404.blade.php` error view:
         │   │       └── views
         │   │           ├── layouts
         │   │           └── errors
-        │   │           │   └── 4040.blade.php
-        │   │           │
+        │   │           │   └── 404.blade.php
         │   │           └── ...
         │   └── ...
         └── ...
