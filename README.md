@@ -365,6 +365,27 @@ return view('welcome');
 2. If the view is not found in active theme then search into parents themes recursively
 3. If the view is still not found then search laravel default view folder `resources/views`
 
+### Package views
+**Themes Manager** allows you to override package views (published in `resources/views/vendor` by Laravel).
+You have to place your theme views into the `resources/views/vendor/namespace` directory (where namespace is the package's views namespace) of your theme.
+
+For example, if you want to override `authentication-card.blade.php` from `Jestream` package we do:
+```sh
+    themes
+        ├── vendorName
+        │   ├── themeName
+        │   │   ├── public
+        │   │   └── resources
+        │   │   │   ├── views
+        │   │   │   │   ├── layouts
+        │   │   │   │   ├── vendor
+        │   │   │   │   │   ├── jetstream
+        │   │   │   │   │   │   ├── components
+        │   │   │   │   │   │   │   ├── authentication-card.blade.php
+```
+
+This way your views will be used first before the one published into the standard `resources/views/vendor` directory.
+
 ## Related projects
 - [Laravel Theme Installer](https://github.com/hexadog/laravel-theme-installer): Composer plugin to install `laravel-theme` packages outside vendor directory .
 

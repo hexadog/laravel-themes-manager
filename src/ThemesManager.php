@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Facades\Config;
 use Hexadog\ThemesManager\Traits\ComposerTrait;
 use Illuminate\Contracts\Translation\Translator;
 use Hexadog\ThemesManager\Exceptions\ThemeNotFoundException;
@@ -186,11 +187,27 @@ class ThemesManager
 				View::addNamespace('theme', "{$path}");
 			}, $paths);
 
-			// TODO: set list of override hints into composer.json
-			// Add theme views path to UI-Kit package
-			$existingHints = app('view')->getFinder()->getHints();
-			if (!empty($existingHints['package.ui-kit'])) {
-				View::replaceNamespace('package.ui-kit', array_merge($paths, $existingHints['package.ui-kit']));
+			// Register all vendor views
+			$vendorViews = $theme->getPath('resources/views/vendor');
+			if (File::exists($vendorViews)) {
+				$directories = scandir($vendorViews);
+				foreach ($directories as $namespace) {
+					if ($namespace != '.' && $namespace != '..') {
+						$path = "{$vendorViews}{$namespace}";
+
+						if (!empty(Config::get('view.paths')) &&
+							is_array(Config::get('view.paths'))
+						) {
+							foreach (Config::get('view.paths') as $viewPath) {
+								if (is_dir($appPath = $viewPath . '/vendor/' . $namespace)) {
+									View::prependNamespace($namespace, $appPath);
+								}
+							}
+						}
+
+						View::prependNamespace($namespace, $path);
+					}
+				}
 			}
 
 			// Add Theme language files
