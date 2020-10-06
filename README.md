@@ -376,12 +376,17 @@ For example, if you want to override `authentication-card.blade.php` from `Jestr
         │   ├── themeName
         │   │   ├── public
         │   │   └── resources
-        │   │   │   ├── views
-        │   │   │   │   ├── layouts
-        │   │   │   │   ├── vendor
-        │   │   │   │   │   ├── jetstream
-        │   │   │   │   │   │   ├── components
-        │   │   │   │   │   │   │   ├── authentication-card.blade.php
+        │   │       └── views
+        │   │           ├── layouts
+        │   │           └── vendor
+        │   │               ├── jetstream
+        │   │               │   └── components
+        │   │               │       ├── authentication-card.blade.php
+        │   │               │       └── ...
+        │   │               │
+        │   │               └── ...
+        │   └── ...
+        └── ...
 ```
 
 This way your views will be used first before the one published into the standard `resources/views/vendor` directory.
