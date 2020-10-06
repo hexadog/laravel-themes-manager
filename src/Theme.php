@@ -233,7 +233,8 @@ class Theme
 		// Lookup asset in current's theme assets path
 		$fullUrl = rtrim((empty($this->getAssetsPath()) ? '' : DIRECTORY_SEPARATOR) . $this->getAssetsPath($url), DIRECTORY_SEPARATOR);
 		if (file_exists(public_path($fullUrl))) {
-			return $absolutePath ? asset('') . ltrim($fullUrl, '/') : $fullUrl;
+			$fullUrl = str_replace('\\', '/', $fullUrl);
+			return $absolutePath ? asset('') . ltrim($fullUrl, '/') : ltrim($fullUrl, '/');
 		}
 
 		// If not found then lookup in parent's theme assets path
@@ -241,13 +242,14 @@ class Theme
 			return $parentTheme->url($url, $absolutePath);
 		} else { // No parent theme? Lookup in the public folder.
 			if (file_exists(public_path($url))) {
-				return $absolutePath ? asset('') . ltrim($url, '/') : DIRECTORY_SEPARATOR . $url;
+				$url = ltrim(str_replace('\\', '/', $url));
+				return $absolutePath ? asset('') . ltrim($url, '/') : ltrim($url, '/');
 			}
 		}
 
 		\Log::warning("Asset not found [{$url}] in Theme [{$this->getName()}]");
 
-		return DIRECTORY_SEPARATOR . $url;
+		return ltrim(str_replace('\\', '/', $url));
 	}
 
 	public function listLayouts()
