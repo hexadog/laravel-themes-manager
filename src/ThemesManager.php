@@ -23,7 +23,7 @@ class ThemesManager
 	 * @var string
 	 */
 	protected $basePath;
-	
+
 	/**
 	 * Scanned themes
 	 * @var Collection
@@ -36,7 +36,7 @@ class ThemesManager
 	 * @var \Illuminate\Contracts\Translation\Translator
 	 */
 	protected $lang;
-	
+
 	/**
 	 * View finder
 	 * @var \Illuminate\View\Factory
@@ -47,21 +47,21 @@ class ThemesManager
 	 * @var \Illuminate\Contracts\Filesystem\Filesystem
 	 */
 	private $files;
-	
+
 	/**
 	 * Engine compiler.
 	 *
 	 * @var array
 	 */
 	protected $compilers = array();
-	
+
 	public function __construct(Factory $view, Filesystem $files, Translator $lang)
 	{
 		$this->view = $view;
 		$this->files = $files;
 		$this->lang = $lang;
 		$this->basePath = config('themes-manager.directory', 'themes');
-		
+
 		// Scan available themes per group
 		try {
 			$this->themes = $this->scan($this->basePath, Theme::class);
@@ -81,7 +81,7 @@ class ThemesManager
 			return $this;
 		}
 	}
-	
+
 	/**
 	 * Get all themes for group
 	 *
@@ -122,7 +122,7 @@ class ThemesManager
 			});
 		}
 	}
-	
+
 	/**
 	 * Set current active theme
 	 *
@@ -132,19 +132,19 @@ class ThemesManager
 	 *
 	 * @return ThemesManager
 	 */
-	public function set(string $name) : ThemesManager
+	public function set(string $name): ThemesManager
 	{
 		if (!$this->has($name)) {
 			throw new ThemeNotFoundException($name);
 		}
-		
+
 		optional($this->current())->disable();
 
 		$this->enable($name);
-		
+
 		return $this;
 	}
-	
+
 	/**
 	 * Get current theme for a group (current group if none provided).
 	 *
@@ -167,7 +167,7 @@ class ThemesManager
 	 *
 	 * @return $this
 	 */
-	public function enable(string $name, bool $withEvent = true) : ThemesManager
+	public function enable(string $name, bool $withEvent = true): ThemesManager
 	{
 		if ($theme = $this->get($name)) {
 			$theme->enable($withEvent);
@@ -206,7 +206,7 @@ class ThemesManager
 	 *
 	 * @return ThemesManager
 	 */
-	public function disable(string $name, bool $withEvent = true) : ThemesManager
+	public function disable(string $name, bool $withEvent = true): ThemesManager
 	{
 		if ($theme = $this->get($name)) {
 			$theme->disable($withEvent);
@@ -214,13 +214,13 @@ class ThemesManager
 
 		return $this;
 	}
-	
+
 	/**
 	 * @param type $asset
 	 *
 	 * @return string
 	 */
-	public function asset(string $asset, $absolutePath = false) : string
+	public function asset(string $asset, $absolutePath = false): string
 	{
 		return $this->url($asset, $absolutePath);
 	}
@@ -231,7 +231,7 @@ class ThemesManager
 	 * @param  string $href
 	 * @return string
 	 */
-	public function style(string $asset, $absolutePath = false) : string
+	public function style(string $asset, $absolutePath = false): string
 	{
 		return sprintf(
 			'<link media="all" type="text/css" rel="stylesheet" href="%s">',
@@ -248,7 +248,7 @@ class ThemesManager
 	 * @param  string $level
 	 * @return string
 	 */
-	public function script(string $asset, string $mode = '', $absolutePath = false, string $type = 'text/javascript', string $level = 'functionality') : string
+	public function script(string $asset, string $mode = '', $absolutePath = false, string $type = 'text/javascript', string $level = 'functionality'): string
 	{
 		return sprintf(
 			'<script %s src="%s" data-type="%s" data-level="%s"></script>',
@@ -268,7 +268,7 @@ class ThemesManager
 	 * @param  array  $attributes
 	 * @return string
 	 */
-	public function image(string $asset, string $alt = '', string $class = '', array $attributes = [], $absolutePath = false) : string
+	public function image(string $asset, string $alt = '', string $class = '', array $attributes = [], $absolutePath = false): string
 	{
 		return sprintf(
 			'<img src="%s" alt="%s" class="%s" %s>',
@@ -293,7 +293,7 @@ class ThemesManager
 	}
 
 	// Return url of current theme
-	public function url(string $asset, $absolutePath = false) : ?string
+	public function url(string $asset, $absolutePath = false): ?string
 	{
 		// Split asset name to find concerned theme name
 		$assetParts = explode('::', $asset);
@@ -301,7 +301,7 @@ class ThemesManager
 			$name = $assetParts[0];
 			$asset = $assetParts[1];
 		}
-		
+
 		// If no Theme set, return /$asset
 		if (empty($name) && !$this->current()) {
 			return '/' . ltrim($asset, '/');
@@ -329,7 +329,7 @@ class ThemesManager
 			return $key . '="' . $attributes[$key] . '"';
 		}, array_keys($attributes)));
 	}
-	
+
 	/**
 	 * @param Collection $themes
 	 *
