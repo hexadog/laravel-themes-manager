@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Facades\Config;
 use Hexadog\ThemesManager\Traits\ComposerTrait;
 use Illuminate\Contracts\Translation\Translator;
 use Hexadog\ThemesManager\Exceptions\ThemeNotFoundException;
@@ -58,7 +59,7 @@ class ThemesManager
 		$this->view = $view;
 		$this->files = $files;
 		$this->lang = $lang;
-		$this->basePath = config('themes-manager.directory', 'themes');
+		$this->basePath = Config::get('themes-manager.directory', 'themes');
 
 		// Scan available themes per group
 		try {

@@ -77,7 +77,7 @@ class Theme
 	 */
 	public function getAssetsPath(string $path = null): string
 	{
-		return config('themes-manager.symlink_path', 'themes') . DIRECTORY_SEPARATOR . mb_strtolower($this->getName()) . DIRECTORY_SEPARATOR . $this->cleanPath($path);
+		return Config::get('themes-manager.symlink_path', 'themes') . DIRECTORY_SEPARATOR . mb_strtolower($this->getName()) . DIRECTORY_SEPARATOR . $this->cleanPath($path);
 	}
 
 	/**
@@ -237,22 +237,22 @@ class Theme
 
 		// Lookup asset in current's theme assets path
 		$fullUrl = rtrim((empty($this->getAssetsPath()) ? '' : DIRECTORY_SEPARATOR) . $this->getAssetsPath($url), DIRECTORY_SEPARATOR);
-		if (file_exists(public_path($fullUrl))) {
-			$fullUrl = str_replace('\\', '/', $fullUrl);
-			return $absolutePath ? asset('') . ltrim($fullUrl, '/') : ltrim($fullUrl, '/');
+		if (File::exists(public_path($fullUrl))) {
+			$fullUrl = ltrim(str_replace('\\', '/', $fullUrl), '/');
+			return $absolutePath ? asset('') . $fullUrl : $fullUrl;
 		}
 
 		// If not found then lookup in parent's theme assets path
 		if ($parentTheme = $this->getParent()) {
 			return $parentTheme->url($url, $absolutePath);
 		} else { // No parent theme? Lookup in the public folder.
-			if (file_exists(public_path($url))) {
-				$url = ltrim(str_replace('\\', '/', $url));
-				return $absolutePath ? asset('') . ltrim($url, '/') : ltrim($url, '/');
+			if (File::exists(public_path($url))) {
+				$url = ltrim(str_replace('\\', '/', $url), '/');
+				return $absolutePath ? asset('') . $url : $url;
 			}
 		}
 
-		\Log::warning("Asset not found [{$url}] in Theme [{$this->getName()}]");
+		\Log::warning("Asset [{$url}] not found for Theme [{$this->getName()}]");
 
 		return ltrim(str_replace('\\', '/', $url));
 	}
