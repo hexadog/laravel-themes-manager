@@ -151,7 +151,7 @@ class ThemesManager
 	 *
 	 * @return Theme|null
 	 */
-	public function current()
+	public function current(): ?Theme
 	{
 		return $this->themes
 			->filter(function ($theme) {
@@ -198,7 +198,7 @@ class ThemesManager
 	 *
 	 * @return string
 	 */
-	public function asset(string $asset, $absolutePath = false): string
+	public function asset(string $asset, $absolutePath = true): string
 	{
 		return $this->url($asset, $absolutePath);
 	}
@@ -209,7 +209,7 @@ class ThemesManager
 	 * @param  string $href
 	 * @return string
 	 */
-	public function style(string $asset, $absolutePath = false): string
+	public function style(string $asset, $absolutePath = true): string
 	{
 		return sprintf(
 			'<link media="all" type="text/css" rel="stylesheet" href="%s">',
@@ -226,7 +226,7 @@ class ThemesManager
 	 * @param  string $level
 	 * @return string
 	 */
-	public function script(string $asset, string $mode = '', $absolutePath = false, string $type = 'text/javascript', string $level = 'functionality'): string
+	public function script(string $asset, string $mode = '', $absolutePath = true, string $type = 'text/javascript', string $level = 'functionality'): string
 	{
 		return sprintf(
 			'<script %s src="%s" data-type="%s" data-level="%s"></script>',
@@ -246,7 +246,7 @@ class ThemesManager
 	 * @param  array  $attributes
 	 * @return string
 	 */
-	public function image(string $asset, string $alt = '', string $class = '', array $attributes = [], $absolutePath = false): string
+	public function image(string $asset, string $alt = '', string $class = '', array $attributes = [], $absolutePath = true): string
 	{
 		return sprintf(
 			'<img src="%s" alt="%s" class="%s" %s>',

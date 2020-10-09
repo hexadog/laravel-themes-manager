@@ -18,8 +18,6 @@ class Theme
 {
 	use ComposerTrait;
 
-	protected $type = null;
-
 	/**
 	 * The theme path.
 	 *
@@ -112,6 +110,8 @@ class Theme
 		return $paths;
 	}
 
+	 * @return boolean
+	 */
 	public function hasParent(): bool
 	{
 		return !is_null($this->parent);
@@ -259,12 +259,12 @@ class Theme
 
 	public function listLayouts()
 	{
-		$layouts = [];
+		$layouts = collect();
 
 		$layoutDirs = $this->getViewPaths('layouts');
 		foreach ($layoutDirs as $layoutDir) {
 			foreach (glob($layoutDir . '/{**/*,*}.php', GLOB_BRACE) as $layout) {
-				$layouts[] = basename($layout, '.blade.php');
+				$layouts.put($layout, basename($layout, '.blade.php'));
 			}
 		}
 
