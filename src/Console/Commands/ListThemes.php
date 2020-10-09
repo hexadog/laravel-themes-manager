@@ -25,7 +25,7 @@ class ListThemes extends Command
 	 *
 	 * @var array
 	 */
-	protected $headers = ['Name', 'Vendor', 'Version', 'Description', 'Extends', 'Default'];
+	protected $headers = ['Name', 'Vendor', 'Version', 'Description', 'Extends', 'Default', 'Active'];
 
 	/**
 	 * Create a new command instance.
@@ -55,6 +55,7 @@ class ListThemes extends Command
 				'description'	=> $theme->get('description'),
 				'extends'		=> $theme->getParent() ? $theme->getParent() : '',
 				'default'		=> $theme->getName() === config('themes-manager.fallback_theme') ? 'X' : '',
+				'active'		=> $theme->isActive() ? 'Yes' : 'No',
 			];
 		}
 		
