@@ -319,6 +319,18 @@ class ThemesManager
 	}
 
 	/**
+	 * Filter non active themes
+	 *
+	 * @return Collection
+	 */
+	public function filterNonActive()
+	{
+		return $this->themes->filter(function ($theme) {
+			return $theme->isActive();
+		});
+	}
+
+	/**
 	 * Return attributes in html format
 	 *
 	 * @param  array $attributes
@@ -333,17 +345,5 @@ class ThemesManager
 			}
 			return $key . '="' . $attributes[$key] . '"';
 		}, array_keys($attributes)));
-	}
-
-	/**
-	 * Filter non active themes
-	 *
-	 * @return Collection
-	 */
-	private function filterNonActive()
-	{
-		return $this->themes->filter(function ($theme) {
-			return $theme->isActive();
-		});
 	}
 }
