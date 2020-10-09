@@ -331,16 +331,13 @@ class ThemesManager
 
 	/**
 	 * Filter non active themes
-	 * 
-	 * @param Collection $themes
 	 *
 	 * @return Collection
 	 */
-	private function filterNonActiveThemes(Collection $themes)
+	private function filterNonActive()
 	{
-		return $themes
-			->filter(function ($theme) {
-				return $theme->enabled();
-			});
+		return $this->themes->filter(function ($theme) {
+			return $theme->isActive();
+		});
 	}
 }
