@@ -38,22 +38,25 @@ class ThemesManager
 
 	/**
 	 * View finder
+	 * 
 	 * @var \Illuminate\View\Factory
 	 */
 	private $view;
 
 	/**
+	 * File System
+	 * 
 	 * @var \Illuminate\Contracts\Filesystem\Filesystem
 	 */
 	private $files;
 
 	/**
-	 * Engine compiler.
+	 * The constructor.
 	 *
-	 * @var array
+	 * @param Factory $view
+	 * @param Filesystem $files
+	 * @param Translator $lang
 	 */
-	protected $compilers = array();
-
 	public function __construct(Factory $view, Filesystem $files, Translator $lang)
 	{
 		$this->view = $view;
@@ -61,7 +64,7 @@ class ThemesManager
 		$this->lang = $lang;
 		$this->basePath = Config::get('themes-manager.directory', 'themes');
 
-		// Scan available themes per group
+		// Scan available themes
 		try {
 			$this->themes = $this->scan($this->basePath, Theme::class);
 
@@ -82,7 +85,7 @@ class ThemesManager
 	}
 
 	/**
-	 * Get all themes for group
+	 * Get all themes
 	 *
 	 * @return mixed
 	 */
@@ -105,7 +108,7 @@ class ThemesManager
 	}
 
 	/**
-	 * Get theme by name and group (or return all themes if no parameter)
+	 * Get theme by name (or return all themes if no name given)
 	 *
 	 * @param string $name
 	 *
@@ -145,9 +148,7 @@ class ThemesManager
 	}
 
 	/**
-	 * Get current theme for a group (current group if none provided).
-	 *
-	 * @param string $group
+	 * Get current theme.
 	 *
 	 * @return Theme|null
 	 */
@@ -160,11 +161,12 @@ class ThemesManager
 	}
 
 	/**
-	 * @param $alias
-	 * @param $group
-	 * @param bool|true $withEvent
+	 * Enable a Theme from its name
+	 * 
+	 * @param string $name
+	 * @param bool $withEvent
 	 *
-	 * @return $this
+	 * @return ThemesManager
 	 */
 	public function enable(string $name, bool $withEvent = true): ThemesManager
 	{
@@ -179,8 +181,10 @@ class ThemesManager
 	}
 
 	/**
+	 * Disable a Theme from its name
+	 * 
 	 * @param string $name
-	 * @param $group
+	 * @param bool $withEvent
 	 *
 	 * @return ThemesManager
 	 */
@@ -194,7 +198,10 @@ class ThemesManager
 	}
 
 	/**
-	 * @param type $asset
+	 * Get current theme's asset url
+	 *
+	 * @param string $asset
+	 * @param boolean $absolutePath
 	 *
 	 * @return string
 	 */
@@ -204,9 +211,11 @@ class ThemesManager
 	}
 
 	/**
-	 * Return css link for $href
+	 * Get current theme's style HTML tag for given asset
 	 *
-	 * @param  string $href
+	 * @param string $asset
+	 * @param boolean $absolutePath
+	 * 
 	 * @return string
 	 */
 	public function style(string $asset, $absolutePath = true): string
@@ -218,12 +227,14 @@ class ThemesManager
 	}
 
 	/**
-	 * Return script link for $href
+	 * Get current theme's script HTML tag for given asset
 	 *
-	 * @param  string $href
+	 * @param  string $asset
 	 * @param  string $mode ''|defer|async
+	 * @param boolean $absolutePath
 	 * @param  string $type
 	 * @param  string $level
+	 * 
 	 * @return string
 	 */
 	public function script(string $asset, string $mode = '', $absolutePath = true, string $type = 'text/javascript', string $level = 'functionality'): string
@@ -238,12 +249,14 @@ class ThemesManager
 	}
 
 	/**
-	 * Return img tag
+	 * Get current theme's image HTML tag for given asset
 	 *
-	 * @param  string $src
+	 * @param  string $asset
 	 * @param  string $alt
-	 * @param  string $Class
+	 * @param  string $class
 	 * @param  array  $attributes
+	 * @param boolean $absolutePath
+	 * 
 	 * @return string
 	 */
 	public function image(string $asset, string $alt = '', string $class = '', array $attributes = [], $absolutePath = true): string
@@ -263,15 +276,22 @@ class ThemesManager
 	 * @param string $path
 	 * @param string $manifestDirectory
 	 *
-	 * @return \Illuminate\Support\HtmlString|string
+	 * @return string
 	 */
 	public function mix($asset, $manifestDirectory = '')
 	{
 		return mix($this->url($asset), $manifestDirectory);
 	}
 
-	// Return url of current theme
-	public function url(string $asset, $absolutePath = false): ?string
+	/**
+	 * Get theme's asset url
+	 *
+	 * @param string $asset
+	 * @param boolean $absolutePath
+	 * 
+	 * @return string|null
+	 */
+	public function url(string $asset, $absolutePath = true): ?string
 	{
 		// Split asset name to find concerned theme name
 		$assetParts = explode('::', $asset);
@@ -296,6 +316,7 @@ class ThemesManager
 	 * Return attributes in html format
 	 *
 	 * @param  array $attributes
+	 * 
 	 * @return string
 	 */
 	private function htmlAttributes($attributes)
@@ -309,6 +330,8 @@ class ThemesManager
 	}
 
 	/**
+	 * Filter non active themes
+	 * 
 	 * @param Collection $themes
 	 *
 	 * @return Collection

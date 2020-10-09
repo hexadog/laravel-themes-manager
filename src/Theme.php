@@ -92,6 +92,12 @@ class Theme
 		return $this;
 	}
 
+	/**
+	 * Get theme views paths
+	 *
+	 * @param string $path
+	 * @return void
+	 */
 	public function getViewPaths($path = '')
 	{
 		// Build Paths array.
@@ -110,6 +116,9 @@ class Theme
 		return $paths;
 	}
 
+	/**
+	 * Check if has parent Theme
+	 *
 	 * @return boolean
 	 */
 	public function hasParent(): bool
@@ -117,12 +126,20 @@ class Theme
 		return !is_null($this->parent);
 	}
 
+	/**
+	 * Set parent Theme
+	 *
+	 * @param Theme $theme
+	 * @return void
+	 */
 	public function setParent(Theme $theme)
 	{
 		$this->parent = $theme;
 	}
 
 	/**
+	 * Get parent Theme
+	 * 
 	 * @return Theme|null
 	 */
 	public function getParent()
@@ -177,7 +194,9 @@ class Theme
 	}
 
 	/**
-	 * Disable the current theme.
+	 * Disable the current theme
+	 * 
+	 * @return Theme
 	 */
 	public function disable(bool $withEvent = true): Theme
 	{
@@ -195,7 +214,9 @@ class Theme
 	}
 
 	/**
-	 * Enable the current theme.
+	 * Enable the current theme
+	 * 
+	 * @return Theme
 	 */
 	public function enable(bool $withEvent = true): Theme
 	{
@@ -213,6 +234,14 @@ class Theme
 		return $this;
 	}
 
+	/**
+	 * Get theme asset url
+	 *
+	 * @param string $url
+	 * @param boolean $absolutePath
+	 * 
+	 * @return string|null
+	 */
 	public function url($url, $absolutePath = false): ?string
 	{
 		$url = ltrim($url, DIRECTORY_SEPARATOR);
@@ -257,6 +286,11 @@ class Theme
 		return ltrim(str_replace('\\', '/', $url));
 	}
 
+	/**
+	 * List theme's available layouts
+	 *
+	 * @return Collection
+	 */
 	public function listLayouts()
 	{
 		$layouts = collect();
@@ -271,6 +305,11 @@ class Theme
 		return $layouts;
 	}
 
+	/**
+	 * Register theme's views in ViewFinder
+	 *
+	 * @return void
+	 */
 	protected function registerViews()
 	{
 		// Create symlink for public resources if not existing yet
@@ -322,6 +361,7 @@ class Theme
 	 * Clean Path by replacing all / by DIRECTORY_SEPARATOR
 	 *
 	 * @param string $path
+	 * 
 	 * @return string
 	 */
 	protected function cleanPath($path = '')
