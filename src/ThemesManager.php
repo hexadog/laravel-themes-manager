@@ -11,6 +11,7 @@ use Hexadog\ThemesManager\Traits\ComposerTrait;
 use Illuminate\Contracts\Translation\Translator;
 use Hexadog\ThemesManager\Exceptions\ThemeNotFoundException;
 use Hexadog\ThemesManager\Exceptions\ComposerLoaderException;
+use Hexadog\ThemesManager\Exceptions\ThemeNotActiveException;
 
 class ThemesManager
 {
@@ -146,6 +147,10 @@ class ThemesManager
 			throw new ThemeNotFoundException($name);
 		}
 
+		if (!$this->get($name)->isActive()) {
+			throw new ThemeNotActiveException($this->getName());
+		}
+
 		optional($this->current())->disable();
 
 		$this->enable($name);
@@ -177,6 +182,10 @@ class ThemesManager
 	public function enable(string $name, bool $withEvent = true): ThemesManager
 	{
 		if ($theme = $this->get($name)) {
+			if (!$theme->isActive()) {
+				throw new ThemeNotActiveException($name);
+			}
+
 			$theme->enable($withEvent);
 
 			// Add Theme language files
@@ -197,6 +206,10 @@ class ThemesManager
 	public function disable(string $name, bool $withEvent = true): ThemesManager
 	{
 		if ($theme = $this->get($name)) {
+			if (!$theme->isActive()) {
+				throw new ThemeNotActiveException($name);
+			}
+
 			$theme->disable($withEvent);
 		}
 

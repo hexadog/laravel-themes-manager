@@ -230,7 +230,8 @@ class Theme
 	 */
 	public function disable(bool $withEvent = true): Theme
 	{
-		if (!$this->isStatus(false)) {
+		// Check if current is active and currently enabled
+		if ($this->isActive() && $this->enabled()) {
 			if ($withEvent) {
 				event(new ThemeDisabling($this->getName()));
 			}
@@ -252,7 +253,8 @@ class Theme
 	 */
 	public function enable(bool $withEvent = true): Theme
 	{
-		if (!$this->isStatus(true)) {
+		// Check if current is active and currently disabled
+		if ($this->isActive() && $this->disabled()) {
 			if ($withEvent) {
 				event(new ThemeEnabling($this->getName()));
 			}
