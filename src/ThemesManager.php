@@ -104,7 +104,13 @@ class ThemesManager
 	public function has(string $name = null)
 	{
 		return !is_null($this->themes->first(function ($theme) use ($name) {
-			return $theme->getLowerName() === Str::lower($name);
+			// Check if $name contains vendor
+			$data = explode('/', $name);
+			if (count($data) > 1) {
+				return Str::lower($theme->getNamespace()) === str_replace('/', '\\', Str::lower($name));
+			} else {
+				return $theme->getLowerName() === Str::lower($name);
+			}
 		}));
 	}
 
