@@ -57,6 +57,8 @@ Themes Manager has many features to help you working with themes
 - [Artisan Commands](#artisan-commands)
   - [Create Theme](#create-theme)
   - [List Themes](#list-themes)
+  - [Activate Theme](#activate-theme)
+  - [Deactivate Theme](#deactivate-theme)
 - [View flow](#view-flow)
   - [Errors views](#errors-views)
   - [Package views](#package-views)
@@ -374,12 +376,22 @@ List all existing themes in your application with their details.
 ```shell
 php artisan theme:list
 
-+-----------+---------+---------+------------------------------------+-----------+---------+
-| Name      | Vendor  | Version | Description                        |  Extends  | Default |
-+-----------+---------+---------+------------------------------------+-----------+---------+
-| theme-one | hexadog |   1.0   | Default Hexadog CMS frontend theme |           |    X    |
-| theme-two | hexadog |   1.0   | Default Hexadog CMS frontend theme | theme-one |         |
-+-----------+---------+---------+------------------------------------+-----------+---------+
++-----------+---------+---------+------------------------------------+-----------+---------+--------+
+| Name      | Vendor  | Version | Description                        |  Extends  | Default | Active |
++-----------+---------+---------+------------------------------------+-----------+---------+--------+
+| theme-one | hexadog |   1.0   | Default Hexadog CMS frontend theme |           |    X    | Yes    |
+| theme-two | hexadog |   1.0   | Default Hexadog CMS frontend theme | theme-one |         | Yes    |
++-----------+---------+---------+------------------------------------+-----------+---------+--------+
+```
+
+#### Activate Theme
+```shell
+php artisan theme:activate hexadog/default
+```
+
+#### Deactivate Theme
+```shell
+php artisan theme:deactivate hexadog/default
 ```
 
 ### View flow

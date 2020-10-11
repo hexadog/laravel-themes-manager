@@ -18,8 +18,6 @@ class Theme
 {
 	use ComposerTrait;
 
-	protected $type = null;
-
 	/**
 	 * The theme path.
 	 *
@@ -61,6 +59,36 @@ class Theme
 	}
 
 	/**
+	 * Check if theme is active
+	 *
+	 * @return boolean
+	 */
+	public function isActive()
+	{
+		return $this->get('extra.theme.active', false);
+	}
+
+	/**
+	 * Activate theme
+	 *
+	 * @return boolean
+	 */
+	public function activate()
+	{
+		return $this->set('extra.theme.active', true);
+	}
+
+	/**
+	 * Deactivate theme
+	 *
+	 * @return boolean
+	 */
+	public function deactivate()
+	{
+		return $this->set('extra.theme.active', false);
+	}
+
+	/**
 	 * Get path.
 	 *
 	 * @return string
@@ -81,19 +109,11 @@ class Theme
 	}
 
 	/**
-	 * Set path.
+	 * Get theme views paths
 	 *
 	 * @param string $path
-	 *
-	 * @return $this
+	 * @return void
 	 */
-	public function setPath($path)
-	{
-		$this->path = $this->cleanPath($path);
-
-		return $this;
-	}
-
 	public function getViewPaths($path = '')
 	{
 		// Build Paths array.
@@ -112,17 +132,44 @@ class Theme
 		return $paths;
 	}
 
+	/**
+	 * Set path.
+	 *
+	 * @param string $path
+	 *
+	 * @return $this
+	 */
+	public function setPath($path)
+	{
+		$this->path = $this->cleanPath($path);
+
+		return $this;
+	}
+
+	/**
+	 * Check if has parent Theme
+	 *
+	 * @return boolean
+	 */
 	public function hasParent(): bool
 	{
 		return !is_null($this->parent);
 	}
 
+	/**
+	 * Set parent Theme
+	 *
+	 * @param Theme $theme
+	 * @return void
+	 */
 	public function setParent(Theme $theme)
 	{
 		$this->parent = $theme;
 	}
 
 	/**
+	 * Get parent Theme
+	 * 
 	 * @return Theme|null
 	 */
 	public function getParent()
@@ -131,7 +178,7 @@ class Theme
 	}
 
 	/**
-	 * Determine whether the given status same with the current theme status.
+	 * Set theme's status
 	 *
 	 * @param $status
 	 *
@@ -145,7 +192,7 @@ class Theme
 	}
 
 	/**
-	 * Determine whether the given status same with the current module status.
+	 * Check is current status is same as the one given
 	 *
 	 * @param $status
 	 *
@@ -153,7 +200,7 @@ class Theme
 	 */
 	public function isStatus(bool $status = false): bool
 	{
-		return $this->get('extra.theme.active', false) === $status;
+		return $this->status === $status;
 	}
 
 	/**
@@ -177,42 +224,60 @@ class Theme
 	}
 
 	/**
-	 * Disable the current theme.
+	 * Disable the current theme
+	 * 
+	 * @return Theme
 	 */
 	public function disable(bool $withEvent = true): Theme
 	{
-		if ($withEvent) {
-			event(new ThemeDisabling($this->getName()));
-		}
+		// Check if current is active and currently enabled
+		if ($this->isActive() && $this->enabled()) {
+			if ($withEvent) {
+				event(new ThemeDisabling($this->getName()));
+			}
 
-		$this->setStatus(false);
+			$this->setStatus(false);
 
-		if ($withEvent) {
-			event(new ThemeDisabled($this->getName()));
+			if ($withEvent) {
+				event(new ThemeDisabled($this->getName()));
+			}
 		}
 
 		return $this;
 	}
 
 	/**
-	 * Enable the current theme.
+	 * Enable the current theme
+	 * 
+	 * @return Theme
 	 */
 	public function enable(bool $withEvent = true): Theme
 	{
-		if ($withEvent) {
-			event(new ThemeEnabling($this->getName()));
-		}
+		// Check if current is active and currently disabled
+		if ($this->isActive() && $this->disabled()) {
+			if ($withEvent) {
+				event(new ThemeEnabling($this->getName()));
+			}
 
-		$this->setStatus(true);
-		$this->registerViews();
+			$this->setStatus(true);
+			$this->registerViews();
 
-		if ($withEvent) {
-			event(new ThemeEnabled($this->getName()));
+			if ($withEvent) {
+				event(new ThemeEnabled($this->getName()));
+			}
 		}
 
 		return $this;
 	}
 
+	/**
+	 * Get theme asset url
+	 *
+	 * @param string $url
+	 * @param boolean $absolutePath
+	 * 
+	 * @return string|null
+	 */
 	public function url($url, $absolutePath = false): ?string
 	{
 		$url = ltrim($url, DIRECTORY_SEPARATOR);
@@ -257,20 +322,48 @@ class Theme
 		return ltrim(str_replace('\\', '/', $url));
 	}
 
+	/**
+	 * List theme's available layouts
+	 *
+	 * @return Collection
+	 */
 	public function listLayouts()
 	{
-		$layouts = [];
+		$layouts = collect();
 
 		$layoutDirs = $this->getViewPaths('layouts');
 		foreach ($layoutDirs as $layoutDir) {
 			foreach (glob($layoutDir . '/{**/*,*}.php', GLOB_BRACE) as $layout) {
-				$layouts[] = basename($layout, '.blade.php');
+				$layouts->put($layout, basename($layout, '.blade.php'));
 			}
 		}
 
 		return $layouts;
 	}
 
+	/**
+	 * Clean Path by replacing all / by DIRECTORY_SEPARATOR
+	 *
+	 * @param string $path
+	 * 
+	 * @return string
+	 */
+	protected function cleanPath($path = '')
+	{
+		$path = str_replace('/', DIRECTORY_SEPARATOR, $path);
+
+		if ($path && !is_file($path) && !Str::endsWith($path, DIRECTORY_SEPARATOR)) {
+			$path = $path . DIRECTORY_SEPARATOR;
+		}
+
+		return $path;
+	}
+
+	/**
+	 * Register theme's views in ViewFinder
+	 *
+	 * @return void
+	 */
 	protected function registerViews()
 	{
 		// Create symlink for public resources if not existing yet
@@ -316,22 +409,5 @@ class Theme
 				}
 			}
 		}
-	}
-
-	/**
-	 * Clean Path by replacing all / by DIRECTORY_SEPARATOR
-	 *
-	 * @param string $path
-	 * @return string
-	 */
-	protected function cleanPath($path = '')
-	{
-		$path = str_replace('/', DIRECTORY_SEPARATOR, $path);
-
-		if ($path && !is_file($path) && !Str::endsWith($path, DIRECTORY_SEPARATOR)) {
-			$path = $path . DIRECTORY_SEPARATOR;
-		}
-
-		return $path;
 	}
 }

@@ -127,6 +127,8 @@ class PackageServiceProvider extends ServiceProvider
 	{
 		if ($this->app->runningInConsole() || config('app.env') == 'testing') {
 			$this->commands([
+				Commands\ActivateTheme::class,
+				Commands\DeactivateTheme::class,
 				Commands\ListThemes::class,
 				Generators\MakeTheme::class,
 			]);
