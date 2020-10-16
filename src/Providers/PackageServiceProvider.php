@@ -99,7 +99,6 @@ class PackageServiceProvider extends ServiceProvider
 		$this->app->singleton('themes-manager', function () {
 			return new ThemesManager(
 				app(Factory::class),
-				app(Filesystem::class),
 				app(Translator::class)
 			);
 		});

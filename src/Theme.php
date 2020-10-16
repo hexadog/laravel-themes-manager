@@ -169,7 +169,7 @@ class Theme
 
 	/**
 	 * Get parent Theme
-	 * 
+	 *
 	 * @return Theme|null
 	 */
 	public function getParent()
@@ -225,7 +225,7 @@ class Theme
 
 	/**
 	 * Disable the current theme
-	 * 
+	 *
 	 * @return Theme
 	 */
 	public function disable(bool $withEvent = true): Theme
@@ -248,7 +248,7 @@ class Theme
 
 	/**
 	 * Enable the current theme
-	 * 
+	 *
 	 * @return Theme
 	 */
 	public function enable(bool $withEvent = true): Theme
@@ -275,7 +275,7 @@ class Theme
 	 *
 	 * @param string $url
 	 * @param boolean $absolutePath
-	 * 
+	 *
 	 * @return string|null
 	 */
 	public function url($url, $absolutePath = false): ?string
@@ -345,7 +345,7 @@ class Theme
 	 * Clean Path by replacing all / by DIRECTORY_SEPARATOR
 	 *
 	 * @param string $path
-	 * 
+	 *
 	 * @return string
 	 */
 	protected function cleanPath($path = '')

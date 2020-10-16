@@ -5,6 +5,7 @@ namespace Hexadog\ThemesManager\Traits;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Hexadog\ThemesManager\Helpers\Json;
+use Symfony\Component\Finder\Finder;
 
 trait ComposerTrait
 {
@@ -225,11 +226,12 @@ trait ComposerTrait
 
 		$path = base_path($path);
 
-		if ($this->files->exists($path)) {
-			$foundComposers = array_filter($this->files->allFiles($path), function ($file) {
-				return preg_match('/.*composer\.json$/U', $file->getFilename());
-			});
+		if (file_exists($path)) {
+			$finder = new Finder();
+			$foundComposers = $finder->files()->in($path)->exclude(['node_modules', 'vendor'])->name('composer.json');
+
 			foreach ($foundComposers as $foundComposer) {
+				dump($foundComposer);
 				$composerJson = new Json($foundComposer, app('files'));
 
 				if ($composerJson->get('type') === 'laravel-theme') {

@@ -39,17 +39,10 @@ class ThemesManager
 
 	/**
 	 * View finder
-	 * 
+	 *
 	 * @var \Illuminate\View\Factory
 	 */
 	private $view;
-
-	/**
-	 * File System
-	 * 
-	 * @var \Illuminate\Contracts\Filesystem\Filesystem
-	 */
-	private $files;
 
 	/**
 	 * The constructor.
@@ -58,10 +51,9 @@ class ThemesManager
 	 * @param Filesystem $files
 	 * @param Translator $lang
 	 */
-	public function __construct(Factory $view, Filesystem $files, Translator $lang)
+	public function __construct(Factory $view, Translator $lang)
 	{
 		$this->view = $view;
-		$this->files = $files;
 		$this->lang = $lang;
 		$this->basePath = Config::get('themes-manager.directory', 'themes');
 
@@ -179,7 +171,7 @@ class ThemesManager
 
 	/**
 	 * Enable a Theme from its name
-	 * 
+	 *
 	 * @param string $name
 	 * @param bool $withEvent
 	 *
@@ -203,7 +195,7 @@ class ThemesManager
 
 	/**
 	 * Disable a Theme from its name
-	 * 
+	 *
 	 * @param string $name
 	 * @param bool $withEvent
 	 *
@@ -240,7 +232,7 @@ class ThemesManager
 	 *
 	 * @param string $asset
 	 * @param boolean $absolutePath
-	 * 
+	 *
 	 * @return string
 	 */
 	public function style(string $asset, $absolutePath = true): string
@@ -259,7 +251,7 @@ class ThemesManager
 	 * @param boolean $absolutePath
 	 * @param  string $type
 	 * @param  string $level
-	 * 
+	 *
 	 * @return string
 	 */
 	public function script(string $asset, string $mode = '', $absolutePath = true, string $type = 'text/javascript', string $level = 'functionality'): string
@@ -281,7 +273,7 @@ class ThemesManager
 	 * @param  string $class
 	 * @param  array  $attributes
 	 * @param boolean $absolutePath
-	 * 
+	 *
 	 * @return string
 	 */
 	public function image(string $asset, string $alt = '', string $class = '', array $attributes = [], $absolutePath = true): string
@@ -313,7 +305,7 @@ class ThemesManager
 	 *
 	 * @param string $asset
 	 * @param boolean $absolutePath
-	 * 
+	 *
 	 * @return string|null
 	 */
 	public function url(string $asset, $absolutePath = true): ?string
@@ -353,7 +345,7 @@ class ThemesManager
 	 * Return attributes in html format
 	 *
 	 * @param  array $attributes
-	 * 
+	 *
 	 * @return string
 	 */
 	private function htmlAttributes($attributes)
