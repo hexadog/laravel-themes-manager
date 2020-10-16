@@ -231,7 +231,6 @@ trait ComposerTrait
 			$foundComposers = $finder->files()->in($path)->exclude(['node_modules', 'vendor'])->name('composer.json');
 
 			foreach ($foundComposers as $foundComposer) {
-				dump($foundComposer);
 				$composerJson = new Json($foundComposer, app('files'));
 
 				if ($composerJson->get('type') === 'laravel-theme') {
