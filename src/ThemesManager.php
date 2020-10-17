@@ -15,346 +15,346 @@ use Hexadog\ThemesManager\Exceptions\ThemeNotActiveException;
 
 class ThemesManager
 {
-	use ComposerTrait;
+    use ComposerTrait;
 
-	/**
-	 * Theme Root Path.
-	 *
-	 * @var string
-	 */
-	protected $basePath;
+    /**
+     * Theme Root Path.
+     *
+     * @var string
+     */
+    protected $basePath;
 
-	/**
-	 * Scanned themes
-	 * @var Collection
-	 */
-	private $themes;
+    /**
+     * Scanned themes
+     * @var Collection
+     */
+    private $themes;
 
-	/**
-	 * Translator.
-	 *
-	 * @var \Illuminate\Contracts\Translation\Translator
-	 */
-	protected $lang;
+    /**
+     * Translator.
+     *
+     * @var \Illuminate\Contracts\Translation\Translator
+     */
+    protected $lang;
 
-	/**
-	 * View finder
-	 *
-	 * @var \Illuminate\View\Factory
-	 */
-	private $view;
+    /**
+     * View finder
+     *
+     * @var \Illuminate\View\Factory
+     */
+    private $view;
 
-	/**
-	 * The constructor.
-	 *
-	 * @param Factory $view
-	 * @param Filesystem $files
-	 * @param Translator $lang
-	 */
-	public function __construct(Factory $view, Translator $lang)
-	{
-		$this->view = $view;
-		$this->lang = $lang;
-		$this->basePath = Config::get('themes-manager.directory', 'themes');
+    /**
+     * The constructor.
+     *
+     * @param Factory $view
+     * @param Filesystem $files
+     * @param Translator $lang
+     */
+    public function __construct(Factory $view, Translator $lang)
+    {
+        $this->view = $view;
+        $this->lang = $lang;
+        $this->basePath = Config::get('themes-manager.directory', 'themes');
 
-		// Scan available themes
-		try {
-			$this->themes = $this->scan($this->basePath, Theme::class);
+        // Scan available themes
+        try {
+            $this->themes = $this->scan($this->basePath, Theme::class);
 
-			$this->themes->each(function ($theme) {
-				$extendedThemeName = $theme->get('extra.theme.parent');
-				if ($extendedThemeName) {
-					if ($this->has($extendedThemeName)) {
-						$extendedTheme = $this->get($extendedThemeName);
-					} else {
-						$extendedTheme = new Theme($theme->getPath());
-					}
-					$theme->setParent($extendedTheme);
-				}
-			});
-		} catch (ComposerLoaderException $e) {
-			return $this;
-		}
-	}
+            $this->themes->each(function ($theme) {
+                $extendedThemeName = $theme->get('extra.theme.parent');
+                if ($extendedThemeName) {
+                    if ($this->has($extendedThemeName)) {
+                        $extendedTheme = $this->get($extendedThemeName);
+                    } else {
+                        $extendedTheme = new Theme($theme->getPath());
+                    }
+                    $theme->setParent($extendedTheme);
+                }
+            });
+        } catch (ComposerLoaderException $e) {
+            return $this;
+        }
+    }
 
-	/**
-	 * Get all themes
-	 *
-	 * @return mixed
-	 */
-	public function all()
-	{
-		return $this->get();
-	}
+    /**
+     * Get all themes
+     *
+     * @return mixed
+     */
+    public function all()
+    {
+        return $this->get();
+    }
 
-	/**
-	 * Check if theme with given name exists
-	 *
-	 * @param string $name
-	 * @return boolean
-	 */
-	public function has(string $name = null)
-	{
-		return !is_null($this->themes->first(function ($theme) use ($name) {
-			// Check if $name contains vendor
-			$data = explode('/', $name);
-			if (count($data) > 1) {
-				return Str::lower($theme->getNamespace()) === str_replace('/', '\\', Str::lower($name));
-			} else {
-				return $theme->getLowerName() === Str::lower($name);
-			}
-		}));
-	}
+    /**
+     * Check if theme with given name exists
+     *
+     * @param string $name
+     * @return boolean
+     */
+    public function has(string $name = null)
+    {
+        return !is_null($this->themes->first(function ($theme) use ($name) {
+            // Check if $name contains vendor
+            $data = explode('/', $name);
+            if (count($data) > 1) {
+                return Str::lower($theme->getNamespace()) === str_replace('/', '\\', Str::lower($name));
+            } else {
+                return $theme->getLowerName() === Str::lower($name);
+            }
+        }));
+    }
 
-	/**
-	 * Get theme by name (or return all themes if no name given)
-	 *
-	 * @param string $name
-	 *
-	 * @return mixed
-	 */
-	public function get(string $name = null)
-	{
-		if (is_null($name)) {
-			return $this->themes;
-		} else {
-			return $this->themes->first(function ($theme) use ($name) {
-				// Check if $name contains vendor
-				$data = explode('/', $name);
-				if (count($data) > 1) {
-					return Str::lower($theme->getNamespace()) === str_replace('/', '\\', Str::lower($name));
-				} else {
-					return $theme->getLowerName() === Str::lower($name);
-				}
-			});
-		}
-	}
+    /**
+     * Get theme by name (or return all themes if no name given)
+     *
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function get(string $name = null)
+    {
+        if (is_null($name)) {
+            return $this->themes;
+        } else {
+            return $this->themes->first(function ($theme) use ($name) {
+                // Check if $name contains vendor
+                $data = explode('/', $name);
+                if (count($data) > 1) {
+                    return Str::lower($theme->getNamespace()) === str_replace('/', '\\', Str::lower($name));
+                } else {
+                    return $theme->getLowerName() === Str::lower($name);
+                }
+            });
+        }
+    }
 
-	/**
-	 * Set current active theme
-	 *
-	 * @param string $name Theme namespace
-	 *
-	 * @throws ThemeNotFoundException
-	 *
-	 * @return ThemesManager
-	 */
-	public function set(string $name): ThemesManager
-	{
-		if (!$this->has($name)) {
-			throw new ThemeNotFoundException($name);
-		}
+    /**
+     * Set current active theme
+     *
+     * @param string $name Theme namespace
+     *
+     * @throws ThemeNotFoundException
+     *
+     * @return ThemesManager
+     */
+    public function set(string $name): ThemesManager
+    {
+        if (!$this->has($name)) {
+            throw new ThemeNotFoundException($name);
+        }
 
-		if (!$this->get($name)->isActive()) {
-			throw new ThemeNotActiveException($this->getName());
-		}
+        if (!$this->get($name)->isActive()) {
+            throw new ThemeNotActiveException($this->getName());
+        }
 
-		optional($this->current())->disable();
+        optional($this->current())->disable();
 
-		$this->enable($name);
+        $this->enable($name);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get current theme.
-	 *
-	 * @return Theme|null
-	 */
-	public function current(): ?Theme
-	{
-		return $this->themes
-			->filter(function ($theme) {
-				return $theme->enabled();
-			})->first();
-	}
+    /**
+     * Get current theme.
+     *
+     * @return Theme|null
+     */
+    public function current(): ?Theme
+    {
+        return $this->themes
+            ->filter(function ($theme) {
+                return $theme->enabled();
+            })->first();
+    }
 
-	/**
-	 * Enable a Theme from its name
-	 *
-	 * @param string $name
-	 * @param bool $withEvent
-	 *
-	 * @return ThemesManager
-	 */
-	public function enable(string $name, bool $withEvent = true): ThemesManager
-	{
-		if ($theme = $this->get($name)) {
-			if (!$theme->isActive()) {
-				throw new ThemeNotActiveException($name);
-			}
+    /**
+     * Enable a Theme from its name
+     *
+     * @param string $name
+     * @param bool $withEvent
+     *
+     * @return ThemesManager
+     */
+    public function enable(string $name, bool $withEvent = true): ThemesManager
+    {
+        if ($theme = $this->get($name)) {
+            if (!$theme->isActive()) {
+                throw new ThemeNotActiveException($name);
+            }
 
-			$theme->enable($withEvent);
+            $theme->enable($withEvent);
 
-			// Add Theme language files
-			$this->lang->addNamespace('theme', $theme->getPath('lang'));
-		}
+            // Add Theme language files
+            $this->lang->addNamespace('theme', $theme->getPath('lang'));
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Disable a Theme from its name
-	 *
-	 * @param string $name
-	 * @param bool $withEvent
-	 *
-	 * @return ThemesManager
-	 */
-	public function disable(string $name, bool $withEvent = true): ThemesManager
-	{
-		if ($theme = $this->get($name)) {
-			if (!$theme->isActive()) {
-				throw new ThemeNotActiveException($name);
-			}
+    /**
+     * Disable a Theme from its name
+     *
+     * @param string $name
+     * @param bool $withEvent
+     *
+     * @return ThemesManager
+     */
+    public function disable(string $name, bool $withEvent = true): ThemesManager
+    {
+        if ($theme = $this->get($name)) {
+            if (!$theme->isActive()) {
+                throw new ThemeNotActiveException($name);
+            }
 
-			$theme->disable($withEvent);
-		}
+            $theme->disable($withEvent);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get current theme's asset url
-	 *
-	 * @param string $asset
-	 * @param boolean $absolutePath
-	 *
-	 * @return string
-	 */
-	public function asset(string $asset, $absolutePath = true): string
-	{
-		return $this->url($asset, $absolutePath);
-	}
+    /**
+     * Get current theme's asset url
+     *
+     * @param string $asset
+     * @param boolean $absolutePath
+     *
+     * @return string
+     */
+    public function asset(string $asset, $absolutePath = true): string
+    {
+        return $this->url($asset, $absolutePath);
+    }
 
-	/**
-	 * Get current theme's style HTML tag for given asset
-	 *
-	 * @param string $asset
-	 * @param boolean $absolutePath
-	 *
-	 * @return string
-	 */
-	public function style(string $asset, $absolutePath = true): string
-	{
-		return sprintf(
-			'<link media="all" type="text/css" rel="stylesheet" href="%s">',
-			$this->url($asset, $absolutePath)
-		);
-	}
+    /**
+     * Get current theme's style HTML tag for given asset
+     *
+     * @param string $asset
+     * @param boolean $absolutePath
+     *
+     * @return string
+     */
+    public function style(string $asset, $absolutePath = true): string
+    {
+        return sprintf(
+            '<link media="all" type="text/css" rel="stylesheet" href="%s">',
+            $this->url($asset, $absolutePath)
+        );
+    }
 
-	/**
-	 * Get current theme's script HTML tag for given asset
-	 *
-	 * @param  string $asset
-	 * @param  string $mode ''|defer|async
-	 * @param boolean $absolutePath
-	 * @param  string $type
-	 * @param  string $level
-	 *
-	 * @return string
-	 */
-	public function script(string $asset, string $mode = '', $absolutePath = true, string $type = 'text/javascript', string $level = 'functionality'): string
-	{
-		return sprintf(
-			'<script %s src="%s" data-type="%s" data-level="%s"></script>',
-			$mode,
-			$this->url($asset, $absolutePath),
-			$type,
-			$level
-		);
-	}
+    /**
+     * Get current theme's script HTML tag for given asset
+     *
+     * @param  string $asset
+     * @param  string $mode ''|defer|async
+     * @param boolean $absolutePath
+     * @param  string $type
+     * @param  string $level
+     *
+     * @return string
+     */
+    public function script(string $asset, string $mode = '', $absolutePath = true, string $type = 'text/javascript', string $level = 'functionality'): string
+    {
+        return sprintf(
+            '<script %s src="%s" data-type="%s" data-level="%s"></script>',
+            $mode,
+            $this->url($asset, $absolutePath),
+            $type,
+            $level
+        );
+    }
 
-	/**
-	 * Get current theme's image HTML tag for given asset
-	 *
-	 * @param  string $asset
-	 * @param  string $alt
-	 * @param  string $class
-	 * @param  array  $attributes
-	 * @param boolean $absolutePath
-	 *
-	 * @return string
-	 */
-	public function image(string $asset, string $alt = '', string $class = '', array $attributes = [], $absolutePath = true): string
-	{
-		return sprintf(
-			'<img src="%s" alt="%s" class="%s" %s>',
-			$this->url($asset, $absolutePath),
-			$alt,
-			$class,
-			$this->htmlAttributes($attributes)
-		);
-	}
+    /**
+     * Get current theme's image HTML tag for given asset
+     *
+     * @param  string $asset
+     * @param  string $alt
+     * @param  string $class
+     * @param  array  $attributes
+     * @param boolean $absolutePath
+     *
+     * @return string
+     */
+    public function image(string $asset, string $alt = '', string $class = '', array $attributes = [], $absolutePath = true): string
+    {
+        return sprintf(
+            '<img src="%s" alt="%s" class="%s" %s>',
+            $this->url($asset, $absolutePath),
+            $alt,
+            $class,
+            $this->htmlAttributes($attributes)
+        );
+    }
 
-	/**
-	 * Get the current theme path to a versioned Mix file.
-	 *
-	 * @param string $path
-	 * @param string $manifestDirectory
-	 *
-	 * @return string
-	 */
-	public function mix($asset, $manifestDirectory = '')
-	{
-		return mix($this->url($asset), $manifestDirectory);
-	}
+    /**
+     * Get the current theme path to a versioned Mix file.
+     *
+     * @param string $path
+     * @param string $manifestDirectory
+     *
+     * @return string
+     */
+    public function mix($asset, $manifestDirectory = '')
+    {
+        return mix($this->url($asset), $manifestDirectory);
+    }
 
-	/**
-	 * Get theme's asset url
-	 *
-	 * @param string $asset
-	 * @param boolean $absolutePath
-	 *
-	 * @return string|null
-	 */
-	public function url(string $asset, $absolutePath = true): ?string
-	{
-		// Split asset name to find concerned theme name
-		$assetParts = explode('::', $asset);
-		if (count($assetParts) == 2) {
-			$name = $assetParts[0];
-			$asset = $assetParts[1];
-		}
+    /**
+     * Get theme's asset url
+     *
+     * @param string $asset
+     * @param boolean $absolutePath
+     *
+     * @return string|null
+     */
+    public function url(string $asset, $absolutePath = true): ?string
+    {
+        // Split asset name to find concerned theme name
+        $assetParts = explode('::', $asset);
+        if (count($assetParts) == 2) {
+            $name = $assetParts[0];
+            $asset = $assetParts[1];
+        }
 
-		// If no Theme set, return /$asset
-		if (empty($name) && !$this->current()) {
-			return '/' . ltrim($asset, '/');
-		}
+        // If no Theme set, return /$asset
+        if (empty($name) && !$this->current()) {
+            return '/' . ltrim($asset, '/');
+        }
 
-		if (!empty($name)) {
-			return optional($this->get($name))->url($asset, $absolutePath);
-		} else {
-			return optional($this->current())->url($asset, $absolutePath);
-		}
-	}
+        if (!empty($name)) {
+            return optional($this->get($name))->url($asset, $absolutePath);
+        } else {
+            return optional($this->current())->url($asset, $absolutePath);
+        }
+    }
 
-	/**
-	 * Filter non active themes
-	 *
-	 * @return Collection
-	 */
-	public function filterNonActive()
-	{
-		return $this->themes->filter(function ($theme) {
-			return $theme->isActive();
-		});
-	}
+    /**
+     * Filter non active themes
+     *
+     * @return Collection
+     */
+    public function filterNonActive()
+    {
+        return $this->themes->filter(function ($theme) {
+            return $theme->isActive();
+        });
+    }
 
-	/**
-	 * Return attributes in html format
-	 *
-	 * @param  array $attributes
-	 *
-	 * @return string
-	 */
-	private function htmlAttributes($attributes)
-	{
-		return join(' ', array_map(function ($key) use ($attributes) {
-			if (is_bool($attributes[$key])) {
-				return $attributes[$key] ? $key : '';
-			}
-			return $key . '="' . $attributes[$key] . '"';
-		}, array_keys($attributes)));
-	}
+    /**
+     * Return attributes in html format
+     *
+     * @param  array $attributes
+     *
+     * @return string
+     */
+    private function htmlAttributes($attributes)
+    {
+        return join(' ', array_map(function ($key) use ($attributes) {
+            if (is_bool($attributes[$key])) {
+                return $attributes[$key] ? $key : '';
+            }
+            return $key . '="' . $attributes[$key] . '"';
+        }, array_keys($attributes)));
+    }
 }
