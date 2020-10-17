@@ -8,22 +8,22 @@ use Illuminate\Console\Command;
 
 abstract class AbstractCommand extends Command
 {
-	use	BlockMessage,
-		SectionMessage;
+    use BlockMessage,
+        SectionMessage;
 
-	/**
-	 * @var \Hexadog\ThemesManager\Theme|mixed
-	 */
-	protected $theme;
+    /**
+     * @var \Hexadog\ThemesManager\Theme|mixed
+     */
+    protected $theme;
 
-	protected function validateName()
-	{
-		$name = $this->argument('name');
+    protected function validateName()
+    {
+        $name = $this->argument('name');
 
-		$this->theme = \Theme::get($name);
-		if (!$this->theme) {
-			$this->error("Theme with name ${name} does not exists!");
-			exit();
-		}
-	}
+        $this->theme = \Theme::get($name);
+        if (!$this->theme) {
+            $this->error("Theme with name ${name} does not exists!");
+            exit();
+        }
+    }
 }
