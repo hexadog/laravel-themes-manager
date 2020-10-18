@@ -1,6 +1,6 @@
 {
     "name": "hexadog/laravel-themes-manager",
-    "description": "Laravel Themes management package",
+    "description": "Bring multi themes support to your Laravel application with a full-featured Themes Manager",
     "license": "MIT",
     "support": {
         "issues": "https://github.com/hexadog/laravel-themes-manager/issues",
