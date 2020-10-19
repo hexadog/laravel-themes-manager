@@ -130,9 +130,9 @@ class ThemeLoader extends HexadogThemeLoader
     public function handle($request, Closure $next)
     {
         // Check if request url starts with admin prefix
-        if (!is_null(Request()->getPathInfo()) && Str::startsWith(ltrim(Request()->getPathInfo(), '/'), 'admin')) {
+        if ($request-segment(1) === 'admin') {
             // Set a specific theme for matching urls
-            $theme = 'backend';
+            $theme = 'admin';
         }
 
         // Call parent Middleware handle method
