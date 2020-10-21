@@ -113,7 +113,7 @@ trait ComposerTrait
             }
         }
 
-        return str_replace('-theme', '', str_replace('theme-', '', $this->name));
+        return str_replace(['-theme', 'theme-'], '', $this->name);
     }
 
     /**
