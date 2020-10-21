@@ -18,11 +18,11 @@ class ThemesManager
     use ComposerTrait;
 
     /**
-     * Theme Root Path.
+     * Composaer package type
      *
      * @var string
      */
-    protected $basePath;
+    protected $packageType = 'laravel-theme';
 
     /**
      * Scanned themes
@@ -55,11 +55,10 @@ class ThemesManager
     {
         $this->view = $view;
         $this->lang = $lang;
-        $this->basePath = Config::get('themes-manager.directory', 'themes');
 
         // Scan available themes
         try {
-            $this->themes = $this->scan($this->basePath, Theme::class);
+            $this->themes = $this->scan(Config::get('themes-manager.directory', 'themes'), Theme::class);
 
             $this->themes->each(function ($theme) {
                 $extendedThemeName = $theme->get('extra.theme.parent');

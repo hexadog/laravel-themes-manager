@@ -233,7 +233,7 @@ trait ComposerTrait
             foreach ($foundComposers as $foundComposer) {
                 $composerJson = new Json($foundComposer, app('files'));
 
-                if ($composerJson->get('type') === 'laravel-theme') {
+                if ($composerJson->get('type') === $this->packageType) {
                     $content->put($composerJson->get('name'), new $class(dirname($foundComposer)));
                 }
             }
