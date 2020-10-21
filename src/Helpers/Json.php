@@ -120,20 +120,14 @@ class Json
      */
     public function getAttributes()
     {
-        $themeAttributes = json_decode($this->getContents(), 1);
+        $attributes = json_decode($this->getContents(), 1);
 
         // any JSON parsing errors should throw an exception
         if (json_last_error() > 0) {
             throw new InvalidJsonException('Error processing file: ' . $this->getPath() . '. Error: ' . json_last_error_msg());
         }
 
-        if (config('themes-manager.cache.enabled', false) === false) {
-            return $themeAttributes;
-        }
-
-        return app('cache')->remember($this->getPath(), config('themes-manager.cache.lifetime'), function () use ($themeAttributes) {
-            return $themeAttributes;
-        });
+        return $attributes;
     }
 
     /**
