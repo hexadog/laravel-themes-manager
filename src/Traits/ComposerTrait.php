@@ -227,8 +227,7 @@ trait ComposerTrait
         $path = base_path($path);
 
         if (file_exists($path)) {
-            $finder = new Finder();
-            $foundComposers = $finder->files()->in($path)->exclude(['node_modules', 'vendor'])->name('composer.json');
+            $foundComposers = Finder::create()->files()->followLinks()->in($path)->exclude(['node_modules', 'vendor'])->name('composer.json');
 
             foreach ($foundComposers as $foundComposer) {
                 $composerJson = new Json($foundComposer, app('files'));
