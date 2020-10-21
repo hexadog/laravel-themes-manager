@@ -99,7 +99,7 @@ class ThemesManager
             if (strpos($name, '/') !== false) {
                 return Str::lower($theme->get('name')) === Str::lower($name);
             } else {
-                return str_replace('-theme', '', str_replace('theme-', '', $theme->getLowerName())) === Str::lower($name);
+                return $theme->getLowerName() === Str::lower($name);
             }
         }));
     }
@@ -121,7 +121,7 @@ class ThemesManager
                 if (strpos($name, '/') !== false) {
                     return Str::lower($theme->get('name')) === Str::lower($name);
                 } else {
-                    return str_replace('-theme', '', str_replace('theme-', '', $theme->getLowerName())) === Str::lower($name);
+                    return $theme->getLowerName() === Str::lower($name);
                 }
             });
         }
