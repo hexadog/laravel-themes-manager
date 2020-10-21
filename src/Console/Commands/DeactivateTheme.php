@@ -2,16 +2,10 @@
 
 namespace Hexadog\ThemesManager\Console\Commands;
 
-use Hexadog\ThemesManager\Console\Commands\Traits\BlockMessage;
-use Hexadog\ThemesManager\Console\Commands\Traits\SectionMessage;
-use Hexadog\ThemesManager\Facades\ThemesManager;
-use Illuminate\Console\Command;
+use Hexadog\ThemesManager\Console\Commands\AbstractCommand;
 
-class DeactivateTheme extends Command
+class DeactivateTheme extends AbstractCommand
 {
-    use BlockMessage;
-    use SectionMessage;
-
     /**
      * The console command signature.
      *
@@ -42,15 +36,9 @@ class DeactivateTheme extends Command
      */
     public function handle()
     {
-        if (!ThemesManager::has($this->argument('name'))) {
-            $this->error("Theme with name {$this->argument('name')} does not exists!");
+        $this->validateName();
 
-            return false;
-        }
-
-        $theme = ThemesManager::get($this->argument('name'));
-
-        if (!$theme->isActive()) {
+        if (!$this->theme->isActive()) {
             $this->error("Theme with name {$this->argument('name')} is already deactivated!");
 
             return false;
@@ -58,7 +46,7 @@ class DeactivateTheme extends Command
 
         $this->sectionMessage('Themes Manager', 'Deactivating theme...');
         
-        if ($theme->deactivate()) {
+        if ($this->theme->deactivate()) {
             $this->sectionMessage('Themes Manager', 'Theme deactivated succefully');
         } else {
             $this->error("Error while deactivating Theme with name {$this->argument('name')}!");
