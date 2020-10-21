@@ -153,6 +153,14 @@ trait ComposerTrait
         return $this->json()->get($key, $default);
     }
 
+    /**
+     * Set a specific data into json file.
+     *
+     * @param string $key
+     * @param mixed $value
+     * 
+     * @return void
+     */
     public function set(string $key, $value)
     {
         return $this->json()->set($key, $value)->save();
