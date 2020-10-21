@@ -96,11 +96,10 @@ class ThemesManager
     {
         return !is_null($this->themes->first(function ($theme) use ($name) {
             // Check if $name contains vendor
-            $data = explode('/', $name);
-            if (count($data) > 1) {
-                return Str::lower($theme->getNamespace()) === str_replace('/', '\\', Str::lower($name));
+            if (strpos($name, '/') !== false) {
+                return Str::lower($theme->get('name')) === Str::lower($name);
             } else {
-                return $theme->getLowerName() === Str::lower($name);
+                return str_replace('-theme', '', str_replace('theme-', '', $theme->getLowerName())) === Str::lower($name);
             }
         }));
     }
@@ -119,11 +118,10 @@ class ThemesManager
         } else {
             return $this->themes->first(function ($theme) use ($name) {
                 // Check if $name contains vendor
-                $data = explode('/', $name);
-                if (count($data) > 1) {
-                    return Str::lower($theme->getNamespace()) === str_replace('/', '\\', Str::lower($name));
+                if (strpos($name, '/') !== false) {
+                    return Str::lower($theme->get('name')) === Str::lower($name);
                 } else {
-                    return $theme->getLowerName() === Str::lower($name);
+                    return str_replace('-theme', '', str_replace('theme-', '', $theme->getLowerName())) === Str::lower($name);
                 }
             });
         }
