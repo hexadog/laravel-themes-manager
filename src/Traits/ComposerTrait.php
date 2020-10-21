@@ -31,17 +31,23 @@ trait ComposerTrait
     /**
      * Get package class namespace
      *
+     * @var string $prefix
+     * 
      * @return string
      */
-    public function getNamespace()
+    public function getNamespace($prefix = null)
     {
         $psr4_autoload = $this->get('autoload.psr-4');
 
         if (!is_null($psr4_autoload)) {
             return array_search('src', $psr4_autoload);
+        } else {
+            if (is_null($prefix)) {
+                $prefix = $this->getStudlyVendor();
+            }
         }
-        
-        return "{$this->getStudlyVendor()}\\{$this->getStudlyName()}";
+
+        return "{$prefix}\\{$this->getStudlyName()}";
     }
 
     /**
