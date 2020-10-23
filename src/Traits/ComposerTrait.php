@@ -221,7 +221,7 @@ trait ComposerTrait
         }
 
         return Arr::get($this->json, $file, function () use ($file) {
-            return $this->json[$file] = new Json($this->getPath() . $file, app('files'));
+            return $this->json[$file] = new Json($this->getPath($file), app('files'));
         });
     }
 
