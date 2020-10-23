@@ -1,4 +1,4 @@
-<p align="center"><img src="https://i.ibb.co/RbnsDrr/logo.png"></p>
+<p align="center"><img src="https://i.ibb.co/pKJgXY5/laravel-modules-manager.png"></p>
 
 <p align="center">
     <a href="https://packagist.org/packages/hexadog/laravel-themes-manager">
