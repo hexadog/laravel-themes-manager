@@ -9,35 +9,35 @@ use Hexadog\ThemesManager\Exceptions\InvalidJsonException;
 class Json
 {
     /**
-     * The file path.
+     * The file path
      *
      * @var string
      */
     protected $path;
 
     /**
-     * The laravel filesystem instance.
+     * The laravel filesystem instance
      *
      * @var \Illuminate\Filesystem\Filesystem
      */
     protected $filesystem;
 
     /**
-     * The attributes collection.
+     * The attributes collection
      *
      * @var \Illuminate\Support\Collection
      */
     protected $attributes;
 
     /**
-     * The constructor.
+     * The constructor
      *
-     * @param mixed                             $path
+     * @param string $path
      * @param \Illuminate\Filesystem\Filesystem $filesystem
      */
-    public function __construct($path, Filesystem $filesystem = null)
+    public function __construct(string $path, Filesystem $filesystem = null)
     {
-        $this->path = (string) $path;
+        $this->path = $path;
         $this->filesystem = $filesystem ?: new Filesystem();
         $this->attributes = collect($this->getAttributes());
     }
@@ -47,19 +47,19 @@ class Json
      *
      * @return Filesystem
      */
-    public function getFilesystem()
+    public function getFilesystem(): Filesystem
     {
         return $this->filesystem;
     }
 
     /**
-     * Set filesystem.
+     * Set filesystem
      *
      * @param Filesystem $filesystem
      *
-     * @return $this
+     * @return Json
      */
-    public function setFilesystem(Filesystem $filesystem)
+    public function setFilesystem(Filesystem $filesystem): Json
     {
         $this->filesystem = $filesystem;
 
@@ -67,58 +67,59 @@ class Json
     }
 
     /**
-     * Get path.
+     * Get path
      *
      * @return string
      */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
 
     /**
-     * Set path.
+     * Set path
      *
-     * @param mixed $path
+     * @param string $path
      *
-     * @return $this
+     * @return Json
      */
-    public function setPath($path)
+    public function setPath(string $path): Json
     {
-        $this->path = (string) $path;
+        $this->path = $path;
 
         return $this;
     }
 
     /**
-     * Make new instance.
+     * Make new instance
      *
-     * @param string                            $path
+     * @param string  $path
      * @param \Illuminate\Filesystem\Filesystem $filesystem
      *
-     * @return static
+     * @return Json
      */
-    public static function make($path, Filesystem $filesystem = null)
+    public static function make(string $path, Filesystem $filesystem = null): Json
     {
         return new static($path, $filesystem);
     }
 
     /**
-     * Get file content.
+     * Get file content
      *
      * @return string
      */
-    public function getContents()
+    public function getContents(): string
     {
         return $this->filesystem->get($this->getPath());
     }
 
     /**
-     * Get file contents as array.
+     * Get file contents as array
+     * 
      * @return array
-     * @throws \Exception
+     * @throws InvalidJsonException
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = json_decode($this->getContents(), 1);
 
@@ -131,11 +132,11 @@ class Json
     }
 
     /**
-     * Convert the given array data to pretty json.
+     * Convert the given array data to pretty json
      *
      * @param array $data
      *
-     * @return string
+     * @return string|false
      */
     public function toJsonPretty(array $data = null)
     {
@@ -143,13 +144,13 @@ class Json
     }
 
     /**
-     * Update json contents from array data.
+     * Update json contents from array data
      *
      * @param array $data
      *
      * @return bool
      */
-    public function update(array $data)
+    public function update(array $data): bool
     {
         $this->attributes = collect(array_merge($this->attributes->toArray(), $data));
 
@@ -157,14 +158,14 @@ class Json
     }
 
     /**
-     * Set a specific key & value.
+     * Set a specific key & value
      *
      * @param string $key
      * @param mixed  $value
      *
-     * @return $this
+     * @return Json
      */
-    public function set($key, $value)
+    public function set($key, $value): Json
     {
         $attributes = $this->attributes->toArray();
 
@@ -176,17 +177,17 @@ class Json
     }
 
     /**
-     * Save the current attributes array to the file storage.
+     * Save the current attributes array to the file storage
      *
      * @return bool
      */
-    public function save()
+    public function save(): bool
     {
-        return $this->filesystem->put($this->getPath(), $this->toJsonPretty());
+        return (bool) $this->filesystem->put($this->getPath(), $this->toJsonPretty());
     }
 
     /**
-     * Handle magic method __get.
+     * Handle magic method __get
      *
      * @param string $key
      *
@@ -198,7 +199,7 @@ class Json
     }
 
     /**
-     * Get the specified attribute from json file.
+     * Get the specified attribute from json file
      *
      * @param $key
      * @param null $default
@@ -211,7 +212,7 @@ class Json
     }
 
     /**
-     * Handle call to __call method.
+     * Handle call to __call method
      *
      * @param string $method
      * @param array  $arguments
@@ -228,7 +229,7 @@ class Json
     }
 
     /**
-     * Handle call to __toString method.
+     * Handle call to __toString method
      *
      * @return string
      */
