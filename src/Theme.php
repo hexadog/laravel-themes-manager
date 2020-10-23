@@ -95,7 +95,7 @@ class Theme
      */
     public function getPath(string $path = null): string
     {
-        return $this->path . $this->cleanPath($path);
+        return $this->cleanPath(Str::finish($this->path, DIRECTORY_SEPARATOR) . $path);
     }
 
     /**
@@ -352,8 +352,8 @@ class Theme
     {
         $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
 
-        if ($path && !is_file($path) && !Str::endsWith($path, DIRECTORY_SEPARATOR)) {
-            $path = $path . DIRECTORY_SEPARATOR;
+        if ($path && !is_file($path)) {
+            Str::finish($path, DIRECTORY_SEPARATOR);
         }
 
         return $path;

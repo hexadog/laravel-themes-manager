@@ -31,17 +31,23 @@ trait ComposerTrait
     /**
      * Get package class namespace
      *
+     * @var string $prefix
+     * 
      * @return string
      */
-    public function getNamespace()
+    public function getNamespace($prefix = null)
     {
         $psr4_autoload = $this->get('autoload.psr-4');
 
         if (!is_null($psr4_autoload)) {
             return array_search('src', $psr4_autoload);
+        } else {
+            if (is_null($prefix)) {
+                $prefix = $this->getStudlyVendor();
+            }
         }
-        
-        return "{$this->getStudlyVendor()}\\{$this->getStudlyName()}";
+
+        return "{$prefix}\\{$this->getStudlyName()}";
     }
 
     /**
@@ -107,7 +113,7 @@ trait ComposerTrait
             }
         }
 
-        return $this->name;
+        return str_replace(['-theme', 'theme-'], '', $this->name);
     }
 
     /**
@@ -153,6 +159,14 @@ trait ComposerTrait
         return $this->json()->get($key, $default);
     }
 
+    /**
+     * Set a specific data into json file.
+     *
+     * @param string $key
+     * @param mixed $value
+     * 
+     * @return void
+     */
     public function set(string $key, $value)
     {
         return $this->json()->set($key, $value)->save();
@@ -207,7 +221,7 @@ trait ComposerTrait
         }
 
         return Arr::get($this->json, $file, function () use ($file) {
-            return $this->json[$file] = new Json($this->getPath() . $file, app('files'));
+            return $this->json[$file] = new Json($this->getPath($file), app('files'));
         });
     }
 
@@ -227,8 +241,7 @@ trait ComposerTrait
         $path = base_path($path);
 
         if (file_exists($path)) {
-            $finder = new Finder();
-            $foundComposers = $finder->files()->in($path)->exclude(['node_modules', 'vendor'])->name('composer.json');
+            $foundComposers = Finder::create()->files()->followLinks()->in($path)->exclude(['node_modules', 'vendor'])->name('composer.json');
 
             foreach ($foundComposers as $foundComposer) {
                 $composerJson = new Json($foundComposer, app('files'));

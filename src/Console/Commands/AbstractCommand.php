@@ -12,7 +12,7 @@ abstract class AbstractCommand extends Command
         SectionMessage;
 
     /**
-     * @var \Hexadog\ThemesManager\Theme|mixed
+     * @var mixed
      */
     protected $theme;
 

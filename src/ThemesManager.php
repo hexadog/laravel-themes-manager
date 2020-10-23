@@ -95,10 +95,11 @@ class ThemesManager
     public function has(string $name = null)
     {
         return !is_null($this->themes->first(function ($theme) use ($name) {
+            // normalize module name
+            $name = str_replace(['-theme', 'theme-'], '', $name);
             // Check if $name contains vendor
-            $data = explode('/', $name);
-            if (count($data) > 1) {
-                return Str::lower($theme->getNamespace()) === str_replace('/', '\\', Str::lower($name));
+            if (strpos($name, '/') !== false) {
+                return Str::lower($theme->getName()) === Str::lower(substr($name, $pos + 1, strlen($name)));;
             } else {
                 return $theme->getLowerName() === Str::lower($name);
             }
@@ -118,10 +119,11 @@ class ThemesManager
             return $this->themes;
         } else {
             return $this->themes->first(function ($theme) use ($name) {
+                // normalize module name
+                $name = str_replace(['-theme', 'theme-'], '', $name);
                 // Check if $name contains vendor
-                $data = explode('/', $name);
-                if (count($data) > 1) {
-                    return Str::lower($theme->getNamespace()) === str_replace('/', '\\', Str::lower($name));
+                if (strpos($name, '/') !== false) {
+                    return Str::lower($theme->getName()) === Str::lower(substr($name, $pos + 1, strlen($name)));;
                 } else {
                     return $theme->getLowerName() === Str::lower($name);
                 }
