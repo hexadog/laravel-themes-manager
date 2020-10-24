@@ -85,7 +85,7 @@ class ThemesManager
 
     /**
      * Clear the themes cache if it is enabled.
-     * 
+     *
      * @return bool
      */
     public function clearCache(): bool
@@ -101,7 +101,7 @@ class ThemesManager
      * Check if theme with given name exists.
      *
      * @param string $name
-     * 
+     *
      * @return boolean
      */
     public function has(string $name = null)
@@ -396,7 +396,6 @@ class ThemesManager
                 }
             });
         } catch (ComposerLoaderException $e) {
-            
         }
 
         return $themes;
