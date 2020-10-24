@@ -6,7 +6,6 @@ use File;
 use ReflectionClass;
 use Illuminate\Support\Str;
 use Illuminate\Routing\Router;
-use Illuminate\Cache\CacheManager;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\AliasLoader;
@@ -100,8 +99,7 @@ class PackageServiceProvider extends ServiceProvider
         $this->app->singleton('themes-manager', function () {
             return new ThemesManager(
                 app(Factory::class),
-                app(Translator::class),
-                app(CacheManager::class)
+                app(Translator::class)
             );
         });
 

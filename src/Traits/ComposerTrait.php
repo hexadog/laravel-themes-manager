@@ -221,7 +221,7 @@ trait ComposerTrait
         }
 
         return Arr::get($this->json, $file, function () use ($file) {
-            return $this->json[$file] = new Json($this->getPath($file), app('files'));
+            return $this->json[$file] = Json::make($this->getPath($file), app('files'));
         });
     }
 
@@ -244,7 +244,7 @@ trait ComposerTrait
             $foundComposers = Finder::create()->files()->followLinks()->in($path)->exclude(['node_modules', 'vendor'])->name('composer.json');
 
             foreach ($foundComposers as $foundComposer) {
-                $composerJson = new Json($foundComposer, app('files'));
+                $composerJson = Json::make($foundComposer, app('files'));
 
                 if ($composerJson->get('type') === $this->packageType) {
                     $content->put($composerJson->get('name'), new $class(dirname($foundComposer)));

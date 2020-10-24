@@ -11,7 +11,7 @@ use Illuminate\Contracts\Translation\Translator;
 use Hexadog\ThemesManager\Exceptions\ThemeNotFoundException;
 use Hexadog\ThemesManager\Exceptions\ComposerLoaderException;
 use Hexadog\ThemesManager\Exceptions\ThemeNotActiveException;
-use Illuminate\Cache\CacheManager;
+use Illuminate\Support\Facades\Cache;
 
 class ThemesManager
 {
@@ -45,24 +45,16 @@ class ThemesManager
     private $view;
 
     /**
-     * Cache Manager.
-     * 
-     * @var \Illuminate\Cache\CacheManager
-     */
-    private $cache;
-
-    /**
      * The constructor.
      *
      * @param \Illuminate\View\Factory $view
      * @param \Illuminate\Contracts\Translation\Translator $lang
      * @param \Illuminate\Cache\CacheManager $lang
      */
-    public function __construct(Factory $view, Translator $lang, CacheManager $cache)
+    public function __construct(Factory $view, Translator $lang)
     {
         $this->view = $view;
         $this->lang = $lang;
-        $this->cache = $cache;
 
         if (Config::get('themes-manager.cache.enabled', false)) {
             $this->themes = $this->getCache();
@@ -88,18 +80,18 @@ class ThemesManager
      */
     public function buildCache(): bool
     {
-        return $this->cache->put(Config::get('themes-manager.cache.key', 'themes-manager'), $this->findThemes(), Config::get('themes-manager.cache.lifetime', 86400));
+        return Cache::put(Config::get('themes-manager.cache.key', 'themes-manager'), $this->findThemes(), Config::get('themes-manager.cache.lifetime', 86400));
     }
 
     /**
      * Clear the themes cache if it is enabled.
-     * 
+     *
      * @return bool
      */
     public function clearCache(): bool
     {
         if (Config::get('themes-manager.cache.enabled', false) === true) {
-            return $this->cache->forget(Config::get('themes-manager.cache.key', 'themes-manager'));
+            return Cache::forget(Config::get('themes-manager.cache.key', 'themes-manager'));
         }
 
         return true;
@@ -109,7 +101,7 @@ class ThemesManager
      * Check if theme with given name exists.
      *
      * @param string $name
-     * 
+     *
      * @return boolean
      */
     public function has(string $name = null)
@@ -119,7 +111,8 @@ class ThemesManager
             $name = str_replace(['-theme', 'theme-'], '', $name);
             // Check if $name contains vendor
             if (strpos($name, '/') !== false) {
-                return Str::lower($theme->getName()) === Str::lower(substr($name, $pos + 1, strlen($name)));;
+                return Str::lower($theme->getName()) === Str::lower(substr($name, $pos + 1, strlen($name)));
+                ;
             } else {
                 return $theme->getLowerName() === Str::lower($name);
             }
@@ -143,7 +136,8 @@ class ThemesManager
                 $name = str_replace(['-theme', 'theme-'], '', $name);
                 // Check if $name contains vendor
                 if (strpos($name, '/') !== false) {
-                    return Str::lower($theme->getName()) === Str::lower(substr($name, $pos + 1, strlen($name)));;
+                    return Str::lower($theme->getName()) === Str::lower(substr($name, $pos + 1, strlen($name)));
+                    ;
                 } else {
                     return $theme->getLowerName() === Str::lower($name);
                 }
@@ -404,7 +398,6 @@ class ThemesManager
                 }
             });
         } catch (ComposerLoaderException $e) {
-            
         }
 
         return $themes;
@@ -417,7 +410,7 @@ class ThemesManager
      */
     protected function getCache(): Collection
     {
-        return $this->cache->remember(Config::get('themes-manager.cache.key', 'themes-manager'), Config::get('themes-manager.cache.lifetime', 86400), function () {
+        return Cache::remember(Config::get('themes-manager.cache.key', 'themes-manager'), Config::get('themes-manager.cache.lifetime', 86400), function () {
             return $this->findThemes();
         });
     }
