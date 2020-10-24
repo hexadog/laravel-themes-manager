@@ -1,4 +1,4 @@
-a<?php
+<?php
 
 namespace Hexadog\ThemesManager;
 
@@ -46,7 +46,7 @@ class ThemesManager
 
     /**
      * Cache Manager.
-     *
+     * 
      * @var \Illuminate\Cache\CacheManager
      */
     private $cache;
@@ -93,7 +93,7 @@ class ThemesManager
 
     /**
      * Clear the themes cache if it is enabled.
-     *
+     * 
      * @return bool
      */
     public function clearCache(): bool
@@ -109,7 +109,7 @@ class ThemesManager
      * Check if theme with given name exists.
      *
      * @param string $name
-     *
+     * 
      * @return boolean
      */
     public function has(string $name = null)
@@ -119,8 +119,7 @@ class ThemesManager
             $name = str_replace(['-theme', 'theme-'], '', $name);
             // Check if $name contains vendor
             if (strpos($name, '/') !== false) {
-                return Str::lower($theme->getName()) === Str::lower(substr($name, $pos + 1, strlen($name)));
-                ;
+                return Str::lower($theme->getName()) === Str::lower(substr($name, $pos + 1, strlen($name)));;
             } else {
                 return $theme->getLowerName() === Str::lower($name);
             }
@@ -144,8 +143,7 @@ class ThemesManager
                 $name = str_replace(['-theme', 'theme-'], '', $name);
                 // Check if $name contains vendor
                 if (strpos($name, '/') !== false) {
-                    return Str::lower($theme->getName()) === Str::lower(substr($name, $pos + 1, strlen($name)));
-                    ;
+                    return Str::lower($theme->getName()) === Str::lower(substr($name, $pos + 1, strlen($name)));;
                 } else {
                     return $theme->getLowerName() === Str::lower($name);
                 }
@@ -406,6 +404,7 @@ class ThemesManager
                 }
             });
         } catch (ComposerLoaderException $e) {
+            
         }
 
         return $themes;

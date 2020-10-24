@@ -10,8 +10,8 @@ return [
 	|
 	*/
 	'directory' => env('THEMES_DIR', 'themes'),
-    
-    /*
+
+	/*
     |--------------------------------------------------------------------------
     | Symbolic path
     |--------------------------------------------------------------------------
@@ -19,7 +19,7 @@ return [
     | you can change the public themes path used for assets.
     |
     */
-    'symlink_path' => 'themes',
+	'symlink_path' => 'themes',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -40,9 +40,9 @@ return [
     | Config for caching feature.
     |
     */
-    'cache' => [
-        'enabled' => false,
-        'key' => 'themes-manager',
-        'lifetime' => 86400,
+	'cache' => [
+		'enabled' => false,
+		'key' => 'themes-manager',
+		'lifetime' => 86400,
 	],
 ];
