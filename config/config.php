@@ -16,7 +16,7 @@ return [
     | Symbolic path
     |--------------------------------------------------------------------------
     |
-    | you can change the public themes path used for assets
+    | you can change the public themes path used for assets.
     |
     */
     'symlink_path' => 'themes',

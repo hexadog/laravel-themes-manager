@@ -26,7 +26,7 @@ class ThemesManager
 
     /**
      * Scanned themes
-     * @var Collection
+     * @var \Illuminate\Support\Collection
      */
     private $themes;
 
@@ -38,7 +38,7 @@ class ThemesManager
     protected $lang;
 
     /**
-     * View finder
+     * View finder.
      *
      * @var \Illuminate\View\Factory
      */
@@ -47,9 +47,8 @@ class ThemesManager
     /**
      * The constructor.
      *
-     * @param Factory $view
-     * @param Filesystem $files
-     * @param Translator $lang
+     * @param \Illuminate\View\Factory $view
+     * @param \Illuminate\Contracts\Translation\Translator $lang
      */
     public function __construct(Factory $view, Translator $lang)
     {
@@ -77,7 +76,7 @@ class ThemesManager
     }
 
     /**
-     * Get all themes
+     * Get all themes.
      *
      * @return mixed
      */
@@ -107,7 +106,7 @@ class ThemesManager
     }
 
     /**
-     * Get theme by name (or return all themes if no name given)
+     * Get theme by name (or return all themes if no name given).
      *
      * @param string $name
      *
@@ -132,13 +131,13 @@ class ThemesManager
     }
 
     /**
-     * Set current active theme
+     * Set current active theme.
      *
      * @param string $name Theme namespace
      *
-     * @throws ThemeNotFoundException
+     * @throws \Hexadog\ThemesManager\Exceptions\ThemeNotFoundException
      *
-     * @return ThemesManager
+     * @return \Hexadog\ThemesManager\ThemesManager
      */
     public function set(string $name): ThemesManager
     {
@@ -160,7 +159,7 @@ class ThemesManager
     /**
      * Get current theme.
      *
-     * @return Theme|null
+     * @return \Hexadog\ThemesManager\Theme|null
      */
     public function current(): ?Theme
     {
@@ -171,12 +170,12 @@ class ThemesManager
     }
 
     /**
-     * Enable a Theme from its name
+     * Enable a Theme from its name.
      *
      * @param string $name
      * @param bool $withEvent
      *
-     * @return ThemesManager
+     * @return \Hexadog\ThemesManager\ThemesManager
      */
     public function enable(string $name, bool $withEvent = true): ThemesManager
     {
@@ -195,12 +194,12 @@ class ThemesManager
     }
 
     /**
-     * Disable a Theme from its name
+     * Disable a Theme from its name.
      *
      * @param string $name
      * @param bool $withEvent
      *
-     * @return ThemesManager
+     * @return \Hexadog\ThemesManager\ThemesManager
      */
     public function disable(string $name, bool $withEvent = true): ThemesManager
     {
@@ -216,7 +215,7 @@ class ThemesManager
     }
 
     /**
-     * Get current theme's asset url
+     * Get current theme's asset url.
      *
      * @param string $asset
      * @param boolean $absolutePath
@@ -229,7 +228,7 @@ class ThemesManager
     }
 
     /**
-     * Get current theme's style HTML tag for given asset
+     * Get current theme's style HTML tag for given asset.
      *
      * @param string $asset
      * @param boolean $absolutePath
@@ -245,7 +244,7 @@ class ThemesManager
     }
 
     /**
-     * Get current theme's script HTML tag for given asset
+     * Get current theme's script HTML tag for given asset.
      *
      * @param  string $asset
      * @param  string $mode ''|defer|async
@@ -267,7 +266,7 @@ class ThemesManager
     }
 
     /**
-     * Get current theme's image HTML tag for given asset
+     * Get current theme's image HTML tag for given asset.
      *
      * @param  string $asset
      * @param  string $alt
@@ -302,7 +301,7 @@ class ThemesManager
     }
 
     /**
-     * Get theme's asset url
+     * Get theme's asset url.
      *
      * @param string $asset
      * @param boolean $absolutePath
@@ -331,11 +330,11 @@ class ThemesManager
     }
 
     /**
-     * Filter non active themes
+     * Filter non active themes.
      *
-     * @return Collection
+     * @return \Illuminate\Support\Collection
      */
-    public function filterNonActive()
+    public function filterNonActive(): Collection
     {
         return $this->themes->filter(function ($theme) {
             return $theme->isActive();
@@ -343,13 +342,13 @@ class ThemesManager
     }
 
     /**
-     * Return attributes in html format
+     * Return attributes in html format.
      *
      * @param  array $attributes
      *
      * @return string
      */
-    private function htmlAttributes($attributes)
+    private function htmlAttributes($attributes): string
     {
         return join(' ', array_map(function ($key) use ($attributes) {
             if (is_bool($attributes[$key])) {
