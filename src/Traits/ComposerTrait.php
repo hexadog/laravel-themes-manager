@@ -32,7 +32,7 @@ trait ComposerTrait
      * Get package class namespace
      *
      * @var string $prefix
-     * 
+     *
      * @return string
      */
     public function getNamespace($prefix = null)
@@ -164,7 +164,7 @@ trait ComposerTrait
      *
      * @param string $key
      * @param mixed $value
-     * 
+     *
      * @return void
      */
     public function set(string $key, $value)
