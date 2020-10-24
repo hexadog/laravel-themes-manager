@@ -26,13 +26,6 @@ class Theme
     protected $path;
 
     /**
-     * The theme assets path (within public storage).
-     *
-     * @var string
-     */
-    protected $assetsPath;
-
-    /**
      * The Parent theme.
      *
      * @var string
