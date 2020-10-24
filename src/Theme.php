@@ -13,6 +13,7 @@ use Hexadog\ThemesManager\Events\ThemeDisabled;
 use Hexadog\ThemesManager\Events\ThemeEnabling;
 use Hexadog\ThemesManager\Traits\ComposerTrait;
 use Hexadog\ThemesManager\Events\ThemeDisabling;
+use Illuminate\Support\Facades\Log;
 
 class Theme
 {
@@ -105,9 +106,10 @@ class Theme
      * Get theme views paths
      *
      * @param string $path
-     * @return void
+     * 
+     * @return array
      */
-    public function getViewPaths($path = '')
+    public function getViewPaths($path = ''): array
     {
         // Build Paths array.
         // All paths are relative to Config::get('themes-manager.directory')
@@ -310,7 +312,7 @@ class Theme
             }
         }
 
-        \Log::warning("Asset [{$url}] not found for Theme [{$this->getName()}]");
+        Log::warning("Asset [{$url}] not found for Theme [{$this->getName()}]");
 
         return ltrim(str_replace('\\', '/', $url));
     }
