@@ -111,7 +111,8 @@ class ThemesManager
             $name = str_replace(['-theme', 'theme-'], '', $name);
             // Check if $name contains vendor
             if (strpos($name, '/') !== false) {
-                return Str::lower($theme->getName()) === Str::lower(substr($name, $pos + 1, strlen($name)));;
+                return Str::lower($theme->getName()) === Str::lower(substr($name, $pos + 1, strlen($name)));
+                ;
             } else {
                 return $theme->getLowerName() === Str::lower($name);
             }
@@ -135,7 +136,8 @@ class ThemesManager
                 $name = str_replace(['-theme', 'theme-'], '', $name);
                 // Check if $name contains vendor
                 if (strpos($name, '/') !== false) {
-                    return Str::lower($theme->getName()) === Str::lower(substr($name, $pos + 1, strlen($name)));;
+                    return Str::lower($theme->getName()) === Str::lower(substr($name, $pos + 1, strlen($name)));
+                    ;
                 } else {
                     return $theme->getLowerName() === Str::lower($name);
                 }
