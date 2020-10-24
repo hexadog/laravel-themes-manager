@@ -11,7 +11,7 @@ use Illuminate\Contracts\Translation\Translator;
 use Hexadog\ThemesManager\Exceptions\ThemeNotFoundException;
 use Hexadog\ThemesManager\Exceptions\ComposerLoaderException;
 use Hexadog\ThemesManager\Exceptions\ThemeNotActiveException;
-use Illuminate\Cache\CacheManager;
+use Illuminate\Support\Facades\Cache;
 
 class ThemesManager
 {
@@ -45,24 +45,16 @@ class ThemesManager
     private $view;
 
     /**
-     * Cache Manager.
-     * 
-     * @var \Illuminate\Cache\CacheManager
-     */
-    private $cache;
-
-    /**
      * The constructor.
      *
      * @param \Illuminate\View\Factory $view
      * @param \Illuminate\Contracts\Translation\Translator $lang
      * @param \Illuminate\Cache\CacheManager $lang
      */
-    public function __construct(Factory $view, Translator $lang, CacheManager $cache)
+    public function __construct(Factory $view, Translator $lang)
     {
         $this->view = $view;
         $this->lang = $lang;
-        $this->cache = $cache;
 
         if (Config::get('themes-manager.cache.enabled', false)) {
             $this->themes = $this->getCache();
@@ -88,7 +80,7 @@ class ThemesManager
      */
     public function buildCache(): bool
     {
-        return $this->cache->put(Config::get('themes-manager.cache.key', 'themes-manager'), $this->findThemes(), Config::get('themes-manager.cache.lifetime', 86400));
+        return Cache::put(Config::get('themes-manager.cache.key', 'themes-manager'), $this->findThemes(), Config::get('themes-manager.cache.lifetime', 86400));
     }
 
     /**
@@ -99,7 +91,7 @@ class ThemesManager
     public function clearCache(): bool
     {
         if (Config::get('themes-manager.cache.enabled', false) === true) {
-            return $this->cache->forget(Config::get('themes-manager.cache.key', 'themes-manager'));
+            return Cache::forget(Config::get('themes-manager.cache.key', 'themes-manager'));
         }
 
         return true;
@@ -417,7 +409,7 @@ class ThemesManager
      */
     protected function getCache(): Collection
     {
-        return $this->cache->remember(Config::get('themes-manager.cache.key', 'themes-manager'), Config::get('themes-manager.cache.lifetime', 86400), function () {
+        return Cache::remember(Config::get('themes-manager.cache.key', 'themes-manager'), Config::get('themes-manager.cache.lifetime', 86400), function () {
             return $this->findThemes();
         });
     }
