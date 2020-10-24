@@ -1,10 +1,9 @@
-<?php
+a<?php
 
 namespace Hexadog\ThemesManager;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Facades\Config;
 use Hexadog\ThemesManager\Traits\ComposerTrait;
@@ -12,6 +11,7 @@ use Illuminate\Contracts\Translation\Translator;
 use Hexadog\ThemesManager\Exceptions\ThemeNotFoundException;
 use Hexadog\ThemesManager\Exceptions\ComposerLoaderException;
 use Hexadog\ThemesManager\Exceptions\ThemeNotActiveException;
+use Illuminate\Cache\CacheManager;
 
 class ThemesManager
 {
@@ -45,33 +45,29 @@ class ThemesManager
     private $view;
 
     /**
+     * Cache Manager.
+     * 
+     * @var \Illuminate\Cache\CacheManager
+     */
+    private $cache;
+
+    /**
      * The constructor.
      *
      * @param \Illuminate\View\Factory $view
      * @param \Illuminate\Contracts\Translation\Translator $lang
+     * @param \Illuminate\Cache\CacheManager $lang
      */
-    public function __construct(Factory $view, Translator $lang)
+    public function __construct(Factory $view, Translator $lang, CacheManager $cache)
     {
         $this->view = $view;
         $this->lang = $lang;
+        $this->cache = $cache;
 
-        // Scan available themes
-        try {
-            $this->themes = $this->scan(Config::get('themes-manager.directory', 'themes'), Theme::class);
-
-            $this->themes->each(function ($theme) {
-                $extendedThemeName = $theme->get('extra.theme.parent');
-                if ($extendedThemeName) {
-                    if ($this->has($extendedThemeName)) {
-                        $extendedTheme = $this->get($extendedThemeName);
-                    } else {
-                        $extendedTheme = new Theme($theme->getPath());
-                    }
-                    $theme->setParent($extendedTheme);
-                }
-            });
-        } catch (ComposerLoaderException $e) {
-            return $this;
+        if (Config::get('themes-manager.cache.enabled', false)) {
+            $this->themes = $this->getCache();
+        } else {
+            $this->themes = $this->findThemes();
         }
     }
 
@@ -86,9 +82,34 @@ class ThemesManager
     }
 
     /**
-     * Check if theme with given name exists
+     * Build cache of available themes.
+     *
+     * @return bool
+     */
+    public function buildCache(): bool
+    {
+        return $this->cache->put(Config::get('themes-manager.cache.key', 'themes-manager'), $this->findThemes(), Config::get('themes-manager.cache.lifetime', 86400));
+    }
+
+    /**
+     * Clear the themes cache if it is enabled.
+     * 
+     * @return bool
+     */
+    public function clearCache(): bool
+    {
+        if (Config::get('themes-manager.cache.enabled', false) === true) {
+            return $this->cache->forget(Config::get('themes-manager.cache.key', 'themes-manager'));
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if theme with given name exists.
      *
      * @param string $name
+     * 
      * @return boolean
      */
     public function has(string $name = null)
@@ -356,5 +377,48 @@ class ThemesManager
             }
             return $key . '="' . $attributes[$key] . '"';
         }, array_keys($attributes)));
+    }
+
+    /**
+     * Find all available themes.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    protected function findThemes(): Collection
+    {
+        $themes = collect();
+
+        // Scan available themes
+        try {
+            $themes = $this->scan(Config::get('themes-manager.directory', 'themes'), Theme::class);
+
+            $themes->each(function ($theme) {
+                $extendedThemeName = $theme->get('extra.theme.parent');
+                if ($extendedThemeName) {
+                    if ($this->has($extendedThemeName)) {
+                        $extendedTheme = $this->get($extendedThemeName);
+                    } else {
+                        $extendedTheme = new Theme($theme->getPath());
+                    }
+                    $theme->setParent($extendedTheme);
+                }
+            });
+        } catch (ComposerLoaderException $e) {
+            
+        }
+
+        return $themes;
+    }
+
+    /**
+     * Get cached themes.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    protected function getCache(): Collection
+    {
+        return $this->cache->remember(Config::get('themes-manager.cache.key', 'themes-manager'), Config::get('themes-manager.cache.lifetime', 86400), function () {
+            return $this->findThemes();
+        });
     }
 }
