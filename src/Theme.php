@@ -106,7 +106,7 @@ class Theme
      * Get theme views paths
      *
      * @param string $path
-     * 
+     *
      * @return array
      */
     public function getViewPaths($path = ''): array

@@ -115,7 +115,7 @@ class Json
 
     /**
      * Get file contents as array
-     * 
+     *
      * @return array
      * @throws InvalidJsonException
      */
