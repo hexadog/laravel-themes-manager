@@ -192,7 +192,7 @@ class MakeTheme extends Command
 
         $replace = [
             Str::title(Arr::get($this->theme, 'author-name', '')),
-            Str::title(Arr::get($this->theme, 'author-email', '')),
+            Arr::get($this->theme, 'author-email', ''),
             Arr::get($this->theme, 'description', ''),
             Arr::get($this->theme, 'name', ''),
             Arr::get($this->theme, 'parent', ''),
