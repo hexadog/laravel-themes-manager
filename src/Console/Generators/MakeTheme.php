@@ -248,7 +248,7 @@ class MakeTheme extends Command
     {
         if ($this->confirm('Is it a child theme?')) {
             $this->theme['parent'] = $this->ask('Parent theme name');
-            $this->theme['parent'] = strtolower($this->theme['parent']);
+            $this->theme['parent'] = mb_strtolower($this->theme['parent']);
         }
     }
 
