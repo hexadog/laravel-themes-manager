@@ -6,7 +6,8 @@
     "minimum-stability": "stable",
     "authors": [
         {
-            "name": "DummyAuthor"
+            "name": "DummyAuthorName",
+            "email": "DummyAuthorEmail"
         }
     ],
     "extra": {

@@ -181,7 +181,8 @@ class MakeTheme extends Command
         $this->sectionMessage('File generation', "{$file->getPathName()}");
 
         $find = [
-            'DummyAuthor',
+            'DummyAuthorName',
+            'DummyAuthorEmail',
             'DummyDescription',
             'DummyName',
             'DummyParent',
@@ -190,7 +191,8 @@ class MakeTheme extends Command
         ];
 
         $replace = [
-            Str::title(Arr::get($this->theme, 'author', '')),
+            Str::title(Arr::get($this->theme, 'author-name', '')),
+            Str::title(Arr::get($this->theme, 'author-email', '')),
             Arr::get($this->theme, 'description', ''),
             Arr::get($this->theme, 'name', ''),
             Arr::get($this->theme, 'parent', ''),
@@ -210,7 +212,8 @@ class MakeTheme extends Command
      */
     protected function askAuthor()
     {
-        $this->config['author'] = $this->ask('Author name');
+        $this->theme['author-name'] = $this->config->get('themes-manager.composer.author.name') ?? $this->ask('Author name');
+        $this->theme['author-email'] = $this->config->get('themes-manager.composer.author.email') ?? $this->ask('Author email');
     }
 
     /**
@@ -261,7 +264,7 @@ class MakeTheme extends Command
      */
     protected function askVendor()
     {
-        $this->theme['vendor'] = mb_strtolower($this->ask('Vendor name'));
+        $this->theme['vendor'] = mb_strtolower($this->config->get('themes-manager.composer.vendor') ?? $this->ask('Vendor name'));
     }
 
     /**
