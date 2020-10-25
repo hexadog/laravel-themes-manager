@@ -3,14 +3,14 @@
 namespace Hexadog\ThemesManager\Console\Generators;
 
 use Exception;
-use Hexadog\ThemesManager\Console\Commands\Traits\BlockMessage;
-use Hexadog\ThemesManager\Console\Commands\Traits\SectionMessage;
-use Hexadog\ThemesManager\Facades\ThemesManager;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Config\Repository;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
+use Hexadog\ThemesManager\Facades\ThemesManager;
+use Hexadog\ThemesManager\Console\Commands\Traits\BlockMessage;
+use Hexadog\ThemesManager\Console\Commands\Traits\SectionMessage;
 
 class MakeTheme extends Command
 {
@@ -94,6 +94,9 @@ class MakeTheme extends Command
         }
     }
     
+    /**
+     * Validate theme name provided.
+     */
     protected function validateName()
     {
         $this->askName();
@@ -128,6 +131,11 @@ class MakeTheme extends Command
         return true;
     }
 
+    /**
+     * Generate Theme structure in target directory.
+     *
+     * @return void
+     */
     private function generateTheme()
     {
         $this->sectionMessage('Files generation', 'start files generation process...');
@@ -161,12 +169,20 @@ class MakeTheme extends Command
         }
     }
 
+    /**
+     * Replace placeholders in generated file.
+     *
+     * @param \Symfony\Component\Finder\SplFileInfo $file
+     * 
+     * @return string
+     */
     protected function replacePlaceholders($file)
     {
         $this->sectionMessage('File generation', "{$file->getPathName()}");
 
         $find = [
-            'DummyAuthor',
+            'DummyAuthorName',
+            'DummyAuthorEmail',
             'DummyDescription',
             'DummyName',
             'DummyParent',
@@ -175,8 +191,9 @@ class MakeTheme extends Command
         ];
 
         $replace = [
-            Str::title(Arr::get($this->theme, 'author', '')),
-            Str::title(Arr::get($this->theme, 'description', '')),
+            Str::title(Arr::get($this->theme, 'author-name', '')),
+            Arr::get($this->theme, 'author-email', ''),
+            Arr::get($this->theme, 'description', ''),
             Arr::get($this->theme, 'name', ''),
             Arr::get($this->theme, 'parent', ''),
             Arr::get($this->theme, 'vendor', ''),
@@ -186,16 +203,34 @@ class MakeTheme extends Command
         return str_replace($find, $replace, $file->getContents());
     }
 
+    /**
+     * Ask for theme author information.
+     * Notice: if value is set in themes-manager.composer.author.name and themes-manager.composer.author.email config value
+     * then this value will be used.
+     *
+     * @return void
+     */
     protected function askAuthor()
     {
-        $this->config['author'] = $this->ask('Author name');
+        $this->theme['author-name'] = $this->config->get('themes-manager.composer.author.name') ?? $this->ask('Author name');
+        $this->theme['author-email'] = $this->config->get('themes-manager.composer.author.email') ?? $this->ask('Author email');
     }
 
+    /**
+     * Ask for theme description.
+     *
+     * @return void
+     */
     protected function askDescription()
     {
-        $this->config['description'] = $this->ask('Description');
+        $this->theme['description'] = $this->ask('Description');
     }
 
+    /**
+     * Ask for theme name.
+     *
+     * @return void
+     */
     protected function askName()
     {
         while (empty(Arr::get($this->theme, 'name', null))) {
@@ -209,19 +244,32 @@ class MakeTheme extends Command
         }
     }
 
+    /**
+     * Ask for parent theme name.
+     */
     protected function askParent()
     {
         if ($this->confirm('Is it a child theme?')) {
             $this->theme['parent'] = $this->ask('Parent theme name');
-            $this->theme['parent'] = strtolower($this->theme['parent']);
+            $this->theme['parent'] = mb_strtolower($this->theme['parent']);
         }
     }
 
+    /**
+     * Ask for theme vendor.
+     * Notice: if value is set in themes-manager.composer.vendor config value
+     * then this value will be used.
+     *
+     * @return void
+     */
     protected function askVendor()
     {
-        $this->theme['vendor'] = mb_strtolower($this->ask('Vendor name'));
+        $this->theme['vendor'] = mb_strtolower($this->config->get('themes-manager.composer.vendor') ?? $this->ask('Vendor name'));
     }
 
+    /**
+     * Ask for theme version.
+     */
     protected function askVersion()
     {
         $this->theme['version'] = $this->ask('Version number');

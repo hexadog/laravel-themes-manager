@@ -45,4 +45,22 @@ return [
 		'key' => 'themes-manager',
 		'lifetime' => 86400,
 	],
+
+	/*
+    |--------------------------------------------------------------------------
+    | Composer File Template
+    |--------------------------------------------------------------------------
+    |
+	| Config for composer.json file, generated for new theme
+	| If null then information will be asked at generation process
+	| If not null, values will be used at generation process
+    |
+    */
+	'composer' => [
+		'vendor' => null,
+		'author' => [
+			'name' => null,
+			'email' => null,
+		],
+	],
 ];
