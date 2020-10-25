@@ -223,7 +223,7 @@ class MakeTheme extends Command
      */
     protected function askDescription()
     {
-        $this->config['description'] = $this->ask('Description');
+        $this->theme['description'] = $this->ask('Description');
     }
 
     /**
