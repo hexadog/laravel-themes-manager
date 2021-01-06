@@ -46,60 +46,60 @@ if (!function_exists('theme')) {
 }
 
 if (!function_exists('theme_asset')) {
-    /**
-     * Generate an url for the theme asset.
-     *
-     * @param  string  $asset
-     * @param  bool  $absolutePath
-     * @return string
-     */
-    function theme_asset(string $asset, $absolutePath = false)
-    {
-        return \Theme::url($asset, $absolutePath);
-    }
+	/**
+	 * Generate an url for the theme asset.
+	 *
+	 * @param  string  $asset
+	 * @param  bool  $absolutePath
+	 * @return string
+	 */
+	function theme_asset(string $asset, $absolutePath = true)
+	{
+		return \Theme::url($asset, $absolutePath);
+	}
 }
 
 if (!function_exists('theme_style')) {
-    /**
-     * Generate a secure asset path for the theme asset.
-     *
-     * @param  string  $asset
-     * @param  bool  $absolutePath
-     * @return string
-     */
-    function theme_style(string $asset, $absolutePath = false)
-    {
-        return \Theme::style($asset, $absolutePath);
-    }
+	/**
+	 * Generate a secure asset path for the theme asset.
+	 *
+	 * @param  string  $asset
+	 * @param  bool  $absolutePath
+	 * @return string
+	 */
+	function theme_style(string $asset, $absolutePath = true)
+	{
+		return \Theme::style($asset, $absolutePath);
+	}
 }
 
 if (!function_exists('theme_script')) {
-    /**
-     * Generate a secure asset path for the theme asset.
-     *
-     * @param  string  $asset
-     * @param  string  $mode
-     * @param  bool  $absolutePath
-     * @param  string  $type
-     * @param  string  $level
-     * @return string
-     */
-    function theme_script(string $asset, string $mode = '', $absolutePath = false, string $type = 'text/javascript', string $level = 'functionality')
-    {
-        return \Theme::script($asset, $mode, $absolutePath, $type, $level);
-    }
+	/**
+	 * Generate a secure asset path for the theme asset.
+	 *
+	 * @param  string  $asset
+	 * @param  string  $mode
+	 * @param  bool  $absolutePath
+	 * @param  string  $type
+	 * @param  string  $level
+	 * @return string
+	 */
+	function theme_script(string $asset, string $mode = '', $absolutePath = true, string $type = 'text/javascript', string $level = 'functionality')
+	{
+		return \Theme::script($asset, $mode, $absolutePath, $type, $level);
+	}
 }
 
 
 if (!function_exists('theme_image')) {
-    /**
-     * Generate a secure asset path for the theme asset.
-     *
-     * @param  string  $asset
-     * @return string
-     */
-    function theme_image(string $asset, string $alt = '', string $class = '', array $attributes = [], $absolutePath = false)
-    {
-        return \Theme::image($asset, $alt, $class, $attributes, $absolutePath);
-    }
+	/**
+	 * Generate a secure asset path for the theme asset.
+	 *
+	 * @param  string  $asset
+	 * @return string
+	 */
+	function theme_image(string $asset, string $alt = '', string $class = '', array $attributes = [], $absolutePath = true)
+	{
+		return \Theme::image($asset, $alt, $class, $attributes, $absolutePath);
+	}
 }
