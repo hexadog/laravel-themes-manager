@@ -390,7 +390,7 @@ class Theme
             $directories = scandir($vendorViewsPath);
             foreach ($directories as $namespace) {
                 if ($namespace != '.' && $namespace != '..') {
-                    $path = "{$vendorViewsPath}{$namespace}";
+                    $path = "{$vendorViewsPath}/{$namespace}";
 
                     if (!empty(Config::get('view.paths')) && is_array(Config::get('view.paths'))) {
                         foreach (Config::get('view.paths') as $viewPath) {
