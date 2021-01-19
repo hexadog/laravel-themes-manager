@@ -390,8 +390,6 @@ class Theme
             $directories = scandir($vendorViewsPath);
             foreach ($directories as $namespace) {
                 if ($namespace != '.' && $namespace != '..') {
-                    $path = "{$vendorViewsPath}{$namespace}";
-
                     if (!empty(Config::get('view.paths')) && is_array(Config::get('view.paths'))) {
                         foreach (Config::get('view.paths') as $viewPath) {
                             if (is_dir($appPath = $viewPath . '/vendor/' . $namespace)) {
@@ -399,9 +397,19 @@ class Theme
                             }
                         }
                     }
-            
-                    View::prependNamespace($namespace, $path);
                 }
+            }
+        }
+
+        // Update config mail.markdown.paths to work with mail views
+        $mailViewsPath = $this->getPath('resources/views/vendor/mail');
+        if (File::exists($vendorViewsPath) && is_dir($mailViewsPath)) {
+            if (is_array(Config::get('mail.markdown.paths'))) {
+                Config::set('mail.markdown.paths', array_merge([
+                    $mailViewsPath
+                ], Config::get('mail.markdown.paths')));
+            } else {
+                Config::set('mail.markdown.paths', $mailViewsPath);
             }
         }
     }

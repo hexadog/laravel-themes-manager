@@ -122,7 +122,7 @@ class MakeTheme extends Command
             }
         }
 
-        if (ThemesManager::has($this->theme['name'])) {
+        if (ThemesManager::has("{$this->theme['vendor']}/{$this->theme['name']}")) {
             $this->error("Theme with name {$this->theme['vendor']}/{$this->theme['name']} already exists!");
 
             return false;
@@ -173,7 +173,7 @@ class MakeTheme extends Command
      * Replace placeholders in generated file.
      *
      * @param \Symfony\Component\Finder\SplFileInfo $file
-     * 
+     *
      * @return string
      */
     protected function replacePlaceholders($file)
@@ -233,15 +233,9 @@ class MakeTheme extends Command
      */
     protected function askName()
     {
-        while (empty(Arr::get($this->theme, 'name', null))) {
+        do {
             $this->theme['name'] = $this->ask('Theme Name');
-            
-            if (ThemesManager::has($this->theme['name'])) {
-                $this->error("Theme with name {$this->theme['name']} already exists!");
-                
-                unset($this->theme['name']);
-            }
-        }
+        } while (!strlen($this->theme['name']));
     }
 
     /**
@@ -264,7 +258,9 @@ class MakeTheme extends Command
      */
     protected function askVendor()
     {
-        $this->theme['vendor'] = mb_strtolower($this->config->get('themes-manager.composer.vendor') ?? $this->ask('Vendor name'));
+        do {
+            $this->theme['vendor'] = mb_strtolower($this->config->get('themes-manager.composer.vendor') ?? $this->ask('Vendor name'));
+        } while (!strlen($this->theme['vendor']));
     }
 
     /**
@@ -273,5 +269,9 @@ class MakeTheme extends Command
     protected function askVersion()
     {
         $this->theme['version'] = $this->ask('Version number');
+
+        if (!strlen($this->theme['version'])) {
+            $this->theme['version'] = null;
+        }
     }
 }
