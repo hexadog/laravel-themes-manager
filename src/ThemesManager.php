@@ -101,22 +101,13 @@ class ThemesManager
      * Check if theme with given name exists.
      *
      * @param string $name
+     * @param string $vendor
      *
      * @return boolean
      */
     public function has(string $name = null)
     {
-        return !is_null($this->themes->first(function ($theme) use ($name) {
-            // normalize module name
-            $name = str_replace(['-theme', 'theme-'], '', $name);
-            // Check if $name contains vendor
-            if (strpos($name, '/') !== false) {
-                return Str::lower($theme->getName()) === Str::lower(substr($name, $pos + 1, strlen($name)));
-                ;
-            } else {
-                return $theme->getLowerName() === Str::lower($name);
-            }
-        }));
+        return !is_null($this->findByName($name));
     }
 
     /**
@@ -131,17 +122,7 @@ class ThemesManager
         if (is_null($name)) {
             return $this->themes;
         } else {
-            return $this->themes->first(function ($theme) use ($name) {
-                // normalize module name
-                $name = str_replace(['-theme', 'theme-'], '', $name);
-                // Check if $name contains vendor
-                if (strpos($name, '/') !== false) {
-                    return Str::lower($theme->getName()) === Str::lower(substr($name, $pos + 1, strlen($name)));
-                    ;
-                } else {
-                    return $theme->getLowerName() === Str::lower($name);
-                }
-            });
+            return $this->findByName($name);
         }
     }
 
@@ -371,6 +352,40 @@ class ThemesManager
             }
             return $key . '="' . $attributes[$key] . '"';
         }, array_keys($attributes)));
+    }
+
+    /**
+     * Find a theme by given name and vendor (optional)
+     * name can include vendor prefix (ie: hexadog/default)
+     * If no vendor provided and name not prefixed by vendor
+     * the first theme with given name is returned
+     *
+     * @param string $name
+     * @return void
+     */
+    protected function findByName(string $name = null, string $vendor = null)
+    {
+        if (is_null($name)) {
+            return null;
+        }
+
+        return $this->themes->first(function ($theme) use ($name, $vendor) {
+            // normalize module name
+            $name = str_replace(['-theme', 'theme-'], '', $name);
+            // Check if $name contains vendor
+            if (($pos = strpos($name, '/')) !== false) {
+                $vendor = substr($name, 0, $pos);
+                $name = substr($name, $pos + 1, strlen($name));
+
+                return Str::lower($theme->getName()) === Str::lower($name)  && $theme->getLowerVendor() === Str::lower($vendor);
+            } else {
+                if (is_null($vendor)) {
+                    return $theme->getLowerName() === Str::lower($name);
+                } else {
+                    return $theme->getLowerName() === Str::lower($name) && $theme->getLowerVendor() === Str::lower($vendor);
+                }
+            }
+        });
     }
 
     /**
