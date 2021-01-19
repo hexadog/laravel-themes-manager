@@ -173,7 +173,7 @@ class MakeTheme extends Command
      * Replace placeholders in generated file.
      *
      * @param \Symfony\Component\Finder\SplFileInfo $file
-     * 
+     *
      * @return string
      */
     protected function replacePlaceholders($file)
