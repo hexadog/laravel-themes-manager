@@ -4,6 +4,7 @@ namespace Hexadog\ThemesManager;
 
 use Illuminate\Support\Str;
 use Illuminate\Container\Container;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
 use Illuminate\Filesystem\Filesystem;
@@ -13,7 +14,6 @@ use Hexadog\ThemesManager\Events\ThemeDisabled;
 use Hexadog\ThemesManager\Events\ThemeEnabling;
 use Hexadog\ThemesManager\Traits\ComposerTrait;
 use Hexadog\ThemesManager\Events\ThemeDisabling;
-use Illuminate\Support\Facades\Log;
 
 class Theme
 {
@@ -379,7 +379,7 @@ class Theme
 
         // Update config view.paths to work with errors views
         if (is_array(Config::get('view.paths'))) {
-            Config::set('view.paths', array_merge(Config::get('view.paths'), $paths));
+            Config::set('view.paths', array_merge($paths, Config::get('view.paths')));
         } else {
             Config::set('view.paths', $paths);
         }
