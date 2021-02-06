@@ -364,8 +364,17 @@ class Theme
         // Create symlink for public resources if not existing yet
         $assetsPath = $this->getPath('public');
         $publicAssetsPath = public_path($this->getAssetsPath());
+
+        if (!File::exists(public_path(Config::get('themes-manager.symlink_path', 'themes')))) {
+            app(Filesystem::class)->makeDirectory(public_path(Config::get('themes-manager.symlink_path', 'themes')));
+        }
+
         if (!File::exists($publicAssetsPath) && File::exists($assetsPath)) {
-            app(Filesystem::class)->link($assetsPath, rtrim($publicAssetsPath, DIRECTORY_SEPARATOR));
+            if (Config::get('themes-manager.symlink_relative', true)) {
+                app(Filesystem::class)->relativeLink($assetsPath, rtrim($publicAssetsPath, DIRECTORY_SEPARATOR));
+            } else {
+                app(Filesystem::class)->link($assetsPath, rtrim($publicAssetsPath, DIRECTORY_SEPARATOR));
+            }
         }
 
         // Register theme views path
