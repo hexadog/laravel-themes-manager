@@ -370,7 +370,7 @@ class Theme
         }
 
         if (!File::exists($publicAssetsPath) && File::exists($assetsPath)) {
-            if (Config::get('themes-manager.symlink_relative', true)) {
+            if (Config::get('themes-manager.symlink_relative', false)) {
                 app(Filesystem::class)->relativeLink($assetsPath, rtrim($publicAssetsPath, DIRECTORY_SEPARATOR));
             } else {
                 app(Filesystem::class)->link($assetsPath, rtrim($publicAssetsPath, DIRECTORY_SEPARATOR));

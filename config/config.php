@@ -29,7 +29,7 @@ return [
     | Determine if relative symlink should be used instead of absolute one.
     |
     */
-	'symlink_relative' => true,
+	'symlink_relative' => false,
 
 	/*
 	|--------------------------------------------------------------------------
