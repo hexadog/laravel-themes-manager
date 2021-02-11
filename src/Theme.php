@@ -361,11 +361,22 @@ class Theme
      */
     protected function registerViews()
     {
+        // Create target symlink parent directory if required
+        $publicPath = public_path(Config::get('themes-manager.symlink_path', 'themes'));
+        if (!File::exists($publicPath)) {
+            app(Filesystem::class)->makeDirectory($publicPath, 0755);
+        }
+        
         // Create symlink for public resources if not existing yet
         $assetsPath = $this->getPath('public');
         $publicAssetsPath = public_path($this->getAssetsPath());
+
         if (!File::exists($publicAssetsPath) && File::exists($assetsPath)) {
-            app(Filesystem::class)->link($assetsPath, rtrim($publicAssetsPath, DIRECTORY_SEPARATOR));
+            if (Config::get('themes-manager.symlink_relative', false)) {
+                app(Filesystem::class)->relativeLink($assetsPath, rtrim($publicAssetsPath, DIRECTORY_SEPARATOR));
+            } else {
+                app(Filesystem::class)->link($assetsPath, rtrim($publicAssetsPath, DIRECTORY_SEPARATOR));
+            }
         }
 
         // Register theme views path

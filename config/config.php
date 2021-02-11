@@ -13,13 +13,23 @@ return [
 
 	/*
     |--------------------------------------------------------------------------
-    | Symbolic path
+    | Symbolic link path
     |--------------------------------------------------------------------------
     |
     | you can change the public themes path used for assets.
     |
     */
 	'symlink_path' => 'themes',
+
+	/*
+    |--------------------------------------------------------------------------
+    | Symbolic link relative
+    |--------------------------------------------------------------------------
+    |
+    | Determine if relative symlink should be used instead of absolute one.
+    |
+    */
+	'symlink_relative' => false,
 
 	/*
 	|--------------------------------------------------------------------------

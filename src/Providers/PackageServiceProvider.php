@@ -2,11 +2,9 @@
 
 namespace Hexadog\ThemesManager\Providers;
 
-use File;
 use ReflectionClass;
 use Illuminate\Support\Str;
 use Illuminate\Routing\Router;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
@@ -69,12 +67,6 @@ class PackageServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        $publicPath = public_path(config('themes-manager.symlink_path', 'themes'));
-
-        if (!File::exists($publicPath)) {
-            app(Filesystem::class)->makeDirectory($publicPath, 0755);
-        }
-
         $this->loadViewsFrom($this->getPath('resources/views'), 'themes-manager');
         $this->loadViewComponentsAs('theme', [
             Image::class,
