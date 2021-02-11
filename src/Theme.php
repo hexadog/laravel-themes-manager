@@ -361,13 +361,15 @@ class Theme
      */
     protected function registerViews()
     {
+        // Create target symlink parent directory if required
+        $publicPath = public_path(Config::get('themes-manager.symlink_path', 'themes'));
+        if (!File::exists($publicPath)) {
+            app(Filesystem::class)->makeDirectory($publicPath, 0755);
+        }
+        
         // Create symlink for public resources if not existing yet
         $assetsPath = $this->getPath('public');
         $publicAssetsPath = public_path($this->getAssetsPath());
-
-        if (!File::exists(public_path(Config::get('themes-manager.symlink_path', 'themes')))) {
-            app(Filesystem::class)->makeDirectory(public_path(Config::get('themes-manager.symlink_path', 'themes')));
-        }
 
         if (!File::exists($publicAssetsPath) && File::exists($assetsPath)) {
             if (Config::get('themes-manager.symlink_relative', false)) {
