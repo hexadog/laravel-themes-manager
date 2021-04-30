@@ -16,6 +16,7 @@
         "illuminate/view": "^7.0|^8.0"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.18",
         "squizlabs/php_codesniffer": "3.*",
         "phpunit/phpunit": "^7.0|^8.0|^9.0",
         "orchestra/testbench": "~5.2"
@@ -48,6 +49,6 @@
         "test": "vendor/bin/phpunit",
         "test:windows": "vendor\\bin\\phpunit",
         "check-style": "vendor/bin/phpcs --extensions=php ./src",
-        "fix-style": "vendor/bin/phpcbf --extensions=php ./src"
+        "fix-style": "vendor/bin/php-cs-fixer fix"
     }
 }
