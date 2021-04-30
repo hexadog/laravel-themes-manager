@@ -2,8 +2,6 @@
 
 namespace Hexadog\ThemesManager\Console\Commands;
 
-use Hexadog\ThemesManager\Console\Commands\AbstractCommand;
-
 class DeactivateTheme extends AbstractCommand
 {
     /**
@@ -38,7 +36,7 @@ class DeactivateTheme extends AbstractCommand
     {
         $this->validateName();
 
-        if (!$this->theme->isActive()) {
+        if (! $this->theme->isActive()) {
             $this->error("Theme with name {$this->argument('name')} is already deactivated!");
 
             return false;

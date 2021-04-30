@@ -2,16 +2,16 @@
 
 namespace Hexadog\ThemesManager;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Collection;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Support\Facades\Config;
-use Hexadog\ThemesManager\Traits\ComposerTrait;
-use Illuminate\Contracts\Translation\Translator;
-use Hexadog\ThemesManager\Exceptions\ThemeNotFoundException;
 use Hexadog\ThemesManager\Exceptions\ComposerLoaderException;
 use Hexadog\ThemesManager\Exceptions\ThemeNotActiveException;
+use Hexadog\ThemesManager\Exceptions\ThemeNotFoundException;
+use Hexadog\ThemesManager\Traits\ComposerTrait;
+use Illuminate\Contracts\Translation\Translator;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 
 class ThemesManager
 {
@@ -103,11 +103,11 @@ class ThemesManager
      * @param string $name
      * @param string $vendor
      *
-     * @return boolean
+     * @return bool
      */
     public function has(string $name = null)
     {
-        return !is_null($this->findByName($name));
+        return ! is_null($this->findByName($name));
     }
 
     /**
@@ -137,11 +137,11 @@ class ThemesManager
      */
     public function set(string $name): ThemesManager
     {
-        if (!$this->has($name)) {
+        if (! $this->has($name)) {
             throw new ThemeNotFoundException($name);
         }
 
-        if (!$this->get($name)->isActive()) {
+        if (! $this->get($name)->isActive()) {
             throw new ThemeNotActiveException($this->getName());
         }
 
@@ -176,7 +176,7 @@ class ThemesManager
     public function enable(string $name, bool $withEvent = true): ThemesManager
     {
         if ($theme = $this->get($name)) {
-            if (!$theme->isActive()) {
+            if (! $theme->isActive()) {
                 throw new ThemeNotActiveException($name);
             }
 
@@ -200,7 +200,7 @@ class ThemesManager
     public function disable(string $name, bool $withEvent = true): ThemesManager
     {
         if ($theme = $this->get($name)) {
-            if (!$theme->isActive()) {
+            if (! $theme->isActive()) {
                 throw new ThemeNotActiveException($name);
             }
 
@@ -214,7 +214,7 @@ class ThemesManager
      * Get current theme's asset url.
      *
      * @param string $asset
-     * @param boolean $absolutePath
+     * @param bool $absolutePath
      *
      * @return string
      */
@@ -227,7 +227,7 @@ class ThemesManager
      * Get current theme's style HTML tag for given asset.
      *
      * @param string $asset
-     * @param boolean $absolutePath
+     * @param bool $absolutePath
      *
      * @return string
      */
@@ -244,7 +244,7 @@ class ThemesManager
      *
      * @param  string $asset
      * @param  string $mode ''|defer|async
-     * @param boolean $absolutePath
+     * @param bool $absolutePath
      * @param  string $type
      * @param  string $level
      *
@@ -268,7 +268,7 @@ class ThemesManager
      * @param  string $alt
      * @param  string $class
      * @param  array  $attributes
-     * @param boolean $absolutePath
+     * @param bool $absolutePath
      *
      * @return string
      */
@@ -300,7 +300,7 @@ class ThemesManager
      * Get theme's asset url.
      *
      * @param string $asset
-     * @param boolean $absolutePath
+     * @param bool $absolutePath
      *
      * @return string|null
      */
@@ -314,11 +314,11 @@ class ThemesManager
         }
 
         // If no Theme set, return /$asset
-        if (empty($name) && !$this->current()) {
+        if (empty($name) && ! $this->current()) {
             return '/' . ltrim($asset, '/');
         }
 
-        if (!empty($name)) {
+        if (! empty($name)) {
             return optional($this->get($name))->url($asset, $absolutePath);
         } else {
             return optional($this->current())->url($asset, $absolutePath);
@@ -350,6 +350,7 @@ class ThemesManager
             if (is_bool($attributes[$key])) {
                 return $attributes[$key] ? $key : '';
             }
+
             return $key . '="' . $attributes[$key] . '"';
         }, array_keys($attributes)));
     }
@@ -377,7 +378,7 @@ class ThemesManager
                 $vendor = substr($name, 0, $pos);
                 $name = substr($name, $pos + 1, strlen($name));
 
-                return Str::lower($theme->getName()) === Str::lower($name)  && $theme->getLowerVendor() === Str::lower($vendor);
+                return Str::lower($theme->getName()) === Str::lower($name) && $theme->getLowerVendor() === Str::lower($vendor);
             } else {
                 if (is_null($vendor)) {
                     return $theme->getLowerName() === Str::lower($name);

@@ -2,8 +2,8 @@
 
 namespace Hexadog\ThemesManager\Components;
 
-use Illuminate\View\Component;
 use Illuminate\Support\Facades\View;
+use Illuminate\View\Component;
 
 class PageTitle extends Component
 {
@@ -27,7 +27,7 @@ class PageTitle extends Component
             $title = View::getSection('title');
         }
 
-        if (!empty($title) && $withAppName) {
+        if (! empty($title) && $withAppName) {
             if ($invert) {
                 $this->title = $title . " " . trim(e($separator)) . " " . config('app.name');
             } else {

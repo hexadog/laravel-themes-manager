@@ -2,22 +2,22 @@
 
 namespace Hexadog\ThemesManager\Providers;
 
-use ReflectionClass;
-use Illuminate\Support\Str;
-use Illuminate\Routing\Router;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Foundation\AliasLoader;
-use Illuminate\Support\ServiceProvider;
-use Hexadog\ThemesManager\ThemesManager;
-use Hexadog\ThemesManager\Http\Middleware;
 use Hexadog\ThemesManager\Components\Image;
+use Hexadog\ThemesManager\Components\PageTitle;
+use Hexadog\ThemesManager\Components\Script;
 use Hexadog\ThemesManager\Components\Style;
 use Hexadog\ThemesManager\Console\Commands;
-use Hexadog\ThemesManager\Components\Script;
 use Hexadog\ThemesManager\Console\Generators;
-use Hexadog\ThemesManager\Components\PageTitle;
-use Illuminate\Contracts\Translation\Translator;
 use Hexadog\ThemesManager\Facades\ThemesManager as ThemesManagerFacade;
+use Hexadog\ThemesManager\Http\Middleware;
+use Hexadog\ThemesManager\ThemesManager;
+use Illuminate\Contracts\Translation\Translator;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Foundation\AliasLoader;
+use Illuminate\Routing\Router;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
+use ReflectionClass;
 
 class PackageServiceProvider extends ServiceProvider
 {

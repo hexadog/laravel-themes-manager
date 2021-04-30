@@ -2,8 +2,8 @@
 
 namespace Hexadog\ThemesManager\Components;
 
-use ThemesManager;
 use Illuminate\View\Component;
+use ThemesManager;
 
 class Style extends Component
 {
@@ -23,7 +23,7 @@ class Style extends Component
      */
     public function __construct($src, $absolutePath = true)
     {
-        if (!is_null($src)) {
+        if (! is_null($src)) {
             $this->source = ThemesManager::asset($src, $absolutePath);
         } else {
             $this->source = null;

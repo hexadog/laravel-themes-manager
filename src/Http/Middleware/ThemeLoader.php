@@ -23,7 +23,7 @@ class ThemeLoader
             return $next($request);
         }
 
-        if (!empty($theme)) {
+        if (! empty($theme)) {
             ThemesManager::set($theme);
         } else {
             if ($theme = config('themes-manager.fallback_theme')) {

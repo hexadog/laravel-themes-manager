@@ -2,8 +2,6 @@
 
 namespace Hexadog\ThemesManager\Console\Commands;
 
-use Hexadog\ThemesManager\Console\Commands\AbstractCommand;
-
 class ActivateTheme extends AbstractCommand
 {
     /**

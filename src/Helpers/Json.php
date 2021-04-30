@@ -2,9 +2,9 @@
 
 namespace Hexadog\ThemesManager\Helpers;
 
-use Illuminate\Support\Arr;
-use Illuminate\Filesystem\Filesystem;
 use Hexadog\ThemesManager\Exceptions\InvalidJsonException;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 
 class Json
 {

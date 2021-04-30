@@ -2,8 +2,8 @@
 
 namespace Hexadog\ThemesManager\Components;
 
-use ThemesManager;
 use Illuminate\View\Component;
+use ThemesManager;
 
 class Image extends Component
 {
