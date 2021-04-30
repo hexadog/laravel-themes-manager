@@ -50,6 +50,11 @@ class Theme
     public function __construct($path)
     {
         $this->setPath($path);
+
+        if ($this->isActive()) {
+            // Add theme.THEME_NAME namespace to be able to force views from specific theme
+            View::prependNamespace('theme.' . $this->getSnakeName(), $this->getPath('resources/views'));
+        }
     }
 
     /**
