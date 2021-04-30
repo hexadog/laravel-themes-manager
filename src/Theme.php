@@ -2,18 +2,18 @@
 
 namespace Hexadog\ThemesManager;
 
-use Illuminate\Support\Str;
-use Illuminate\Container\Container;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\View;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Config;
-use Hexadog\ThemesManager\Events\ThemeEnabled;
 use Hexadog\ThemesManager\Events\ThemeDisabled;
+use Hexadog\ThemesManager\Events\ThemeDisabling;
+use Hexadog\ThemesManager\Events\ThemeEnabled;
 use Hexadog\ThemesManager\Events\ThemeEnabling;
 use Hexadog\ThemesManager\Traits\ComposerTrait;
-use Hexadog\ThemesManager\Events\ThemeDisabling;
+use Illuminate\Container\Container;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 
 class Theme
 {
@@ -50,12 +50,17 @@ class Theme
     public function __construct($path)
     {
         $this->setPath($path);
+
+        if ($this->isActive()) {
+            // Add theme.THEME_NAME namespace to be able to force views from specific theme
+            View::prependNamespace('theme.' . $this->getSnakeName(), $this->getPath('resources/views'));
+        }
     }
 
     /**
      * Check if theme is active
      *
-     * @return boolean
+     * @return bool
      */
     public function isActive()
     {
@@ -65,7 +70,7 @@ class Theme
     /**
      * Activate theme
      *
-     * @return boolean
+     * @return bool
      */
     public function activate()
     {
@@ -75,7 +80,7 @@ class Theme
     /**
      * Deactivate theme
      *
-     * @return boolean
+     * @return bool
      */
     public function deactivate()
     {
@@ -119,7 +124,7 @@ class Theme
         do {
             $viewsPath = $theme->getPath('resources/views' . ($path ? "/{$path}" : ''));
 
-            if (!in_array($viewsPath, $paths)) {
+            if (! in_array($viewsPath, $paths)) {
                 $paths[] = $viewsPath;
             }
         } while ($theme = $theme->getParent());
@@ -144,11 +149,11 @@ class Theme
     /**
      * Check if has parent Theme
      *
-     * @return boolean
+     * @return bool
      */
     public function hasParent(): bool
     {
-        return !is_null($this->parent);
+        return ! is_null($this->parent);
     }
 
     /**
@@ -215,7 +220,7 @@ class Theme
      */
     public function disabled(): bool
     {
-        return !$this->enabled();
+        return ! $this->enabled();
     }
 
     /**
@@ -269,7 +274,7 @@ class Theme
      * Get theme asset url
      *
      * @param string $url
-     * @param boolean $absolutePath
+     * @param bool $absolutePath
      *
      * @return string|null
      */
@@ -299,6 +304,7 @@ class Theme
         $fullUrl = rtrim((empty($this->getAssetsPath()) ? '' : DIRECTORY_SEPARATOR) . $this->getAssetsPath($url), DIRECTORY_SEPARATOR);
         if (File::exists(public_path($fullUrl))) {
             $fullUrl = ltrim(str_replace('\\', '/', $fullUrl), '/');
+
             return $absolutePath ? asset('') . $fullUrl : $fullUrl;
         }
 
@@ -308,6 +314,7 @@ class Theme
         } else { // No parent theme? Lookup in the public folder.
             if (File::exists(public_path($url))) {
                 $url = ltrim(str_replace('\\', '/', $url), '/');
+
                 return $absolutePath ? asset('') . $url : $url;
             }
         }
@@ -347,7 +354,7 @@ class Theme
     {
         $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
 
-        if ($path && !is_file($path)) {
+        if ($path && ! is_file($path)) {
             Str::finish($path, DIRECTORY_SEPARATOR);
         }
 
@@ -363,7 +370,7 @@ class Theme
     {
         // Create target symlink parent directory if required
         $publicPath = public_path(Config::get('themes-manager.symlink_path', 'themes'));
-        if (!File::exists($publicPath)) {
+        if (! File::exists($publicPath)) {
             app(Filesystem::class)->makeDirectory($publicPath, 0755);
         }
         
@@ -371,7 +378,7 @@ class Theme
         $assetsPath = $this->getPath('public');
         $publicAssetsPath = public_path($this->getAssetsPath());
 
-        if (!File::exists($publicAssetsPath) && File::exists($assetsPath)) {
+        if (! File::exists($publicAssetsPath) && File::exists($assetsPath)) {
             if (Config::get('themes-manager.symlink_relative', false)) {
                 app(Filesystem::class)->relativeLink($assetsPath, rtrim($publicAssetsPath, DIRECTORY_SEPARATOR));
             } else {
@@ -401,7 +408,7 @@ class Theme
             $directories = scandir($vendorViewsPath);
             foreach ($directories as $namespace) {
                 if ($namespace != '.' && $namespace != '..') {
-                    if (!empty(Config::get('view.paths')) && is_array(Config::get('view.paths'))) {
+                    if (! empty(Config::get('view.paths')) && is_array(Config::get('view.paths'))) {
                         foreach (Config::get('view.paths') as $viewPath) {
                             if (is_dir($appPath = $viewPath . '/vendor/' . $namespace)) {
                                 View::prependNamespace($namespace, $appPath);
@@ -417,7 +424,7 @@ class Theme
         if (File::exists($vendorViewsPath) && is_dir($mailViewsPath)) {
             if (is_array(Config::get('mail.markdown.paths'))) {
                 Config::set('mail.markdown.paths', array_merge([
-                    $mailViewsPath
+                    $mailViewsPath,
                 ], Config::get('mail.markdown.paths')));
             } else {
                 Config::set('mail.markdown.paths', $mailViewsPath);

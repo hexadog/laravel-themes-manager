@@ -3,7 +3,6 @@
 namespace Hexadog\ThemesManager\Console\Commands;
 
 use Hexadog\ThemesManager\Facades\ThemesManager;
-use Hexadog\ThemesManager\Console\Commands\AbstractCommand;
 
 class ClearCache extends AbstractCommand
 {

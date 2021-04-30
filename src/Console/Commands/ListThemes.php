@@ -49,13 +49,13 @@ class ListThemes extends Command
 
         foreach ($themes as $theme) {
             $this->themes[] = [
-                'name'          => $theme->getName(),
-                'vendor'        => $theme->getVendor(),
-                'version'       => $theme->get('version'),
-                'description'   => $theme->get('description'),
-                'extends'       => $theme->getParent() ? $theme->getParent() : '',
-                'default'       => $theme->getName() === config('themes-manager.fallback_theme') ? 'X' : '',
-                'active'        => $theme->isActive() ? 'Yes' : 'No',
+                'name' => $theme->getName(),
+                'vendor' => $theme->getVendor(),
+                'version' => $theme->get('version'),
+                'description' => $theme->get('description'),
+                'extends' => $theme->getParent() ? $theme->getParent() : '',
+                'default' => $theme->getName() === config('themes-manager.fallback_theme') ? 'X' : '',
+                'active' => $theme->isActive() ? 'Yes' : 'No',
             ];
         }
         

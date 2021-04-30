@@ -3,14 +3,14 @@
 namespace Hexadog\ThemesManager\Console\Generators;
 
 use Exception;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Illuminate\Console\Command;
-use Illuminate\Config\Repository;
-use Illuminate\Filesystem\Filesystem;
-use Hexadog\ThemesManager\Facades\ThemesManager;
 use Hexadog\ThemesManager\Console\Commands\Traits\BlockMessage;
 use Hexadog\ThemesManager\Console\Commands\Traits\SectionMessage;
+use Hexadog\ThemesManager\Facades\ThemesManager;
+use Illuminate\Config\Repository;
+use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class MakeTheme extends Command
 {
@@ -187,7 +187,7 @@ class MakeTheme extends Command
             'DummyName',
             'DummyParent',
             'DummyVendor',
-            'DummyVersion'
+            'DummyVersion',
         ];
 
         $replace = [
@@ -235,7 +235,7 @@ class MakeTheme extends Command
     {
         do {
             $this->theme['name'] = $this->ask('Theme Name');
-        } while (!strlen($this->theme['name']));
+        } while (! strlen($this->theme['name']));
     }
 
     /**
@@ -260,7 +260,7 @@ class MakeTheme extends Command
     {
         do {
             $this->theme['vendor'] = mb_strtolower($this->config->get('themes-manager.composer.vendor') ?? $this->ask('Vendor name'));
-        } while (!strlen($this->theme['vendor']));
+        } while (! strlen($this->theme['vendor']));
     }
 
     /**
@@ -270,7 +270,7 @@ class MakeTheme extends Command
     {
         $this->theme['version'] = $this->ask('Version number');
 
-        if (!strlen($this->theme['version'])) {
+        if (! strlen($this->theme['version'])) {
             $this->theme['version'] = null;
         }
     }

@@ -2,9 +2,9 @@
 
 namespace Hexadog\ThemesManager\Traits;
 
+use Hexadog\ThemesManager\Helpers\Json;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Hexadog\ThemesManager\Helpers\Json;
 use Symfony\Component\Finder\Finder;
 
 trait ComposerTrait
@@ -31,7 +31,7 @@ trait ComposerTrait
     /**
      * Get package class namespace
      *
-     * @var string $prefix
+     * @var string
      *
      * @return string
      */
@@ -39,7 +39,7 @@ trait ComposerTrait
     {
         $psr4_autoload = $this->get('autoload.psr-4');
 
-        if (!is_null($psr4_autoload)) {
+        if (! is_null($psr4_autoload)) {
             return array_search('src', $psr4_autoload);
         } else {
             if (is_null($prefix)) {
