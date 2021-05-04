@@ -218,9 +218,9 @@ class ThemesManager
      *
      * @return string
      */
-    public function asset(string $asset, $absolutePath = true): string
+    public function asset(string $asset, $absolutePath = true, bool $version = true): string
     {
-        return $this->url($asset, $absolutePath);
+        return $this->url($asset, $absolutePath, $version);
     }
 
     /**
@@ -231,11 +231,11 @@ class ThemesManager
      *
      * @return string
      */
-    public function style(string $asset, $absolutePath = true): string
+    public function style(string $asset, $absolutePath = true, bool $version = true): string
     {
         return sprintf(
             '<link media="all" type="text/css" rel="stylesheet" href="%s">',
-            $this->url($asset, $absolutePath)
+            $this->url($asset, $absolutePath, $version)
         );
     }
 
@@ -250,12 +250,12 @@ class ThemesManager
      *
      * @return string
      */
-    public function script(string $asset, string $mode = '', $absolutePath = true, string $type = 'text/javascript', string $level = 'functionality'): string
+    public function script(string $asset, string $mode = '', $absolutePath = true, string $type = 'text/javascript', string $level = 'functionality', bool $version = true): string
     {
         return sprintf(
             '<script %s src="%s" data-type="%s" data-level="%s"></script>',
             $mode,
-            $this->url($asset, $absolutePath),
+            $this->url($asset, $absolutePath, $version),
             $type,
             $level
         );
@@ -272,11 +272,11 @@ class ThemesManager
      *
      * @return string
      */
-    public function image(string $asset, string $alt = '', string $class = '', array $attributes = [], $absolutePath = true): string
+    public function image(string $asset, string $alt = '', string $class = '', array $attributes = [], $absolutePath = true, bool $version = true): string
     {
         return sprintf(
             '<img src="%s" alt="%s" class="%s" %s>',
-            $this->url($asset, $absolutePath),
+            $this->url($asset, $absolutePath, $version),
             $alt,
             $class,
             $this->htmlAttributes($attributes)
@@ -304,7 +304,7 @@ class ThemesManager
      *
      * @return string|null
      */
-    public function url(string $asset, $absolutePath = true): ?string
+    public function url(string $asset, $absolutePath = true, bool $version = true): ?string
     {
         // Split asset name to find concerned theme name
         $assetParts = explode('::', $asset);
@@ -319,9 +319,9 @@ class ThemesManager
         }
 
         if (! empty($name)) {
-            return optional($this->get($name))->url($asset, $absolutePath);
+            return optional($this->get($name))->url($asset, $absolutePath, $version);
         } else {
-            return optional($this->current())->url($asset, $absolutePath);
+            return optional($this->current())->url($asset, $absolutePath, $version);
         }
     }
 

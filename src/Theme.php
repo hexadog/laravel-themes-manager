@@ -278,7 +278,7 @@ class Theme
      *
      * @return string|null
      */
-    public function url($url, $absolutePath = false): ?string
+    public function url($url, $absolutePath = true, bool $version = true): ?string
     {
         $url = ltrim($url, DIRECTORY_SEPARATOR);
 
@@ -304,18 +304,20 @@ class Theme
         $fullUrl = rtrim((empty($this->getAssetsPath()) ? '' : DIRECTORY_SEPARATOR) . $this->getAssetsPath($url), DIRECTORY_SEPARATOR);
         if (File::exists(public_path($fullUrl))) {
             $fullUrl = ltrim(str_replace('\\', '/', $fullUrl), '/');
+            $versionTag = hash_file('md5', public_path($fullUrl));
 
-            return $absolutePath ? asset('') . $fullUrl : $fullUrl;
+            return ($absolutePath ? asset('') . $fullUrl : $fullUrl) . ($version ? '?v=' . $versionTag : '');
         }
 
         // If not found then lookup in parent's theme assets path
         if ($parentTheme = $this->getParent()) {
-            return $parentTheme->url($url, $absolutePath);
+            return $parentTheme->url($url, $absolutePath, $version);
         } else { // No parent theme? Lookup in the public folder.
             if (File::exists(public_path($url))) {
                 $url = ltrim(str_replace('\\', '/', $url), '/');
+                $versionTag = hash_file('md5', public_path($url));
 
-                return $absolutePath ? asset('') . $url : $url;
+                return ($absolutePath ? asset('') . $url : $url) . ($version ? '?v=' . $versionTag : '');
             }
         }
 
@@ -373,7 +375,7 @@ class Theme
         if (! File::exists($publicPath)) {
             app(Filesystem::class)->makeDirectory($publicPath, 0755);
         }
-        
+
         // Create symlink for public resources if not existing yet
         $assetsPath = $this->getPath('public');
         $publicAssetsPath = public_path($this->getAssetsPath());
