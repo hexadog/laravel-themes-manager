@@ -20,8 +20,6 @@ class ActivateTheme extends AbstractCommand
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -29,8 +27,7 @@ class ActivateTheme extends AbstractCommand
     }
 
     /**
-     * Prompt for module's alias name
-     *
+     * Prompt for module's alias name.
      */
     public function handle()
     {

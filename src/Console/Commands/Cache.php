@@ -22,8 +22,6 @@ class Cache extends AbstractCommand
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -31,15 +29,14 @@ class Cache extends AbstractCommand
     }
 
     /**
-     * Prompt for module's alias name
-     *
+     * Prompt for module's alias name.
      */
     public function handle()
     {
         if (ThemesManager::buildCache()) {
             $this->sectionMessage('Themes Manager', 'Themes cache created succefully');
         } else {
-            $this->error("An error occured while creating themes cache");
+            $this->error('An error occured while creating themes cache');
         }
     }
 }

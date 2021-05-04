@@ -51,7 +51,7 @@ class BladeServiceProvider extends ServiceProvider
         Blade::directive('themeStyle', function ($expression) {
             $expression = self::parseMultipleArgs($expression);
             list($asset, $absolutePath) = $expression;
-            
+
             return "<?php theme_style({$asset}, {$absolutePath}); ?>";
         });
     }
@@ -59,7 +59,8 @@ class BladeServiceProvider extends ServiceProvider
     /**
      * Parse expression.
      *
-     * @param  string $expression
+     * @param string $expression
+     *
      * @return \Illuminate\Support\Collection
      */
     public static function parseMultipleArgs($expression)

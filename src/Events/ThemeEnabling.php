@@ -4,7 +4,6 @@ namespace Hexadog\ThemesManager\Events;
 
 class ThemeEnabling
 {
-
     /**
      * @var array|string
      */

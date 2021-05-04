@@ -9,30 +9,29 @@ use Illuminate\Support\Arr;
 class Json
 {
     /**
-     * The file path
+     * The file path.
      *
      * @var string
      */
     protected $path;
 
     /**
-     * The laravel filesystem instance
+     * The laravel filesystem instance.
      *
      * @var \Illuminate\Filesystem\Filesystem
      */
     protected $filesystem;
 
     /**
-     * The attributes collection
+     * The attributes collection.
      *
      * @var \Illuminate\Support\Collection
      */
     protected $attributes;
 
     /**
-     * The constructor
+     * The constructor.
      *
-     * @param string $path
      * @param \Illuminate\Filesystem\Filesystem $filesystem
      */
     public function __construct(string $path, Filesystem $filesystem = null)
@@ -43,151 +42,7 @@ class Json
     }
 
     /**
-     * Get filesystem.
-     *
-     * @return Filesystem
-     */
-    public function getFilesystem(): Filesystem
-    {
-        return $this->filesystem;
-    }
-
-    /**
-     * Set filesystem
-     *
-     * @param Filesystem $filesystem
-     *
-     * @return Json
-     */
-    public function setFilesystem(Filesystem $filesystem): Json
-    {
-        $this->filesystem = $filesystem;
-
-        return $this;
-    }
-
-    /**
-     * Get path
-     *
-     * @return string
-     */
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-
-    /**
-     * Set path
-     *
-     * @param string $path
-     *
-     * @return Json
-     */
-    public function setPath(string $path): Json
-    {
-        $this->path = $path;
-
-        return $this;
-    }
-
-    /**
-     * Make new instance
-     *
-     * @param string  $path
-     * @param \Illuminate\Filesystem\Filesystem $filesystem
-     *
-     * @return Json
-     */
-    public static function make(string $path, Filesystem $filesystem = null): Json
-    {
-        return new static($path, $filesystem);
-    }
-
-    /**
-     * Get file content
-     *
-     * @return string
-     */
-    public function getContents(): string
-    {
-        return $this->filesystem->get($this->getPath());
-    }
-
-    /**
-     * Get file contents as array
-     *
-     * @return array
-     * @throws InvalidJsonException
-     */
-    public function getAttributes(): array
-    {
-        $attributes = json_decode($this->getContents(), 1);
-
-        // any JSON parsing errors should throw an exception
-        if (json_last_error() > 0) {
-            throw new InvalidJsonException('Error processing file: ' . $this->getPath() . '. Error: ' . json_last_error_msg());
-        }
-
-        return $attributes;
-    }
-
-    /**
-     * Convert the given array data to pretty json
-     *
-     * @param array $data
-     *
-     * @return string|false
-     */
-    public function toJsonPretty(array $data = null)
-    {
-        return json_encode($data ?: $this->attributes, JSON_PRETTY_PRINT);
-    }
-
-    /**
-     * Update json contents from array data
-     *
-     * @param array $data
-     *
-     * @return bool
-     */
-    public function update(array $data): bool
-    {
-        $this->attributes = collect(array_merge($this->attributes->toArray(), $data));
-
-        return $this->save();
-    }
-
-    /**
-     * Set a specific key & value
-     *
-     * @param string $key
-     * @param mixed  $value
-     *
-     * @return Json
-     */
-    public function set($key, $value): Json
-    {
-        $attributes = $this->attributes->toArray();
-
-        Arr::set($attributes, $key, $value);
-
-        $this->attributes = collect($attributes);
-        
-        return $this;
-    }
-
-    /**
-     * Save the current attributes array to the file storage
-     *
-     * @return bool
-     */
-    public function save(): bool
-    {
-        return (bool) $this->filesystem->put($this->getPath(), $this->toJsonPretty());
-    }
-
-    /**
-     * Handle magic method __get
+     * Handle magic method __get.
      *
      * @param string $key
      *
@@ -199,20 +54,7 @@ class Json
     }
 
     /**
-     * Get the specified attribute from json file
-     *
-     * @param $key
-     * @param null $default
-     *
-     * @return mixed
-     */
-    public function get($key, $default = null)
-    {
-        return Arr::get($this->attributes, $key, $default);
-    }
-
-    /**
-     * Handle call to __call method
+     * Handle call to __call method.
      *
      * @param string $method
      * @param array  $arguments
@@ -229,12 +71,143 @@ class Json
     }
 
     /**
-     * Handle call to __toString method
+     * Handle call to __toString method.
      *
      * @return string
      */
     public function __toString()
     {
         return $this->getContents();
+    }
+
+    /**
+     * Get filesystem.
+     */
+    public function getFilesystem(): Filesystem
+    {
+        return $this->filesystem;
+    }
+
+    /**
+     * Set filesystem.
+     */
+    public function setFilesystem(Filesystem $filesystem): Json
+    {
+        $this->filesystem = $filesystem;
+
+        return $this;
+    }
+
+    /**
+     * Get path.
+     */
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    /**
+     * Set path.
+     */
+    public function setPath(string $path): Json
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * Make new instance.
+     *
+     * @param \Illuminate\Filesystem\Filesystem $filesystem
+     */
+    public static function make(string $path, Filesystem $filesystem = null): Json
+    {
+        return new static($path, $filesystem);
+    }
+
+    /**
+     * Get file content.
+     */
+    public function getContents(): string
+    {
+        return $this->filesystem->get($this->getPath());
+    }
+
+    /**
+     * Get file contents as array.
+     *
+     * @throws InvalidJsonException
+     */
+    public function getAttributes(): array
+    {
+        $attributes = json_decode($this->getContents(), 1);
+
+        // any JSON parsing errors should throw an exception
+        if (json_last_error() > 0) {
+            throw new InvalidJsonException('Error processing file: '.$this->getPath().'. Error: '.json_last_error_msg());
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Convert the given array data to pretty json.
+     *
+     * @param array $data
+     *
+     * @return false|string
+     */
+    public function toJsonPretty(array $data = null)
+    {
+        return json_encode($data ?: $this->attributes, JSON_PRETTY_PRINT);
+    }
+
+    /**
+     * Update json contents from array data.
+     */
+    public function update(array $data): bool
+    {
+        $this->attributes = collect(array_merge($this->attributes->toArray(), $data));
+
+        return $this->save();
+    }
+
+    /**
+     * Set a specific key & value.
+     *
+     * @param string $key
+     * @param mixed  $value
+     */
+    public function set($key, $value): Json
+    {
+        $attributes = $this->attributes->toArray();
+
+        Arr::set($attributes, $key, $value);
+
+        $this->attributes = collect($attributes);
+
+        return $this;
+    }
+
+    /**
+     * Save the current attributes array to the file storage.
+     */
+    public function save(): bool
+    {
+        return (bool) $this->filesystem->put($this->getPath(), $this->toJsonPretty());
+    }
+
+    /**
+     * Get the specified attribute from json file.
+     *
+     * @param $key
+     * @param null $default
+     *
+     * @return mixed
+     */
+    public function get($key, $default = null)
+    {
+        return Arr::get($this->attributes, $key, $default);
     }
 }

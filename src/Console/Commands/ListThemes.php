@@ -29,8 +29,6 @@ class ListThemes extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -38,13 +36,12 @@ class ListThemes extends Command
     }
 
     /**
-     * Prompt for module's alias name
-     *
+     * Prompt for module's alias name.
      */
     public function handle()
     {
         $this->themes = [];
-        
+
         $themes = \Theme::all();
 
         foreach ($themes as $theme) {
@@ -58,8 +55,8 @@ class ListThemes extends Command
                 'active' => $theme->isActive() ? 'Yes' : 'No',
             ];
         }
-        
-        if (count($this->themes) == 0) {
+
+        if (0 == count($this->themes)) {
             return $this->error("Your application doesn't have any theme.");
         }
 
