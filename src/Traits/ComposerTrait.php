@@ -29,9 +29,46 @@ trait ComposerTrait
     protected $json = [];
 
     /**
-     * Get package class namespace
+     * Handle call __toString.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
+    /**
+     * Handle call to __get method.
+     *
+     * @param $key
+     *
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        return $this->get($key);
+    }
+
+    /**
+     * Handle call to __set method.
+     *
+     * @param $key
+     * @param $value
+     *
+     * @return mixed
+     */
+    public function __set($key, $value)
+    {
+        return $this->set($key, $value);
+    }
+
+    /**
+     * Get package class namespace.
      *
      * @var string
+     *
+     * @param null|mixed $prefix
      *
      * @return string
      */
@@ -39,12 +76,11 @@ trait ComposerTrait
     {
         $psr4_autoload = $this->get('autoload.psr-4');
 
-        if (! is_null($psr4_autoload)) {
+        if (!is_null($psr4_autoload)) {
             return array_search('src', $psr4_autoload);
-        } else {
-            if (is_null($prefix)) {
-                $prefix = $this->getStudlyVendor();
-            }
+        }
+        if (is_null($prefix)) {
+            $prefix = $this->getStudlyVendor();
         }
 
         return "{$prefix}\\{$this->getStudlyName()}";
@@ -149,7 +185,6 @@ trait ComposerTrait
     /**
      * Get a specific data from json file by given the key.
      *
-     * @param string $key
      * @param null $default
      *
      * @return mixed
@@ -162,10 +197,7 @@ trait ComposerTrait
     /**
      * Set a specific data into json file.
      *
-     * @param string $key
      * @param mixed $value
-     *
-     * @return void
      */
     public function set(string $key, $value)
     {
@@ -173,50 +205,13 @@ trait ComposerTrait
     }
 
     /**
-     * Handle call __toString.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->getName();
-    }
-
-    /**
-     * Handle call to __get method.
-     *
-     * @param $key
-     *
-     * @return mixed
-     */
-    public function __get($key)
-    {
-        return $this->get($key);
-    }
-
-    /**
-     * Handle call to __set method.
-     *
-     * @param $key
-     * @param $value
-     *
-     * @return mixed
-     */
-    public function __set($key, $value)
-    {
-        return $this->set($key, $value);
-    }
-
-    /**
      * Get json contents from the cache, setting as needed.
      *
      * @param string $file
-     *
-     * @return Json
      */
     private function json($file = null): Json
     {
-        if ($file === null) {
+        if (null === $file) {
             $file = 'composer.json';
         }
 
@@ -226,7 +221,7 @@ trait ComposerTrait
     }
 
     /**
-     * Scan for all available packages
+     * Scan for all available packages.
      *
      * @throws Exception
      */
@@ -234,7 +229,7 @@ trait ComposerTrait
     {
         $content = collect();
 
-        if ($path === null || empty($path)) {
+        if (null === $path || empty($path)) {
             return $content;
         }
 

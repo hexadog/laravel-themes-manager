@@ -18,17 +18,11 @@ class ThemesManager
     use ComposerTrait;
 
     /**
-     * Composaer package type
+     * Composaer package type.
      *
      * @var string
      */
     protected $packageType = 'laravel-theme';
-
-    /**
-     * Scanned themes
-     * @var \Illuminate\Support\Collection
-     */
-    private $themes;
 
     /**
      * Translator.
@@ -36,6 +30,13 @@ class ThemesManager
      * @var \Illuminate\Contracts\Translation\Translator
      */
     protected $lang;
+
+    /**
+     * Scanned themes.
+     *
+     * @var \Illuminate\Support\Collection
+     */
+    private $themes;
 
     /**
      * View finder.
@@ -47,8 +48,7 @@ class ThemesManager
     /**
      * The constructor.
      *
-     * @param \Illuminate\View\Factory $view
-     * @param \Illuminate\Contracts\Translation\Translator $lang
+     * @param \Illuminate\View\Factory       $view
      * @param \Illuminate\Cache\CacheManager $lang
      */
     public function __construct(Factory $view, Translator $lang)
@@ -75,8 +75,6 @@ class ThemesManager
 
     /**
      * Build cache of available themes.
-     *
-     * @return bool
      */
     public function buildCache(): bool
     {
@@ -85,12 +83,10 @@ class ThemesManager
 
     /**
      * Clear the themes cache if it is enabled.
-     *
-     * @return bool
      */
     public function clearCache(): bool
     {
-        if (Config::get('themes-manager.cache.enabled', false) === true) {
+        if (true === Config::get('themes-manager.cache.enabled', false)) {
             return Cache::forget(Config::get('themes-manager.cache.key', 'themes-manager'));
         }
 
@@ -107,7 +103,7 @@ class ThemesManager
      */
     public function has(string $name = null)
     {
-        return ! is_null($this->findByName($name));
+        return !is_null($this->findByName($name));
     }
 
     /**
@@ -121,9 +117,9 @@ class ThemesManager
     {
         if (is_null($name)) {
             return $this->themes;
-        } else {
-            return $this->findByName($name);
         }
+
+        return $this->findByName($name);
     }
 
     /**
@@ -137,11 +133,11 @@ class ThemesManager
      */
     public function set(string $name): ThemesManager
     {
-        if (! $this->has($name)) {
+        if (!$this->has($name)) {
             throw new ThemeNotFoundException($name);
         }
 
-        if (! $this->get($name)->isActive()) {
+        if (!$this->get($name)->isActive()) {
             throw new ThemeNotActiveException($this->getName());
         }
 
@@ -155,7 +151,7 @@ class ThemesManager
     /**
      * Get current theme.
      *
-     * @return \Hexadog\ThemesManager\Theme|null
+     * @return null|\Hexadog\ThemesManager\Theme
      */
     public function current(): ?Theme
     {
@@ -168,15 +164,12 @@ class ThemesManager
     /**
      * Enable a Theme from its name.
      *
-     * @param string $name
-     * @param bool $withEvent
-     *
      * @return \Hexadog\ThemesManager\ThemesManager
      */
     public function enable(string $name, bool $withEvent = true): ThemesManager
     {
         if ($theme = $this->get($name)) {
-            if (! $theme->isActive()) {
+            if (!$theme->isActive()) {
                 throw new ThemeNotActiveException($name);
             }
 
@@ -192,15 +185,12 @@ class ThemesManager
     /**
      * Disable a Theme from its name.
      *
-     * @param string $name
-     * @param bool $withEvent
-     *
      * @return \Hexadog\ThemesManager\ThemesManager
      */
     public function disable(string $name, bool $withEvent = true): ThemesManager
     {
         if ($theme = $this->get($name)) {
-            if (! $theme->isActive()) {
+            if (!$theme->isActive()) {
                 throw new ThemeNotActiveException($name);
             }
 
@@ -213,49 +203,38 @@ class ThemesManager
     /**
      * Get current theme's asset url.
      *
-     * @param string $asset
      * @param bool $absolutePath
-     *
-     * @return string
      */
-    public function asset(string $asset, $absolutePath = true): string
+    public function asset(string $asset, $absolutePath = true, bool $version = true): string
     {
-        return $this->url($asset, $absolutePath);
+        return $this->url($asset, $absolutePath, $version);
     }
 
     /**
      * Get current theme's style HTML tag for given asset.
      *
-     * @param string $asset
      * @param bool $absolutePath
-     *
-     * @return string
      */
-    public function style(string $asset, $absolutePath = true): string
+    public function style(string $asset, $absolutePath = true, bool $version = true): string
     {
         return sprintf(
             '<link media="all" type="text/css" rel="stylesheet" href="%s">',
-            $this->url($asset, $absolutePath)
+            $this->url($asset, $absolutePath, $version)
         );
     }
 
     /**
      * Get current theme's script HTML tag for given asset.
      *
-     * @param  string $asset
-     * @param  string $mode ''|defer|async
-     * @param bool $absolutePath
-     * @param  string $type
-     * @param  string $level
-     *
-     * @return string
+     * @param string $mode         ''|defer|async
+     * @param bool   $absolutePath
      */
-    public function script(string $asset, string $mode = '', $absolutePath = true, string $type = 'text/javascript', string $level = 'functionality'): string
+    public function script(string $asset, string $mode = '', $absolutePath = true, string $type = 'text/javascript', string $level = 'functionality', bool $version = true): string
     {
         return sprintf(
             '<script %s src="%s" data-type="%s" data-level="%s"></script>',
             $mode,
-            $this->url($asset, $absolutePath),
+            $this->url($asset, $absolutePath, $version),
             $type,
             $level
         );
@@ -264,19 +243,13 @@ class ThemesManager
     /**
      * Get current theme's image HTML tag for given asset.
      *
-     * @param  string $asset
-     * @param  string $alt
-     * @param  string $class
-     * @param  array  $attributes
      * @param bool $absolutePath
-     *
-     * @return string
      */
-    public function image(string $asset, string $alt = '', string $class = '', array $attributes = [], $absolutePath = true): string
+    public function image(string $asset, string $alt = '', string $class = '', array $attributes = [], $absolutePath = true, bool $version = true): string
     {
         return sprintf(
             '<img src="%s" alt="%s" class="%s" %s>',
-            $this->url($asset, $absolutePath),
+            $this->url($asset, $absolutePath, $version),
             $alt,
             $class,
             $this->htmlAttributes($attributes)
@@ -288,6 +261,7 @@ class ThemesManager
      *
      * @param string $path
      * @param string $manifestDirectory
+     * @param mixed  $asset
      *
      * @return string
      */
@@ -299,36 +273,31 @@ class ThemesManager
     /**
      * Get theme's asset url.
      *
-     * @param string $asset
      * @param bool $absolutePath
-     *
-     * @return string|null
      */
-    public function url(string $asset, $absolutePath = true): ?string
+    public function url(string $asset, $absolutePath = true, bool $version = true): ?string
     {
         // Split asset name to find concerned theme name
         $assetParts = explode('::', $asset);
-        if (count($assetParts) == 2) {
+        if (2 == count($assetParts)) {
             $name = $assetParts[0];
             $asset = $assetParts[1];
         }
 
         // If no Theme set, return /$asset
-        if (empty($name) && ! $this->current()) {
-            return '/' . ltrim($asset, '/');
+        if (empty($name) && !$this->current()) {
+            return '/'.ltrim($asset, '/');
         }
 
-        if (! empty($name)) {
-            return optional($this->get($name))->url($asset, $absolutePath);
-        } else {
-            return optional($this->current())->url($asset, $absolutePath);
+        if (!empty($name)) {
+            return optional($this->get($name))->url($asset, $absolutePath, $version);
         }
+
+        return optional($this->current())->url($asset, $absolutePath, $version);
     }
 
     /**
      * Filter non active themes.
-     *
-     * @return \Illuminate\Support\Collection
      */
     public function filterNonActive(): Collection
     {
@@ -338,31 +307,12 @@ class ThemesManager
     }
 
     /**
-     * Return attributes in html format.
-     *
-     * @param  array $attributes
-     *
-     * @return string
-     */
-    private function htmlAttributes($attributes): string
-    {
-        return join(' ', array_map(function ($key) use ($attributes) {
-            if (is_bool($attributes[$key])) {
-                return $attributes[$key] ? $key : '';
-            }
-
-            return $key . '="' . $attributes[$key] . '"';
-        }, array_keys($attributes)));
-    }
-
-    /**
      * Find a theme by given name and vendor (optional)
      * name can include vendor prefix (ie: hexadog/default)
      * If no vendor provided and name not prefixed by vendor
-     * the first theme with given name is returned
+     * the first theme with given name is returned.
      *
      * @param string $name
-     * @return void
      */
     protected function findByName(string $name = null, string $vendor = null)
     {
@@ -379,20 +329,17 @@ class ThemesManager
                 $name = substr($name, $pos + 1, strlen($name));
 
                 return Str::lower($theme->getName()) === Str::lower($name) && $theme->getLowerVendor() === Str::lower($vendor);
-            } else {
-                if (is_null($vendor)) {
-                    return $theme->getLowerName() === Str::lower($name);
-                } else {
-                    return $theme->getLowerName() === Str::lower($name) && $theme->getLowerVendor() === Str::lower($vendor);
-                }
             }
+            if (is_null($vendor)) {
+                return $theme->getLowerName() === Str::lower($name);
+            }
+
+            return $theme->getLowerName() === Str::lower($name) && $theme->getLowerVendor() === Str::lower($vendor);
         });
     }
 
     /**
      * Find all available themes.
-     *
-     * @return \Illuminate\Support\Collection
      */
     protected function findThemes(): Collection
     {
@@ -421,13 +368,27 @@ class ThemesManager
 
     /**
      * Get cached themes.
-     *
-     * @return \Illuminate\Support\Collection
      */
     protected function getCache(): Collection
     {
         return Cache::remember(Config::get('themes-manager.cache.key', 'themes-manager'), Config::get('themes-manager.cache.lifetime', 86400), function () {
             return $this->findThemes();
         });
+    }
+
+    /**
+     * Return attributes in html format.
+     *
+     * @param array $attributes
+     */
+    private function htmlAttributes($attributes): string
+    {
+        return join(' ', array_map(function ($key) use ($attributes) {
+            if (is_bool($attributes[$key])) {
+                return $attributes[$key] ? $key : '';
+            }
+
+            return $key.'="'.$attributes[$key].'"';
+        }, array_keys($attributes)));
     }
 }

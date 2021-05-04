@@ -10,10 +10,10 @@ class ThemeLoader
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param String $theme
-     * @param String $layout
+     * @param \Illuminate\Http\Request $request
+     * @param string                   $theme
+     * @param string                   $layout
+     *
      * @return mixed
      */
     public function handle($request, Closure $next, $theme = null)
@@ -23,7 +23,7 @@ class ThemeLoader
             return $next($request);
         }
 
-        if (! empty($theme)) {
+        if (!empty($theme)) {
             ThemesManager::set($theme);
         } else {
             if ($theme = config('themes-manager.fallback_theme')) {

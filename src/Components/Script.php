@@ -17,13 +17,14 @@ class Script extends Component
     /**
      * Create the component instance.
      *
-     * @param  string  $type
-     * @param  string  $message
-     * @return void
+     * @param string     $type
+     * @param string     $message
+     * @param null|mixed $src
+     * @param mixed      $absolutePath
      */
     public function __construct($src = null, $absolutePath = true)
     {
-        if (! is_null($src)) {
+        if (!is_null($src)) {
             $this->source = ThemesManager::asset($src, $absolutePath);
         } else {
             $this->source = null;

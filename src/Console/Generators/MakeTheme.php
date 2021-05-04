@@ -37,7 +37,7 @@ class MakeTheme extends Command
      * @var \Illuminate\Support\Facades\Config
      */
     protected $config;
-    
+
     /**
      * @var Filesystem
      */
@@ -56,11 +56,9 @@ class MakeTheme extends Command
      * @var string
      */
     protected $themePath;
-    
+
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct(Repository $config, Filesystem $filesystem)
     {
@@ -69,14 +67,14 @@ class MakeTheme extends Command
 
         parent::__construct();
     }
-    
+
     /**
      * Execute the console command.
      */
     public function handle()
     {
         $this->themePath = $this->config->get('themes-manager.directory', 'themes');
-        
+
         $this->sectionMessage('Themes Manager', 'Create new Theme');
         if ($this->validateName()) {
             $this->askAuthor();
@@ -93,7 +91,7 @@ class MakeTheme extends Command
             }
         }
     }
-    
+
     /**
      * Validate theme name provided.
      */
@@ -103,7 +101,7 @@ class MakeTheme extends Command
 
         if (Str::contains($this->theme['name'], '\\')) {
             $nameParts = explode('\\', str_replace('\\\\', '\\', $this->theme['name']));
-            if (count($nameParts) === 2) {
+            if (2 === count($nameParts)) {
                 $this->theme['vendor'] = mb_strtolower($nameParts[0]);
                 $this->theme['name'] = Str::kebab($nameParts[1]);
             } else {
@@ -129,44 +127,6 @@ class MakeTheme extends Command
         }
 
         return true;
-    }
-
-    /**
-     * Generate Theme structure in target directory.
-     *
-     * @return void
-     */
-    private function generateTheme()
-    {
-        $this->sectionMessage('Files generation', 'start files generation process...');
-
-        $basepath = base_path($this->themePath);
-
-        $directory = $basepath . DIRECTORY_SEPARATOR . $this->theme['vendor'] . DIRECTORY_SEPARATOR . $this->theme['name'];
-
-        /**
-         * Make directory
-         */
-        if ($this->files->isDirectory($directory)) {
-            throw new Exception("Theme {$this->theme['name']} already exists");
-        } else {
-            $this->files->makeDirectory($directory, 0755, true);
-        }
-
-        $source = __DIR__ . '/../../../resources/stubs/_folder-structure';
-
-        $this->files->copyDirectory($source, $directory, null);
-
-        /**
-         * Replace files placeholder
-         */
-        $files = $this->files->allFiles($directory);
-        foreach ($files as $file) {
-            $contents = $this->replacePlaceholders($file);
-            $filePath = $directory . DIRECTORY_SEPARATOR . $file->getRelativePathname();
-
-            $this->files->put($filePath, $contents);
-        }
     }
 
     /**
@@ -207,8 +167,6 @@ class MakeTheme extends Command
      * Ask for theme author information.
      * Notice: if value is set in themes-manager.composer.author.name and themes-manager.composer.author.email config value
      * then this value will be used.
-     *
-     * @return void
      */
     protected function askAuthor()
     {
@@ -218,8 +176,6 @@ class MakeTheme extends Command
 
     /**
      * Ask for theme description.
-     *
-     * @return void
      */
     protected function askDescription()
     {
@@ -228,14 +184,12 @@ class MakeTheme extends Command
 
     /**
      * Ask for theme name.
-     *
-     * @return void
      */
     protected function askName()
     {
         do {
             $this->theme['name'] = $this->ask('Theme Name');
-        } while (! strlen($this->theme['name']));
+        } while (!strlen($this->theme['name']));
     }
 
     /**
@@ -253,14 +207,12 @@ class MakeTheme extends Command
      * Ask for theme vendor.
      * Notice: if value is set in themes-manager.composer.vendor config value
      * then this value will be used.
-     *
-     * @return void
      */
     protected function askVendor()
     {
         do {
             $this->theme['vendor'] = mb_strtolower($this->config->get('themes-manager.composer.vendor') ?? $this->ask('Vendor name'));
-        } while (! strlen($this->theme['vendor']));
+        } while (!strlen($this->theme['vendor']));
     }
 
     /**
@@ -270,8 +222,41 @@ class MakeTheme extends Command
     {
         $this->theme['version'] = $this->ask('Version number');
 
-        if (! strlen($this->theme['version'])) {
+        if (!strlen($this->theme['version'])) {
             $this->theme['version'] = null;
+        }
+    }
+
+    /**
+     * Generate Theme structure in target directory.
+     */
+    private function generateTheme()
+    {
+        $this->sectionMessage('Files generation', 'start files generation process...');
+
+        $basepath = base_path($this->themePath);
+
+        $directory = $basepath.DIRECTORY_SEPARATOR.$this->theme['vendor'].DIRECTORY_SEPARATOR.$this->theme['name'];
+
+        // Make directory
+        if ($this->files->isDirectory($directory)) {
+            throw new Exception("Theme {$this->theme['name']} already exists");
+        }
+        $this->files->makeDirectory($directory, 0755, true);
+
+        $source = __DIR__.'/../../../resources/stubs/_folder-structure';
+
+        $this->files->copyDirectory($source, $directory, null);
+
+        /**
+         * Replace files placeholder.
+         */
+        $files = $this->files->allFiles($directory);
+        foreach ($files as $file) {
+            $contents = $this->replacePlaceholders($file);
+            $filePath = $directory.DIRECTORY_SEPARATOR.$file->getRelativePathname();
+
+            $this->files->put($filePath, $contents);
         }
     }
 }

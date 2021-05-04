@@ -7,8 +7,6 @@ use RuntimeException;
 class ComposerLoaderException extends RuntimeException
 {
     /**
-     * @param string $name
-     *
      * @return \Hexadog\ThemesManager\Exceptions\ComposerLoaderException
      */
     public static function duplicate(string $name): self

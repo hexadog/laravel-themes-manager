@@ -17,13 +17,14 @@ class Style extends Component
     /**
      * Create the component instance.
      *
-     * @param  string  $type
-     * @param  string  $message
-     * @return void
+     * @param string $type
+     * @param string $message
+     * @param mixed  $src
+     * @param mixed  $absolutePath
      */
     public function __construct($src, $absolutePath = true)
     {
-        if (! is_null($src)) {
+        if (!is_null($src)) {
             $this->source = ThemesManager::asset($src, $absolutePath);
         } else {
             $this->source = null;

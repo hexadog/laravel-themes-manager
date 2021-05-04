@@ -20,8 +20,6 @@ class DeactivateTheme extends AbstractCommand
 
     /**
      * Create a new command instance.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -29,21 +27,20 @@ class DeactivateTheme extends AbstractCommand
     }
 
     /**
-     * Prompt for module's alias name
-     *
+     * Prompt for module's alias name.
      */
     public function handle()
     {
         $this->validateName();
 
-        if (! $this->theme->isActive()) {
+        if (!$this->theme->isActive()) {
             $this->error("Theme with name {$this->argument('name')} is already deactivated!");
 
             return false;
         }
 
         $this->sectionMessage('Themes Manager', 'Deactivating theme...');
-        
+
         if ($this->theme->deactivate()) {
             $this->sectionMessage('Themes Manager', 'Theme deactivated succefully');
         } else {
