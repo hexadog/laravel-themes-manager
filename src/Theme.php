@@ -123,7 +123,7 @@ class Theme
             }
         } while ($theme = $theme->getParent());
 
-        return $paths;
+        return array_reverse($paths);
     }
 
     /**
