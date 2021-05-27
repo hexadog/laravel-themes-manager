@@ -97,13 +97,12 @@ class ThemesManager
      * Check if theme with given name exists.
      *
      * @param string $name
-     * @param string $vendor
      *
      * @return bool
      */
-    public function has(string $name = null)
+    public function has(string $name = null, ?Collection $themes = null)
     {
-        return !is_null($this->findByName($name));
+        return !is_null($this->findByName($name, null, $themes));
     }
 
     /**
@@ -113,13 +112,13 @@ class ThemesManager
      *
      * @return mixed
      */
-    public function get(string $name = null)
+    public function get(string $name = null, ?Collection $themes = null)
     {
         if (is_null($name)) {
             return $this->themes;
         }
 
-        return $this->findByName($name);
+        return $this->findByName($name, null, $themes);
     }
 
     /**
@@ -259,7 +258,6 @@ class ThemesManager
     /**
      * Get the current theme path to a versioned Mix file.
      *
-     * @param string $path
      * @param string $manifestDirectory
      * @param mixed  $asset
      *
@@ -314,13 +312,15 @@ class ThemesManager
      *
      * @param string $name
      */
-    protected function findByName(string $name = null, string $vendor = null)
+    protected function findByName(string $name = null, string $vendor = null, ?Collection $themes = null)
     {
         if (is_null($name)) {
             return null;
         }
 
-        return $this->themes->first(function ($theme) use ($name, $vendor) {
+        $themes = $themes ?? $this->themes;
+
+        return $themes ? $themes->first(function ($theme) use ($name, $vendor) {
             // normalize module name
             $name = str_replace(['-theme', 'theme-'], '', $name);
             // Check if $name contains vendor
@@ -335,7 +335,7 @@ class ThemesManager
             }
 
             return $theme->getLowerName() === Str::lower($name) && $theme->getLowerVendor() === Str::lower($vendor);
-        });
+        }) : null;
     }
 
     /**
@@ -349,15 +349,18 @@ class ThemesManager
         try {
             $themes = $this->scan(Config::get('themes-manager.directory', 'themes'), Theme::class);
 
-            $themes->each(function ($theme) {
+            $themes->each(function ($theme) use ($themes) {
                 $extendedThemeName = $theme->get('extra.theme.parent');
                 if ($extendedThemeName) {
-                    if ($this->has($extendedThemeName)) {
-                        $extendedTheme = $this->get($extendedThemeName);
+                    if ($this->has($extendedThemeName, $themes)) {
+                        $extendedTheme = $this->get($extendedThemeName, $themes);
                     } else {
                         $extendedTheme = new Theme($theme->getPath());
                     }
-                    $theme->setParent($extendedTheme);
+
+                    if ($extendedTheme) {
+                        $theme->setParent($extendedTheme);
+                    }
                 }
             });
         } catch (ComposerLoaderException $e) {
