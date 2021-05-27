@@ -150,7 +150,7 @@ class ThemesManager
     /**
      * Get current theme.
      *
-     * @return \Hexadog\ThemesManager\Theme|null
+     * @return null|\Hexadog\ThemesManager\Theme
      */
     public function current(): ?Theme
     {
