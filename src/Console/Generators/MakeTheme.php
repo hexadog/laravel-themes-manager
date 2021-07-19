@@ -236,7 +236,7 @@ class MakeTheme extends Command
 
         $basepath = base_path($this->themePath);
 
-        $directory = $basepath.DIRECTORY_SEPARATOR.$this->theme['vendor'].DIRECTORY_SEPARATOR.$this->theme['name'];
+        $directory = $basepath . DIRECTORY_SEPARATOR . $this->theme['vendor'] . DIRECTORY_SEPARATOR . $this->theme['name'];
 
         // Make directory
         if ($this->files->isDirectory($directory)) {
@@ -244,7 +244,7 @@ class MakeTheme extends Command
         }
         $this->files->makeDirectory($directory, 0755, true);
 
-        $source = __DIR__.'/../../../resources/stubs/_folder-structure';
+        $source = __DIR__ . '/../../../resources/stubs/_folder-structure';
 
         $this->files->copyDirectory($source, $directory, null);
 
@@ -254,7 +254,7 @@ class MakeTheme extends Command
         $files = $this->files->allFiles($directory);
         foreach ($files as $file) {
             $contents = $this->replacePlaceholders($file);
-            $filePath = $directory.DIRECTORY_SEPARATOR.$file->getRelativePathname();
+            $filePath = $directory . DIRECTORY_SEPARATOR . $file->getRelativePathname();
 
             $this->files->put($filePath, $contents);
         }

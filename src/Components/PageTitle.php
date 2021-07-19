@@ -32,9 +32,9 @@ class PageTitle extends Component
 
         if (!empty($title) && $withAppName) {
             if ($invert) {
-                $this->title = $title.' '.trim(e($separator)).' '.config('app.name');
+                $this->title = $title . ' ' . trim(e($separator)) . ' ' . config('app.name');
             } else {
-                $this->title = config('app.name').' '.trim(e($separator)).' '.$title;
+                $this->title = config('app.name') . ' ' . trim(e($separator)) . ' ' . $title;
             }
         } else {
             $this->title = config('app.name');

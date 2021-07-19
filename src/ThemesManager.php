@@ -284,7 +284,7 @@ class ThemesManager
 
         // If no Theme set, return /$asset
         if (empty($name) && !$this->current()) {
-            return '/'.ltrim($asset, '/');
+            return '/' . ltrim($asset, '/');
         }
 
         if (!empty($name)) {
@@ -391,7 +391,7 @@ class ThemesManager
                 return $attributes[$key] ? $key : '';
             }
 
-            return $key.'="'.$attributes[$key].'"';
+            return $key . '="' . $attributes[$key] . '"';
         }, array_keys($attributes)));
     }
 }
