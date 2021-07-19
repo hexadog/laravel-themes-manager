@@ -20,5 +20,8 @@ return $config
     ->setRules([
         '@PSR2' => true,
         '@PhpCsFixer' => true,
+        'concat_space' => [
+            'spacing' => 'one'
+        ]
     ])
     ->setFinder($finder);
