@@ -53,7 +53,7 @@ class Theme
 
         if ($this->isActive()) {
             // Add theme.THEME_NAME namespace to be able to force views from specific theme
-            View::prependNamespace('theme.'.$this->getSnakeName(), $this->getPath('resources/views'));
+            View::prependNamespace('theme.' . $this->getSnakeName(), $this->getPath('resources/views'));
         }
     }
 
@@ -92,7 +92,7 @@ class Theme
      */
     public function getPath(string $path = null): string
     {
-        return $this->cleanPath(Str::finish($this->path, DIRECTORY_SEPARATOR).$path);
+        return $this->cleanPath(Str::finish($this->path, DIRECTORY_SEPARATOR) . $path);
     }
 
     /**
@@ -100,7 +100,7 @@ class Theme
      */
     public function getAssetsPath(string $path = null): string
     {
-        return Config::get('themes-manager.symlink_path', 'themes').DIRECTORY_SEPARATOR.mb_strtolower($this->getName()).DIRECTORY_SEPARATOR.$this->cleanPath($path);
+        return Config::get('themes-manager.symlink_path', 'themes') . DIRECTORY_SEPARATOR . mb_strtolower($this->getName()) . DIRECTORY_SEPARATOR . $this->cleanPath($path);
     }
 
     /**
@@ -116,7 +116,7 @@ class Theme
         $theme = $this;
 
         do {
-            $viewsPath = $theme->getPath('resources/views'.($path ? "/{$path}" : ''));
+            $viewsPath = $theme->getPath('resources/views' . ($path ? "/{$path}" : ''));
 
             if (!in_array($viewsPath, $paths)) {
                 $paths[] = $viewsPath;
@@ -273,17 +273,17 @@ class Theme
         preg_match_all('/\{(.*?)\}/', $url, $matches);
         foreach ($matches[1] as $param) {
             if (($value = $this->get("extra.theme.{$param}")) !== null) {
-                $url = str_replace('{'.$param.'}', $value, $url);
+                $url = str_replace('{' . $param . '}', $value, $url);
             }
         }
 
         // Lookup asset in current's theme assets path
-        $fullUrl = rtrim((empty($this->getAssetsPath()) ? '' : DIRECTORY_SEPARATOR).$this->getAssetsPath($url), DIRECTORY_SEPARATOR);
+        $fullUrl = rtrim((empty($this->getAssetsPath()) ? '' : DIRECTORY_SEPARATOR) . $this->getAssetsPath($url), DIRECTORY_SEPARATOR);
         if (File::exists(public_path($fullUrl))) {
             $fullUrl = ltrim(str_replace('\\', '/', $fullUrl), '/');
             $versionTag = hash_file('md5', public_path($fullUrl));
 
-            return ($absolutePath ? asset('').$fullUrl : $fullUrl).($version ? '?v='.$versionTag : '');
+            return ($absolutePath ? asset('') . $fullUrl : $fullUrl) . ($version ? '?v=' . $versionTag : '');
         }
 
         // If not found then lookup in parent's theme assets path
@@ -294,7 +294,7 @@ class Theme
             $url = ltrim(str_replace('\\', '/', $url), '/');
             $versionTag = hash_file('md5', public_path($url));
 
-            return ($absolutePath ? asset('').$url : $url).($version ? '?v='.$versionTag : '');
+            return ($absolutePath ? asset('') . $url : $url) . ($version ? '?v=' . $versionTag : '');
         }
 
         Log::warning("Asset [{$url}] not found for Theme [{$this->getName()}]");
@@ -313,7 +313,7 @@ class Theme
 
         $layoutDirs = $this->getViewPaths('layouts');
         foreach ($layoutDirs as $layoutDir) {
-            foreach (glob($layoutDir.'/{**/*,*}.php', GLOB_BRACE) as $layout) {
+            foreach (glob($layoutDir . '/{**/*,*}.php', GLOB_BRACE) as $layout) {
                 $layouts->put($layout, basename($layout, '.blade.php'));
             }
         }
@@ -386,7 +386,7 @@ class Theme
                 if ('.' != $namespace && '..' != $namespace) {
                     if (!empty(Config::get('view.paths')) && is_array(Config::get('view.paths'))) {
                         foreach (Config::get('view.paths') as $viewPath) {
-                            if (is_dir($appPath = $viewPath.'/vendor/'.$namespace)) {
+                            if (is_dir($appPath = $viewPath . '/vendor/' . $namespace)) {
                                 View::prependNamespace($namespace, $appPath);
                             }
                         }
