@@ -6,18 +6,19 @@
         "issues": "https://github.com/hexadog/laravel-themes-manager/issues",
         "source": "https://github.com/hexadog/laravel-themes-manager"
     },
-    "authors": [{
-        "name": "Gaetan",
-        "email": "gaetan@hexadog.com"
-    }],
+    "authors": [
+        {
+            "name": "Gaetan",
+            "email": "gaetan@hexadog.com"
+        }
+    ],
     "minimum-stability": "stable",
     "require": {
         "hexadog/laravel-theme-installer": "^1.0",
         "illuminate/view": "^7.0|^8.0|^9.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.19",
-        "squizlabs/php_codesniffer": "3.*",
+        "friendsofphp/php-cs-fixer": "^3.1",
         "phpunit/phpunit": "^7.0|^8.0|^9.0",
         "orchestra/testbench": "~5.2"
     },
