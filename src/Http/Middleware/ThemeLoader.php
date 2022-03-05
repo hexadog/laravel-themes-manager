@@ -11,9 +11,8 @@ class ThemeLoader
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $theme
-     * @param string                   $layout
+     * @param string $theme
+     * @param string $layout
      *
      * @return mixed
      */
