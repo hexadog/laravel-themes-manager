@@ -342,9 +342,7 @@ class Theme
     }
 
     /**
-     * Create public assets directory path
-     *
-     * @return void
+     * Create public assets directory path.
      */
     protected function createPublicAssetsStructure()
     {
