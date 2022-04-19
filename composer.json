@@ -35,6 +35,11 @@
             "Hexadog\\ThemesManager\\Test\\": "tests"
         }
     },
+    "config": {
+        "allow-plugins": {
+            "hexadog/laravel-theme-installer": true
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [
