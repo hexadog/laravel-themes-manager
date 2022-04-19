@@ -370,6 +370,8 @@ class Theme
         $assetsPath = $this->getPath('public');
         $publicAssetsPath = public_path($this->getAssetsPath());
 
+        $this->createPublicAssetsStructure();
+
         if (!File::exists($publicAssetsPath) && File::exists($assetsPath)) {
             if (Config::get('themes-manager.symlink_relative', false)) {
                 app(Filesystem::class)->relativeLink($assetsPath, rtrim($publicAssetsPath, DIRECTORY_SEPARATOR));
