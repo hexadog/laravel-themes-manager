@@ -330,10 +330,12 @@ class Theme
      */
     protected function cleanPath($path = '')
     {
-        $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
+        if ($path) {
+            $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
 
-        if ($path && !is_file($path)) {
-            Str::finish($path, DIRECTORY_SEPARATOR);
+            if (!is_file($path)) {
+                Str::finish($path, DIRECTORY_SEPARATOR);
+            }
         }
 
         return $path;
