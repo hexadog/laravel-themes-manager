@@ -100,7 +100,7 @@ class Theme
      */
     public function getAssetsPath(string $path = null): string
     {
-        return Config::get('themes-manager.symlink_path', 'themes') . DIRECTORY_SEPARATOR . mb_strtolower($this->getName()) . DIRECTORY_SEPARATOR . $this->cleanPath($path);
+        return Config::get('themes-manager.symlink_path', 'themes') . DIRECTORY_SEPARATOR . $this->getLowerVendor() . DIRECTORY_SEPARATOR . $this->getLowerName() . DIRECTORY_SEPARATOR . $this->cleanPath($path);
     }
 
     /**
@@ -342,16 +342,30 @@ class Theme
     }
 
     /**
-     * Register theme's views in ViewFinder.
+     * Create public assets directory path.
      */
-    protected function registerViews()
+    protected function createPublicAssetsStructure()
     {
         // Create target symlink parent directory if required
         $publicPath = public_path(Config::get('themes-manager.symlink_path', 'themes'));
+
         if (!File::exists($publicPath)) {
             app(Filesystem::class)->makeDirectory($publicPath, 0755);
         }
 
+        $publicAssetsPath = dirname(public_path($this->getAssetsPath()));
+
+        // Create vendor directory if not exists yet
+        if (!File::exists($publicAssetsPath)) {
+            app(Filesystem::class)->makeDirectory($publicAssetsPath, 0755);
+        }
+    }
+
+    /**
+     * Register theme's views in ViewFinder.
+     */
+    protected function registerViews()
+    {
         // Create symlink for public resources if not existing yet
         $assetsPath = $this->getPath('public');
         $publicAssetsPath = public_path($this->getAssetsPath());
