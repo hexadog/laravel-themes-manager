@@ -100,7 +100,7 @@ class Theme
      */
     public function getAssetsPath(string $path = null): string
     {
-        return Config::get('themes-manager.symlink_path', 'themes') . DIRECTORY_SEPARATOR . mb_strtolower($this->getName()) . DIRECTORY_SEPARATOR . $this->cleanPath($path);
+        return Config::get('themes-manager.symlink_path', 'themes') . DIRECTORY_SEPARATOR . $this->getLowerVendor() . DIRECTORY_SEPARATOR . $this->getLowerName() . DIRECTORY_SEPARATOR . $this->cleanPath($path);
     }
 
     /**
