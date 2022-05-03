@@ -46,6 +46,20 @@ class ThemesManager
     private $view;
 
     /**
+     * Laravel default view paths
+     *
+     * @var [type]
+     */
+    protected $defaultViewPaths;
+
+    /**
+     * Laravel default Mail view paths
+     *
+     * @var [type]
+     */
+    protected $defaultMailViewPaths;
+
+    /**
      * The constructor.
      *
      * @param \Illuminate\View\Factory       $view
@@ -55,6 +69,11 @@ class ThemesManager
     {
         $this->view = $view;
         $this->lang = $lang;
+
+        // Save default Laravel View Paths
+        $this->defaultViewPaths = Config::get('view.paths');
+        // Save default Laravel Mail View Paths
+        $this->defaultMailViewPaths = Config::get('mail.markdown.paths');
 
         if (Config::get('themes-manager.cache.enabled', false)) {
             $this->themes = $this->getCache();
@@ -172,7 +191,7 @@ class ThemesManager
                 throw new ThemeNotActiveException($name);
             }
 
-            $theme->enable($withEvent);
+            $theme->enable($withEvent, $this->defaultViewPaths, $this->defaultMailViewPaths);
 
             // Add Theme language files
             $this->lang->addNamespace('theme', $theme->getPath('lang'));
