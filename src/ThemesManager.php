@@ -32,6 +32,20 @@ class ThemesManager
     protected $lang;
 
     /**
+     * Laravel default view paths.
+     *
+     * @var [type]
+     */
+    protected $defaultViewPaths;
+
+    /**
+     * Laravel default Mail view paths.
+     *
+     * @var [type]
+     */
+    protected $defaultMailViewPaths;
+
+    /**
      * Scanned themes.
      *
      * @var \Illuminate\Support\Collection
@@ -44,20 +58,6 @@ class ThemesManager
      * @var \Illuminate\View\Factory
      */
     private $view;
-
-    /**
-     * Laravel default view paths
-     *
-     * @var [type]
-     */
-    protected $defaultViewPaths;
-
-    /**
-     * Laravel default Mail view paths
-     *
-     * @var [type]
-     */
-    protected $defaultMailViewPaths;
 
     /**
      * The constructor.

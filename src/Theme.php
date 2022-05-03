@@ -230,6 +230,9 @@ class Theme
 
     /**
      * Enable the current theme.
+     *
+     * @param null|mixed $defaultViewPaths
+     * @param null|mixed $defaultMailViewPaths
      */
     public function enable(bool $withEvent = true, $defaultViewPaths = null, $defaultMailViewPaths = null): Theme
     {
@@ -364,6 +367,9 @@ class Theme
 
     /**
      * Register theme's views in ViewFinder.
+     *
+     * @param mixed $defaultViewPaths
+     * @param mixed $defaultMailViewPaths
      */
     protected function registerViews($defaultViewPaths, $defaultMailViewPaths)
     {
