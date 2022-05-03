@@ -9,6 +9,7 @@ use Hexadog\ThemesManager\Events\ThemeEnabling;
 use Hexadog\ThemesManager\Traits\ComposerTrait;
 use Illuminate\Container\Container;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Mail\Markdown;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
@@ -229,8 +230,11 @@ class Theme
 
     /**
      * Enable the current theme.
+     *
+     * @param null|mixed $defaultViewPaths
+     * @param null|mixed $defaultMailViewPaths
      */
-    public function enable(bool $withEvent = true): Theme
+    public function enable(bool $withEvent = true, $defaultViewPaths = null, $defaultMailViewPaths = null): Theme
     {
         // Check if current is active and currently disabled
         if ($this->isActive() && $this->disabled()) {
@@ -239,7 +243,7 @@ class Theme
             }
 
             $this->setStatus(true);
-            $this->registerViews();
+            $this->registerViews($defaultViewPaths, $defaultMailViewPaths);
 
             if ($withEvent) {
                 event(new ThemeEnabled($this->getName()));
@@ -363,8 +367,11 @@ class Theme
 
     /**
      * Register theme's views in ViewFinder.
+     *
+     * @param mixed $defaultViewPaths
+     * @param mixed $defaultMailViewPaths
      */
-    protected function registerViews()
+    protected function registerViews($defaultViewPaths, $defaultMailViewPaths)
     {
         // Create symlink for public resources if not existing yet
         $assetsPath = $this->getPath('public');
@@ -390,8 +397,8 @@ class Theme
         }, $paths);
 
         // Update config view.paths to work with errors views
-        if (is_array(Config::get('view.paths'))) {
-            Config::set('view.paths', array_merge($paths, Config::get('view.paths')));
+        if (is_array($this->defaultViewPaths)) {
+            Config::set('view.paths', array_merge($paths, $defaultViewPaths));
         } else {
             Config::set('view.paths', $paths);
         }
@@ -416,13 +423,15 @@ class Theme
         // Update config mail.markdown.paths to work with mail views
         $mailViewsPath = $this->getPath('resources/views/vendor/mail');
         if (File::exists($vendorViewsPath) && is_dir($mailViewsPath)) {
-            if (is_array(Config::get('mail.markdown.paths'))) {
+            if (is_array($defaultMailViewPaths)) {
                 Config::set('mail.markdown.paths', array_merge([
                     $mailViewsPath,
-                ], Config::get('mail.markdown.paths')));
+                ], $defaultMailViewPaths));
             } else {
-                Config::set('mail.markdown.paths', $mailViewsPath);
+                Config::set('mail.markdown.paths', [$mailViewsPath]);
             }
+
+            app()->make(Markdown::class)->loadComponentsFrom(Config::get('mail.markdown.paths'));
         }
     }
 }
