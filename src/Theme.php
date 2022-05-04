@@ -8,6 +8,7 @@ use Hexadog\ThemesManager\Events\ThemeEnabled;
 use Hexadog\ThemesManager\Events\ThemeEnabling;
 use Hexadog\ThemesManager\Traits\ComposerTrait;
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Mail\Markdown;
 use Illuminate\Support\Facades\Config;
@@ -121,6 +122,29 @@ class Theme
 
             if (!in_array($viewsPath, $paths)) {
                 $paths[] = $viewsPath;
+            }
+        } while ($theme = $theme->getParent());
+
+        return array_reverse($paths);
+    }
+
+    /**
+     * Get theme translations paths.
+     *
+     * @param string $path
+     */
+    public function getTransaltionPaths($path = ''): array
+    {
+        // Build Paths array.
+        // All paths are relative to Config::get('themes-manager.directory')
+        $paths = [];
+        $theme = $this;
+
+        do {
+            $translationsPath = $theme->getPath('lang' . ($path ? "/{$path}" : ''));
+
+            if (File::exists($translationsPath) && !in_array($translationsPath, $paths)) {
+                $paths[] = $translationsPath;
             }
         } while ($theme = $theme->getParent());
 
@@ -244,6 +268,7 @@ class Theme
 
             $this->setStatus(true);
             $this->registerViews($defaultViewPaths, $defaultMailViewPaths);
+            $this->registerTranlastions();
 
             if ($withEvent) {
                 event(new ThemeEnabled($this->getName()));
@@ -363,6 +388,24 @@ class Theme
         if (!File::exists($publicAssetsPath)) {
             app(Filesystem::class)->makeDirectory($publicAssetsPath, 0755);
         }
+    }
+
+    /**
+     * Register theme's translations.
+     */
+    protected function registerTranlastions()
+    {
+        // Register Translation paths
+        $paths = $this->getTransaltionPaths();
+        $translator = app()->make(Translator::class);
+
+        $paths = array_map(function ($path) use ($translator) {
+            $path = rtrim($path, DIRECTORY_SEPARATOR);
+
+            $translator->addNamespace('theme', $path);
+
+            return $path;
+        }, $paths);
     }
 
     /**
