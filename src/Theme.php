@@ -56,6 +56,7 @@ class Theme
         if ($this->isActive()) {
             // Add theme.THEME_NAME namespace to be able to force views from specific theme
             View::prependNamespace('theme.' . $this->getSnakeName(), $this->getPath('resources/views'));
+            View::replaceNamespace('theme', $this->getPath('resources/views'));
         }
     }
 
@@ -440,10 +441,10 @@ class Theme
         }, $paths);
 
         // Update config view.paths to work with errors views
-        if (is_array($this->defaultViewPaths)) {
+        if (is_array($defaultViewPaths)) {
             Config::set('view.paths', array_merge($paths, $defaultViewPaths));
         } else {
-            Config::set('view.paths', $paths);
+            Config::set('view.paths', array_merge($paths, [$defaultViewPaths]));
         }
 
         // Register all vendor views
