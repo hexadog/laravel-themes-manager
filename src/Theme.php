@@ -316,7 +316,6 @@ class Theme
             return ($absolutePath ? url('/') . '/' . $fullUrl : $fullUrl) . ($version ? '?v=' . $versionTag : '');
         }
 
-
         // If not found then lookup in parent's theme assets path
         if ($parentTheme = $this->getParent()) {
             return $parentTheme->url($url, $absolutePath, $version);
