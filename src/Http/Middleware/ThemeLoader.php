@@ -4,22 +4,22 @@ namespace Hexadog\ThemesManager\Http\Middleware;
 
 use Closure;
 use Hexadog\ThemesManager\Facades\ThemesManager;
+use Illuminate\Http\Request;
 
 class ThemeLoader
 {
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param string                   $theme
-     * @param string                   $layout
+     * @param string $theme
+     * @param string $layout
      *
      * @return mixed
      */
-    public function handle($request, Closure $next, $theme = null)
+    public function handle(Request $request, Closure $next, $theme = null)
     {
-        // Do not load theme if API request
-        if ($request->expectsJson()) {
+        // Do not load theme if API request or App is running in console
+        if ($request->expectsJson() || app()->runningInConsole()) {
             return $next($request);
         }
 
