@@ -313,7 +313,7 @@ class Theme
             $fullUrl = ltrim(str_replace('\\', '/', $fullUrl), '/');
             $versionTag = hash_file('md5', public_path($fullUrl));
 
-            return ($absolutePath ? asset('') . $fullUrl : $fullUrl) . ($version ? '?v=' . $versionTag : '');
+            return ($absolutePath ? url('/') . '/' . $fullUrl : $fullUrl) . ($version ? '?v=' . $versionTag : '');
         }
 
         // If not found then lookup in parent's theme assets path
@@ -324,7 +324,7 @@ class Theme
             $url = ltrim(str_replace('\\', '/', $url), '/');
             $versionTag = hash_file('md5', public_path($url));
 
-            return ($absolutePath ? asset('') . $url : $url) . ($version ? '?v=' . $versionTag : '');
+            return ($absolutePath ? url('/') . '/' . $url : $url) . ($version ? '?v=' . $versionTag : '');
         }
 
         Log::warning("Asset [{$url}] not found for Theme [{$this->getName()}]");

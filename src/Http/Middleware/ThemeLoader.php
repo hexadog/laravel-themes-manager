@@ -18,8 +18,8 @@ class ThemeLoader
      */
     public function handle(Request $request, Closure $next, $theme = null)
     {
-        // Do not load theme if API request
-        if ($request->expectsJson()) {
+        // Do not load theme if API request or App is running in console
+        if ($request->expectsJson() || app()->runningInConsole()) {
             return $next($request);
         }
 
