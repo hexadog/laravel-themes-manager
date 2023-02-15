@@ -31,7 +31,7 @@ trait HasViews
     }
 
     /**
-     * Register theme's vendor views
+     * Register theme's vendor views.
      */
     protected function loadVendorViews(): void
     {
@@ -47,7 +47,7 @@ trait HasViews
     }
 
     /**
-     * Register Mail Markdown components
+     * Register Mail Markdown components.
      */
     protected function loadMailComponentPaths(): void
     {

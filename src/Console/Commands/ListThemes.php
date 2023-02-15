@@ -23,7 +23,7 @@ class ListThemes extends Command
     protected $headers = ['Name', 'Vendor', 'Version', 'Description', 'Extends', 'Default', 'Active'];
 
     /**
-     * List of existing themes
+     * List of existing themes.
      */
     protected array $themes = [];
 

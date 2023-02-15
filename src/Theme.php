@@ -49,7 +49,7 @@ class Theme
     /**
      * The Parent theme.
      */
-    protected string|Theme|null $parent;
+    protected string | Theme | null $parent;
 
     /**
      * The theme statud (enabled or not).
@@ -57,7 +57,7 @@ class Theme
     protected bool $enabled = false;
 
     /**
-     * Theme extra data
+     * Theme extra data.
      */
     protected array $extra = [];
 
@@ -102,7 +102,7 @@ class Theme
     /**
      * Get theme views paths.
      * Build Paths array.
-     * All paths are relative to Config::get('themes-manager.directory')
+     * All paths are relative to Config::get('themes-manager.directory').
      */
     public function getViewPaths(string $path = ''): array
     {
@@ -121,7 +121,7 @@ class Theme
     }
 
     /**
-     * Set extra data
+     * Set extra data.
      */
     public function setExtra(array $extra): self
     {
@@ -131,7 +131,7 @@ class Theme
     }
 
     /**
-     * Set theme version
+     * Set theme version.
      */
     public function setVersion(string $version): self
     {
@@ -141,7 +141,7 @@ class Theme
     }
 
     /**
-     * Set theme description
+     * Set theme description.
      */
     public function setDescription(string $description): self
     {
@@ -151,7 +151,7 @@ class Theme
     }
 
     /**
-     * Set theme name
+     * Set theme name.
      */
     public function setName(string $name): self
     {
@@ -180,7 +180,7 @@ class Theme
     }
 
     /**
-     * Set theme vendor
+     * Set theme vendor.
      */
     public function setVendor(string $vendor = null): self
     {
@@ -204,7 +204,7 @@ class Theme
     /**
      * Set parent Theme.
      */
-    public function setParent(string|Theme|null $theme): self
+    public function setParent(string | Theme | null $theme): self
     {
         $this->parent = empty($theme) ? null : $theme;
 
@@ -214,7 +214,7 @@ class Theme
     /**
      * Get parent Theme.
      */
-    public function getParent(): Theme|null
+    public function getParent(): Theme | null
     {
         if (is_string($this->parent) && !empty($this->parent)) {
             $this->parent = ThemesManager::findByName($this->parent);
@@ -309,7 +309,7 @@ class Theme
         $fullUrl = $this->getAssetsPath($url);
 
         if (file_exists(public_path($fullUrl))) {
-            return ($absolute ? asset($fullUrl) : $fullUrl);
+            return $absolute ? asset($fullUrl) : $fullUrl;
         }
 
         // If not found then lookup in parent's theme assets path
@@ -319,7 +319,7 @@ class Theme
 
         // No parent theme? Lookup in the public folder.
         if (file_exists(public_path($url))) {
-            return ($absolute ? asset('') . $url : $url);
+            return $absolute ? asset('') . $url : $url;
         }
 
         Log::warning("Asset [{$url}] not found for Theme [{$this->name}]");
