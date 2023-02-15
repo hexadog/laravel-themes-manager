@@ -6,88 +6,81 @@ use Hexadog\ThemesManager\Events\ThemeDisabled;
 use Hexadog\ThemesManager\Events\ThemeDisabling;
 use Hexadog\ThemesManager\Events\ThemeEnabled;
 use Hexadog\ThemesManager\Events\ThemeEnabling;
-use Hexadog\ThemesManager\Traits\ComposerTrait;
-use Illuminate\Container\Container;
-use Illuminate\Contracts\Translation\Translator;
+use Hexadog\ThemesManager\Facades\ThemesManager;
+use Hexadog\ThemesManager\Traits\HasTranslations;
+use Hexadog\ThemesManager\Traits\HasViews;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Mail\Markdown;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 
 class Theme
 {
-    use ComposerTrait;
+    use HasTranslations;
+    use HasViews;
+
+    /**
+     * The theme name.
+     */
+    protected string $name;
+
+    /**
+     * The theme vendor.
+     */
+    protected string $vendor;
+
+    /**
+     * The theme version.
+     */
+    protected string $version = '0.1';
+
+    /**
+     * The theme description.
+     */
+    protected string $description = '';
 
     /**
      * The theme path.
-     *
-     * @var string
      */
-    protected $path;
+    protected string $path;
 
     /**
      * The Parent theme.
-     *
-     * @var string
      */
-    protected $parent;
+    protected string|Theme|null $parent;
 
     /**
-     * The theme status (enabled or not).
-     *
-     * @var string
+     * The theme statud (enabled or not).
      */
-    protected $status = false;
+    protected bool $enabled = false;
+
+    /**
+     * Theme extra data
+     */
+    protected array $extra = [];
 
     /**
      * The constructor.
-     *
-     * @param Container $app
-     * @param $name
-     * @param $path
      */
-    public function __construct($path)
+    public function __construct(string $name, string $path)
     {
+        $this->setName($name);
         $this->setPath($path);
 
-        if ($this->isActive()) {
-            // Add theme.THEME_NAME namespace to be able to force views from specific theme
-            View::prependNamespace('theme.' . $this->getSnakeName(), $this->getPath('resources/views'));
-            View::replaceNamespace('theme', $this->getPath('resources/views'));
-        }
+        View::prependNamespace('theme.' . Str::snake($this->name), $this->getPath('resources/views'));
+
+        // // Add theme.THEME_NAME namespace to be able to force views from specific theme
+        // View::replaceNamespace('theme', $this->getPath('resources/views'));
     }
 
     /**
-     * Check if theme is active.
-     *
-     * @return bool
+     * Create a new Theme.
      */
-    public function isActive()
+    public static function make(...$arguments): self
     {
-        return $this->get('extra.theme.active', false);
-    }
-
-    /**
-     * Activate theme.
-     *
-     * @return bool
-     */
-    public function activate()
-    {
-        return $this->set('extra.theme.active', true);
-    }
-
-    /**
-     * Deactivate theme.
-     *
-     * @return bool
-     */
-    public function deactivate()
-    {
-        return $this->set('extra.theme.active', false);
+        return new static(...$arguments);
     }
 
     /**
@@ -95,7 +88,7 @@ class Theme
      */
     public function getPath(string $path = null): string
     {
-        return $this->cleanPath(Str::finish($this->path, DIRECTORY_SEPARATOR) . $path);
+        return $this->path . $path;
     }
 
     /**
@@ -103,18 +96,16 @@ class Theme
      */
     public function getAssetsPath(string $path = null): string
     {
-        return Config::get('themes-manager.symlink_path', 'themes') . DIRECTORY_SEPARATOR . $this->getLowerVendor() . DIRECTORY_SEPARATOR . $this->getLowerName() . DIRECTORY_SEPARATOR . $this->cleanPath($path);
+        return Config::get('themes-manager.symlink_path', 'themes') . '/' . mb_strtolower($this->vendor) . '/' . mb_strtolower($this->name) . ($path ? '/' . $path : '');
     }
 
     /**
      * Get theme views paths.
-     *
-     * @param string $path
+     * Build Paths array.
+     * All paths are relative to Config::get('themes-manager.directory')
      */
-    public function getViewPaths($path = ''): array
+    public function getViewPaths(string $path = ''): array
     {
-        // Build Paths array.
-        // All paths are relative to Config::get('themes-manager.directory')
         $paths = [];
         $theme = $this;
 
@@ -130,38 +121,74 @@ class Theme
     }
 
     /**
-     * Get theme translations paths.
-     *
-     * @param string $path
+     * Set extra data
      */
-    public function getTransaltionPaths($path = ''): array
+    public function setExtra(array $extra): self
     {
-        // Build Paths array.
-        // All paths are relative to Config::get('themes-manager.directory')
-        $paths = [];
-        $theme = $this;
+        $this->extra = $extra;
 
-        do {
-            $translationsPath = $theme->getPath('lang' . ($path ? "/{$path}" : ''));
-
-            if (File::exists($translationsPath) && !in_array($translationsPath, $paths)) {
-                $paths[] = $translationsPath;
-            }
-        } while ($theme = $theme->getParent());
-
-        return array_reverse($paths);
+        return $this;
     }
 
     /**
-     * Set path.
-     *
-     * @param string $path
-     *
-     * @return $this
+     * Set theme version
      */
-    public function setPath($path)
+    public function setVersion(string $version): self
     {
-        $this->path = $this->cleanPath($path);
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Set theme description
+     */
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Set theme name
+     */
+    public function setName(string $name): self
+    {
+        // normalize theme name
+        $name = str_replace(['-theme', 'theme-'], '', $name);
+
+        $this->name = basename($name);
+        $this->setVendor($name);
+
+        return $this;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set Theme path.
+     */
+    public function setPath(string $path): self
+    {
+        $this->path = Str::finish($path, '/');
+
+        return $this;
+    }
+
+    /**
+     * Set theme vendor
+     */
+    public function setVendor(string $vendor = null): self
+    {
+        if (Str::contains($vendor, '/')) {
+            $this->vendor = dirname($vendor);
+        } else {
+            $this->vendor = $vendor;
+        }
 
         return $this;
     }
@@ -177,43 +204,23 @@ class Theme
     /**
      * Set parent Theme.
      */
-    public function setParent(Theme $theme)
+    public function setParent(string|Theme|null $theme): self
     {
-        $this->parent = $theme;
-    }
-
-    /**
-     * Get parent Theme.
-     *
-     * @return null|Theme
-     */
-    public function getParent()
-    {
-        return $this->parent;
-    }
-
-    /**
-     * Set theme's status.
-     *
-     * @param $status
-     *
-     * @return bool
-     */
-    public function setStatus(bool $status): Theme
-    {
-        $this->status = $status;
+        $this->parent = empty($theme) ? null : $theme;
 
         return $this;
     }
 
     /**
-     * Check is current status is same as the one given.
-     *
-     * @param $status
+     * Get parent Theme.
      */
-    public function isStatus(bool $status = false): bool
+    public function getParent(): Theme|null
     {
-        return $this->status === $status;
+        if (is_string($this->parent) && !empty($this->parent)) {
+            $this->parent = ThemesManager::findByName($this->parent);
+        }
+
+        return $this->parent;
     }
 
     /**
@@ -221,7 +228,7 @@ class Theme
      */
     public function enabled(): bool
     {
-        return $this->isStatus(true);
+        return $this->enabled;
     }
 
     /**
@@ -238,15 +245,15 @@ class Theme
     public function disable(bool $withEvent = true): Theme
     {
         // Check if current is active and currently enabled
-        if ($this->isActive() && $this->enabled()) {
+        if ($this->enabled()) {
             if ($withEvent) {
-                event(new ThemeDisabling($this->getName()));
+                event(new ThemeDisabling($this->name));
             }
 
-            $this->setStatus(false);
+            $this->enabled = false;
 
             if ($withEvent) {
-                event(new ThemeDisabled($this->getName()));
+                event(new ThemeDisabled($this->name));
             }
         }
 
@@ -255,24 +262,21 @@ class Theme
 
     /**
      * Enable the current theme.
-     *
-     * @param null|mixed $defaultViewPaths
-     * @param null|mixed $defaultMailViewPaths
      */
-    public function enable(bool $withEvent = true, $defaultViewPaths = null, $defaultMailViewPaths = null): Theme
+    public function enable(bool $withEvent = true): Theme
     {
         // Check if current is active and currently disabled
-        if ($this->isActive() && $this->disabled()) {
+        if ($this->disabled()) {
             if ($withEvent) {
-                event(new ThemeEnabling($this->getName()));
+                event(new ThemeEnabling($this->name));
             }
 
-            $this->setStatus(true);
-            $this->registerViews($defaultViewPaths, $defaultMailViewPaths);
-            $this->registerTranlastions();
+            $this->enabled = true;
+            $this->loadViews();
+            $this->loadTranlastions();
 
             if ($withEvent) {
-                event(new ThemeEnabled($this->getName()));
+                event(new ThemeEnabled($this->name));
             }
         }
 
@@ -281,53 +285,44 @@ class Theme
 
     /**
      * Get theme asset url.
-     *
-     * @param string $url
-     * @param bool   $absolutePath
      */
-    public function url($url, $absolutePath = true, bool $version = true): ?string
+    public function url(string $url, bool $absolute = true): string
     {
-        $url = ltrim($url, DIRECTORY_SEPARATOR);
+        $url = trim($url, '/');
 
         // return external URLs unmodified
-        if (preg_match('/^((http(s?):)?\/\/)/i', $url)) {
+        if (URL::isValidUrl($url)) {
             return $url;
         }
 
         // Is theme folder located on the web (ie AWS)? Dont lookup parent themes...
-        if (preg_match('/^((http(s?):)?\/\/)/i', $this->getAssetsPath())) {
+        if (URL::isValidUrl($this->getAssetsPath())) {
             return $this->getAssetsPath($url);
         }
 
         // Check for valid {xxx} keys and replace them with the Theme's configuration value (in composer.json)
-        preg_match_all('/\{(.*?)\}/', $url, $matches);
-        foreach ($matches[1] as $param) {
-            if (($value = $this->get("extra.theme.{$param}")) !== null) {
-                $url = str_replace('{' . $param . '}', $value, $url);
-            }
+        if (preg_match_all('/(\{.*?\})/', $url, $matches)) {
+            $url = str_replace($matches, $this->extra, $url);
         }
 
         // Lookup asset in current's theme assets path
-        $fullUrl = rtrim((empty($this->getAssetsPath()) ? '' : DIRECTORY_SEPARATOR) . $this->getAssetsPath($url), DIRECTORY_SEPARATOR);
-        if (File::exists(public_path($fullUrl))) {
-            $fullUrl = ltrim(str_replace('\\', '/', $fullUrl), '/');
-            $versionTag = hash_file('md5', public_path($fullUrl));
+        $fullUrl = $this->getAssetsPath($url);
 
-            return ($absolutePath ? url('/') . '/' . $fullUrl : $fullUrl) . ($version ? '?v=' . $versionTag : '');
+        if (file_exists(public_path($fullUrl))) {
+            return ($absolute ? asset($fullUrl) : $fullUrl);
         }
 
         // If not found then lookup in parent's theme assets path
         if ($parentTheme = $this->getParent()) {
-            return $parentTheme->url($url, $absolutePath, $version);
-        }   // No parent theme? Lookup in the public folder.
-        if (File::exists(public_path($url))) {
-            $url = ltrim(str_replace('\\', '/', $url), '/');
-            $versionTag = hash_file('md5', public_path($url));
-
-            return ($absolutePath ? url('/') . '/' . $url : $url) . ($version ? '?v=' . $versionTag : '');
+            return $parentTheme->url($url, $absolute);
         }
 
-        Log::warning("Asset [{$url}] not found for Theme [{$this->getName()}]");
+        // No parent theme? Lookup in the public folder.
+        if (file_exists(public_path($url))) {
+            return ($absolute ? asset('') . $url : $url);
+        }
+
+        Log::warning("Asset [{$url}] not found for Theme [{$this->name}]");
 
         return ltrim(str_replace('\\', '/', $url));
     }
@@ -342,6 +337,7 @@ class Theme
         $layouts = collect();
 
         $layoutDirs = $this->getViewPaths('layouts');
+
         foreach ($layoutDirs as $layoutDir) {
             foreach (glob($layoutDir . '/{**/*,*}.php', GLOB_BRACE) as $layout) {
                 $layouts->put($layout, basename($layout, '.blade.php'));
@@ -352,130 +348,29 @@ class Theme
     }
 
     /**
-     * Clean Path by replacing all / by DIRECTORY_SEPARATOR.
-     *
-     * @param string $path
-     *
-     * @return string
-     */
-    protected function cleanPath($path = '')
-    {
-        if ($path) {
-            $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
-
-            if (!is_file($path)) {
-                Str::finish($path, DIRECTORY_SEPARATOR);
-            }
-        }
-
-        return $path;
-    }
-
-    /**
      * Create public assets directory path.
      */
-    protected function createPublicAssetsStructure()
+    protected function assertPublicAssetsPath()
     {
-        // Create target symlink parent directory if required
-        $publicPath = public_path(Config::get('themes-manager.symlink_path', 'themes'));
+        $themeAssetsPath = $this->getPath('public');
 
-        if (!File::exists($publicPath)) {
-            app(Filesystem::class)->makeDirectory($publicPath, 0755);
-        }
+        if (file_exists($themeAssetsPath)) {
+            $publicThemeAssetsPath = public_path($this->getAssetsPath());
+            $publicThemeVendorPath = dirname($publicThemeAssetsPath);
 
-        $publicAssetsPath = dirname(public_path($this->getAssetsPath()));
-
-        // Create vendor directory if not exists yet
-        if (!File::exists($publicAssetsPath)) {
-            app(Filesystem::class)->makeDirectory($publicAssetsPath, 0755);
-        }
-    }
-
-    /**
-     * Register theme's translations.
-     */
-    protected function registerTranlastions()
-    {
-        // Register Translation paths
-        $paths = $this->getTransaltionPaths();
-        $translator = app()->make(Translator::class);
-
-        $paths = array_map(function ($path) use ($translator) {
-            $path = rtrim($path, DIRECTORY_SEPARATOR);
-
-            $translator->addNamespace('theme', $path);
-
-            return $path;
-        }, $paths);
-    }
-
-    /**
-     * Register theme's views in ViewFinder.
-     *
-     * @param mixed $defaultViewPaths
-     * @param mixed $defaultMailViewPaths
-     */
-    protected function registerViews($defaultViewPaths, $defaultMailViewPaths)
-    {
-        // Create symlink for public resources if not existing yet
-        $assetsPath = $this->getPath('public');
-        $publicAssetsPath = public_path($this->getAssetsPath());
-
-        $this->createPublicAssetsStructure();
-
-        if (!File::exists($publicAssetsPath) && File::exists($assetsPath)) {
-            if (Config::get('themes-manager.symlink_relative', false)) {
-                app(Filesystem::class)->relativeLink($assetsPath, rtrim($publicAssetsPath, DIRECTORY_SEPARATOR));
-            } else {
-                app(Filesystem::class)->link($assetsPath, rtrim($publicAssetsPath, DIRECTORY_SEPARATOR));
+            // Create target public theme vendor directory if required
+            if (!file_exists($publicThemeVendorPath)) {
+                app(Filesystem::class)->makeDirectory($publicThemeVendorPath, 0755);
             }
-        }
 
-        // Register theme views path
-        $paths = $this->getViewPaths();
-        $paths = array_map(function ($path) {
-            $path = rtrim($path, DIRECTORY_SEPARATOR);
-            View::getFinder()->prependLocation("{$path}");
-
-            return $path;
-        }, $paths);
-
-        // Update config view.paths to work with errors views
-        if (is_array($defaultViewPaths)) {
-            Config::set('view.paths', array_merge($paths, $defaultViewPaths));
-        } else {
-            Config::set('view.paths', array_merge($paths, [$defaultViewPaths]));
-        }
-
-        // Register all vendor views
-        $vendorViewsPath = $this->getPath('resources/views/vendor');
-        if (File::exists($vendorViewsPath)) {
-            $directories = scandir($vendorViewsPath);
-            foreach ($directories as $namespace) {
-                if ('.' != $namespace && '..' != $namespace) {
-                    if (!empty(Config::get('view.paths')) && is_array(Config::get('view.paths'))) {
-                        foreach (Config::get('view.paths') as $viewPath) {
-                            if (is_dir($appPath = $viewPath . '/vendor/' . $namespace)) {
-                                View::prependNamespace($namespace, $appPath);
-                            }
-                        }
-                    }
+            // Create target symlink public theme assets directory if required
+            if (!file_exists($publicThemeAssetsPath) && file_exists($themeAssetsPath)) {
+                if (Config::get('themes-manager.symlink_relative', false)) {
+                    app(Filesystem::class)->relativeLink($themeAssetsPath, rtrim($publicThemeAssetsPath, '/'));
+                } else {
+                    app(Filesystem::class)->link($themeAssetsPath, rtrim($publicThemeAssetsPath, '/'));
                 }
             }
-        }
-
-        // Update config mail.markdown.paths to work with mail views
-        $mailViewsPath = $this->getPath('resources/views/vendor/mail');
-        if (File::exists($vendorViewsPath) && is_dir($mailViewsPath)) {
-            if (is_array($defaultMailViewPaths)) {
-                Config::set('mail.markdown.paths', array_merge([
-                    $mailViewsPath,
-                ], $defaultMailViewPaths));
-            } else {
-                Config::set('mail.markdown.paths', [$mailViewsPath]);
-            }
-
-            app()->make(Markdown::class)->loadComponentsFrom(Config::get('mail.markdown.paths'));
         }
     }
 }
