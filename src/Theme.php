@@ -193,6 +193,11 @@ class Theme
         return $this;
     }
 
+    public function getVendor(): string
+    {
+        return $this->vendor;
+    }
+
     /**
      * Check if has parent Theme.
      */
