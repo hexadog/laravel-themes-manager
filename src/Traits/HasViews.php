@@ -24,7 +24,7 @@ trait HasViews
         }
 
         // Update config view.paths to work with errors views
-        Config::set('view.paths', Arr::prepend(Arr::wrap(Config::set('view.paths')), $paths));
+        Config::set('view.paths', Arr::prepend(Arr::wrap(Config::get('view.paths')), ...$paths));
 
         $this->loadVendorViews();
         $this->loadMailComponentPaths();
