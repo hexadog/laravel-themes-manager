@@ -2,8 +2,8 @@
 
 namespace Hexadog\ThemesManager\Components;
 
+use Hexadog\ThemesManager\Facades\ThemesManager;
 use Illuminate\View\Component;
-use ThemesManager;
 
 class Image extends Component
 {
@@ -16,15 +16,10 @@ class Image extends Component
 
     /**
      * Create the component instance.
-     *
-     * @param string $type
-     * @param string $message
-     * @param mixed  $src
-     * @param mixed  $absolutePath
      */
-    public function __construct($src, $absolutePath = true)
+    public function __construct(string $src, bool $absolute = true)
     {
-        $this->source = ThemesManager::asset($src, $absolutePath);
+        $this->source = ThemesManager::asset($src, $absolute);
     }
 
     /**

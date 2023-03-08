@@ -11,8 +11,6 @@ use Hexadog\ThemesManager\Console\Generators;
 use Hexadog\ThemesManager\Facades\ThemesManager as ThemesManagerFacade;
 use Hexadog\ThemesManager\Http\Middleware;
 use Hexadog\ThemesManager\ThemesManager;
-use Illuminate\Contracts\Translation\Translator;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
@@ -22,14 +20,9 @@ use ReflectionClass;
 class PackageServiceProvider extends ServiceProvider
 {
     /**
-     * Our root directory for this package to make traversal easier.
-     */
-    public const PACKAGE_DIR = __DIR__ . '/../../';
-
-    /**
      * Name for this package to publish assets.
      */
-    public const PACKAGE_NAME = 'themes-manager';
+    protected const PACKAGE_NAME = 'themes-manager';
 
     /**
      * Pblishers list.
@@ -63,10 +56,7 @@ class PackageServiceProvider extends ServiceProvider
         $this->registerConfigs();
 
         $this->app->singleton('themes-manager', function () {
-            return new ThemesManager(
-                app(Factory::class),
-                app(Translator::class)
-            );
+            return new ThemesManager();
         });
 
         AliasLoader::getInstance()->alias('ThemesManager', ThemesManagerFacade::class);
@@ -125,10 +115,8 @@ class PackageServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole() || 'testing' == config('app.env')) {
             $this->commands([
-                Commands\ActivateTheme::class,
                 Commands\Cache::class,
                 Commands\ClearCache::class,
-                Commands\DeactivateTheme::class,
                 Commands\ListThemes::class,
                 Generators\MakeTheme::class,
             ]);
