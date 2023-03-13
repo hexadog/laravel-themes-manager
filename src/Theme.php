@@ -140,6 +140,11 @@ class Theme
         return $this;
     }
 
+    public function getVersion(): string
+    {
+        return $this->version;
+    }
+
     /**
      * Set theme description.
      */
@@ -148,6 +153,11 @@ class Theme
         $this->description = $description;
 
         return $this;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
     }
 
     /**
