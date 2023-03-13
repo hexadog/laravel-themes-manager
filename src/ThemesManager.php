@@ -187,7 +187,7 @@ class ThemesManager
      * If no vendor provided and name not prefixed by vendor
      * the first theme with given name is returned.
      */
-    protected function findByName(string $name, string $vendor = null): ?Theme
+    public function findByName(string $name, string $vendor = null): ?Theme
     {
         // normalize theme name
         $name = str_replace(['-theme', 'theme-'], '', $name);
