@@ -389,7 +389,7 @@ class Theme
 
             // Create target public theme vendor directory if required
             if (!file_exists($publicThemeVendorPath)) {
-                app(Filesystem::class)->makeDirectory($publicThemeVendorPath, 0755);
+                app(Filesystem::class)->makeDirectory($publicThemeVendorPath, 0755, true);
             }
 
             // Create target symlink public theme assets directory if required
