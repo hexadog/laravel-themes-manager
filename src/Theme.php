@@ -368,8 +368,10 @@ class Theme
         $layoutDirs = $this->getViewPaths('layouts');
 
         foreach ($layoutDirs as $layoutDir) {
-            foreach (glob($layoutDir . '/{**/*,*}.php', GLOB_BRACE) as $layout) {
-                $layouts->put($layout, basename($layout, '.blade.php'));
+            if ($layoutFiles = glob($layoutDir . '/{**/*,*}.php', GLOB_BRACE)) {
+                foreach ($layoutFiles as $layout) {
+                    $layouts->put($layout, basename($layout, '.blade.php'));
+                }
             }
         }
 
