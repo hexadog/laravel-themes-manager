@@ -38,10 +38,10 @@ trait HasViews
         $vendorViewsPath = $this->getPath('resources/views/vendor');
 
         if (file_exists($vendorViewsPath)) {
-            $directories = glob($vendorViewsPath . '/*', GLOB_ONLYDIR);
-
-            foreach ($directories as $path) {
-                View::prependNamespace(basename($path), $path);
+            if ($directories = glob($vendorViewsPath . '/*', GLOB_ONLYDIR)) {
+                foreach ($directories as $path) {
+                    View::prependNamespace(basename($path), $path);
+                }
             }
         }
     }
