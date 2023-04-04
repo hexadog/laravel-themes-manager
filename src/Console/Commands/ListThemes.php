@@ -46,9 +46,9 @@ class ListThemes extends Command
         }
 
         if (0 == count($this->themes)) {
-            return $this->error("Your application doesn't have any theme.");
+            $this->error("Your application doesn't have any theme.");
+        } else {
+            $this->table($this->headers, $this->themes);
         }
-
-        $this->table($this->headers, $this->themes);
     }
 }
