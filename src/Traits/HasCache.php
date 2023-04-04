@@ -27,7 +27,7 @@ trait HasCache
     protected function getCache(): Collection
     {
         return Cache::remember(Config::get('themes-manager.cache.key', 'themes-manager'), Config::get('themes-manager.cache.lifetime', 86400), function () {
-            return ThemeFinder::find(Config::get('themes-manager.directory', 'themes'));
+            return ThemeFinder::find();
         });
     }
 }

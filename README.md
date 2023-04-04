@@ -18,7 +18,7 @@
 
 <!-- omit in toc -->
 ## Installation
-This package requires PHP 7.3 and Laravel 7.0 or higher.
+This package requires PHP 7.4 and Laravel 7.0 or higher.
 
 To get started, install Themes Manager using Composer:
 ```shell
