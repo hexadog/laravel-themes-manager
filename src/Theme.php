@@ -49,7 +49,7 @@ class Theme
     /**
      * The Parent theme.
      */
-    protected string | Theme | null $parent;
+    protected string | Theme | null $parent = null;
 
     /**
      * The theme statud (enabled or not).
@@ -231,7 +231,7 @@ class Theme
      */
     public function getParent(): Theme | null
     {
-        if (is_string($this->parent) && !empty($this->parent)) {
+        if (is_string($this->parent)) {
             $this->parent = ThemesManager::findByName($this->parent);
         }
 
@@ -359,7 +359,7 @@ class Theme
     /**
      * List theme's available layouts.
      *
-     * @return Collection
+     * @return \Illuminate\Support\Collection
      */
     public function listLayouts()
     {
