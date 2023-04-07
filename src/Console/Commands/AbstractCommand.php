@@ -24,7 +24,7 @@ abstract class AbstractCommand extends Command
         if (!$this->theme) {
             $this->error("Theme with name {$name} does not exists!");
 
-            exit();
+            exit;
         }
     }
 }
