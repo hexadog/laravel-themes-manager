@@ -40,7 +40,7 @@ class ListThemes extends Command
                 'vendor' => $theme->getVendor(),
                 'version' => $theme->getVersion(),
                 'description' => $theme->getDescription(),
-                'extends' => $theme->getParent() ? $theme->getParent() : '',
+                'extends' => $theme->getParent() ? $theme->getParent()->getName() : '',
                 'default' => $theme->getName() === config('themes-manager.fallback_theme') ? 'X' : '',
             ];
         }
