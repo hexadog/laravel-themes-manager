@@ -2,9 +2,7 @@
 
 namespace Hexadog\ThemesManager\Exceptions;
 
-use RuntimeException;
-
-class ThemeLoaderException extends RuntimeException
+class ThemeLoaderException extends \RuntimeException
 {
     /**
      * @return \Hexadog\ThemesManager\Exceptions\ThemeLoaderException
