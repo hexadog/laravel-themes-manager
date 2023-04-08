@@ -201,7 +201,6 @@ class Json
     /**
      * Get the specified attribute from json file.
      *
-     * @param $key
      * @param null $default
      *
      * @return mixed

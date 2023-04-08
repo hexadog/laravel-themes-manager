@@ -79,7 +79,8 @@ class ThemesManager
         return $this->themes
             ->filter(function ($theme) {
                 return $theme->enabled();
-            })->first();
+            })->first()
+        ;
     }
 
     /**

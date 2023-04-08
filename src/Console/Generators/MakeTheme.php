@@ -2,7 +2,6 @@
 
 namespace Hexadog\ThemesManager\Console\Generators;
 
-use Exception;
 use Hexadog\ThemesManager\Console\Commands\Traits\BlockMessage;
 use Hexadog\ThemesManager\Console\Commands\Traits\SectionMessage;
 use Hexadog\ThemesManager\Facades\ThemesManager;
@@ -86,7 +85,7 @@ class MakeTheme extends Command
                 $this->generateTheme();
 
                 $this->sectionMessage('Themes Manager', 'Theme successfully created');
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $this->error($e->getMessage());
             }
         }
@@ -240,7 +239,7 @@ class MakeTheme extends Command
 
         // Make directory
         if ($this->files->isDirectory($directory)) {
-            throw new Exception("Theme {$this->theme['name']} already exists");
+            throw new \Exception("Theme {$this->theme['name']} already exists");
         }
         $this->files->makeDirectory($directory, 0755, true);
 
