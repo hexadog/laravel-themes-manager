@@ -100,27 +100,6 @@ class Theme
     }
 
     /**
-     * Get theme views paths.
-     * Build Paths array.
-     * All paths are relative to Config::get('themes-manager.directory').
-     */
-    public function getViewPaths(string $path = ''): array
-    {
-        $paths = [];
-        $theme = $this;
-
-        do {
-            $viewsPath = $theme->getPath('resources/views' . ($path ? "/{$path}" : ''));
-
-            if (!in_array($viewsPath, $paths)) {
-                $paths[] = $viewsPath;
-            }
-        } while ($theme = $theme->getParent());
-
-        return array_reverse($paths);
-    }
-
-    /**
      * Set extra data.
      */
     public function setExtra(array $extra): self
@@ -354,28 +333,6 @@ class Theme
         Log::warning("Asset [{$url}] not found for Theme [{$this->name}]");
 
         return ltrim(str_replace('\\', '/', $url));
-    }
-
-    /**
-     * List theme's available layouts.
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function listLayouts()
-    {
-        $layouts = collect();
-
-        $layoutDirs = $this->getViewPaths('layouts');
-
-        foreach ($layoutDirs as $layoutDir) {
-            if ($layoutFiles = glob($layoutDir . '/{**/*,*}.php', GLOB_BRACE)) {
-                foreach ($layoutFiles as $layout) {
-                    $layouts->put($layout, basename($layout, '.blade.php'));
-                }
-            }
-        }
-
-        return $layouts;
     }
 
     /**
