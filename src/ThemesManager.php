@@ -64,18 +64,7 @@ class ThemesManager
             throw new ThemeNotFoundException($name);
         }
 
-        /**
-         * Syntax error unexpected '->' arrow T_OBJECT_OPERATOR.
-         * this error does not allow the theme:make command to proceed after inserting 
-         * vendor name in the command line (CLI); 
-         * the code below was commented out and replaced with the new code to fix the error.
-         * dakingeorge58@gmail.com
-         * www.telegram.com/codedweb.
-         */
-
-        //$this->current()?->disable(); //old
-
-        $this->current() ?  $this->disable($name) : ''; //new
+        optional($this->current())->disable();
 
         $this->enable($name);
 
