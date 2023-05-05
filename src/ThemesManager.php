@@ -64,7 +64,9 @@ class ThemesManager
             throw new ThemeNotFoundException($name);
         }
 
-        $this->current()?->disable();
+        //$this->current()?->disable(); //old
+
+        $this->current() ?  $this->disable($name) : '';
 
         $this->enable($name);
 
@@ -79,8 +81,7 @@ class ThemesManager
         return $this->themes
             ->filter(function ($theme) {
                 return $theme->enabled();
-            })->first()
-        ;
+            })->first();
     }
 
     /**
@@ -171,7 +172,8 @@ class ThemesManager
         if (Str::contains($asset, '::')) {
             $assetParts = explode('::', $asset);
 
-            return $this->findByName($assetParts[0])?->url($assetParts[1], $absolute);
+            //return $this->findByName($assetParts[0])?->url($assetParts[1], $absolute); //old
+            return $this->findByName($assetParts[0]) ? $this->url($assetParts[1], $absolute) : '';
         }
 
         // If no Theme set, return /$asset
