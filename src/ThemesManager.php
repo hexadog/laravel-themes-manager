@@ -170,18 +170,7 @@ class ThemesManager
         if (Str::contains($asset, '::')) {
             $assetParts = explode('::', $asset);
 
-            /**
-             * Syntax error unexpected '->' arrow T_OBJECT_OPERATOR.
-             * this error does not allow the theme:make command to proceed after inserting 
-             * vendor name in the command line (CLI); 
-             * the code below was commented out and replaced with the new code to fix the error.
-             * dakingeorge58@gmail.com
-             * www.telegram.com/codedweb.
-             */
-
-            //return $this->findByName($assetParts[0])?->url($assetParts[1], $absolute); //old
-
-            return $this->findByName($assetParts[0]) ? $this->url($assetParts[1], $absolute) : ''; //new
+            return optional($this->findByName($assetParts[0]))->url($assetParts[1], $absolute);
         }
 
         // If no Theme set, return /$asset
