@@ -21,7 +21,6 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^7.0|^8.0|^9.0|^10.0",
-        "nunomaduro/phpinsights": "^2.8",
         "laravel/pint": "^1.10",
         "nunomaduro/larastan": "^2.0",
         "orchestra/testbench": "^8.3"
