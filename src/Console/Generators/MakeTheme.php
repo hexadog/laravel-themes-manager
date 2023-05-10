@@ -89,7 +89,7 @@ class MakeTheme extends Command
 
         if (Str::contains($this->theme['name'], '\\')) {
             $nameParts = explode('\\', str_replace('\\\\', '\\', $this->theme['name']));
-            if (2 === count($nameParts)) {
+            if (count($nameParts) === 2) {
                 $this->theme['vendor'] = mb_strtolower($nameParts[0]);
                 $this->theme['name'] = Str::kebab($nameParts[1]);
             } else {

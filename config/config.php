@@ -51,8 +51,8 @@ return [
     |
     */
     'cache' => [
-        'enabled' => false,
-        'key' => 'themes-manager',
+        'enabled'  => false,
+        'key'      => 'themes-manager',
         'lifetime' => 86400,
     ],
 
@@ -69,7 +69,7 @@ return [
     'composer' => [
         'vendor' => null,
         'author' => [
-            'name' => null,
+            'name'  => null,
             'email' => null,
         ],
     ],

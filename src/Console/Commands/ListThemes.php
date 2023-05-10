@@ -38,16 +38,16 @@ class ListThemes extends Command
 
         foreach ($themes as $theme) {
             $this->themes[] = [
-                'name' => $theme->getName(),
-                'vendor' => $theme->getVendor(),
-                'version' => $theme->getVersion(),
+                'name'        => $theme->getName(),
+                'vendor'      => $theme->getVendor(),
+                'version'     => $theme->getVersion(),
                 'description' => $theme->getDescription(),
-                'extends' => $theme->getParent() ? $theme->getParent()->getName() : '',
-                'default' => $theme->getName() === config('themes-manager.fallback_theme') ? 'X' : '',
+                'extends'     => $theme->getParent() ? $theme->getParent()->getName() : '',
+                'default'     => $theme->getName() === config('themes-manager.fallback_theme') ? 'X' : '',
             ];
         }
 
-        if (0 === count($this->themes)) {
+        if (count($this->themes) === 0) {
             $this->error("Your application doesn't have any theme.");
         } else {
             $this->table($this->headers, $this->themes);
