@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Hexadog\ThemesManager\Exceptions;
 
-class ThemeLoaderException extends \RuntimeException
+final class ThemeLoaderException extends \RuntimeException
 {
     /**
      * @return \Hexadog\ThemesManager\Exceptions\ThemeLoaderException
      */
     public static function duplicate(string $name): self
     {
-        return new static(sprintf(
+        return new self(sprintf(
             'A theme named "%s" already exists.',
             $name
         ));

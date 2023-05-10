@@ -42,17 +42,17 @@ class ThemesManager
     /**
      * Check if theme with given name exists.
      */
-    public function has(?string $name = null, ?Collection $themes = null): bool
+    public function has(?string $name = null): bool
     {
-        return ! is_null($this->findByName($name, null, $themes));
+        return ! is_null($this->findByName($name, null));
     }
 
     /**
      * Get theme by name (or return all themes if no name given).
      */
-    public function get(?string $name = null, ?Collection $themes = null): ?Theme
+    public function get(?string $name = null): ?Theme
     {
-        return $this->findByName($name, null, $themes);
+        return $this->findByName($name, null);
     }
 
     /**

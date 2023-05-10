@@ -12,18 +12,14 @@ class Script extends Component
     /**
      * The script source url.
      */
-    public string $source;
+    public ?string $source = null;
 
     /**
      * Create the component instance.
      */
-    public function __construct(?string $src = null, bool $absolute = true)
+    public function __construct(string $src, bool $absolute = true)
     {
-        if (! is_null($src)) {
-            $this->source = ThemesManager::asset($src, $absolute);
-        } else {
-            $this->source = null;
-        }
+        $this->source = ThemesManager::asset($src, $absolute);
     }
 
     /**

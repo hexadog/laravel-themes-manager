@@ -8,12 +8,12 @@ trait SectionMessage
 {
     public function sectionMessage($title, $message, $style = 'info'): void
     {
-        $formatter = $this->getHelperSet()->get('formatter');
-        $formattedLine = $formatter->formatSection(
+        $formattedLine = $this->getHelperSet()->get('formatter')->formatSection(
             $title,
             $message,
             $style
         );
+
         $this->line($formattedLine);
     }
 }

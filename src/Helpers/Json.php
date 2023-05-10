@@ -9,7 +9,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
-class Json
+final class Json
 {
     /**
      * The file path.
@@ -105,7 +105,7 @@ class Json
      */
     public static function make(string $path, ?Filesystem $filesystem = null): Json
     {
-        return new static($path, $filesystem);
+        return new self($path, $filesystem);
     }
 
     /**
@@ -135,8 +135,6 @@ class Json
 
     /**
      * Convert the given array data to pretty json.
-     *
-     * @param  array  $data
      */
     public function toJsonPretty(?array $data = null): false|string
     {
@@ -177,10 +175,8 @@ class Json
 
     /**
      * Get the specified attribute from json file.
-     *
-     * @param  null  $default
      */
-    public function get(mixed $key, $default = null): mixed
+    public function get(mixed $key, mixed $default = null): mixed
     {
         return Arr::get($this->attributes, $key, $default);
     }

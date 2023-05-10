@@ -16,9 +16,6 @@ class PageTitle extends Component
 
     /**
      * Create the component instance.
-     *
-     * @param  string  $type
-     * @param  string  $message
      */
     public function __construct(mixed $title = null, mixed $withAppName = true, mixed $separator = '-', mixed $invert = false)
     {

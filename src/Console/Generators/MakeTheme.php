@@ -21,17 +21,17 @@ class MakeTheme extends Command
     /**
      * The console command name.
      */
-    protected string $name = 'theme:make';
+    protected $name = 'theme:make';
 
     /**
      * The console command description.
      */
-    protected string $description = 'Create a new Theme';
+    protected $description = 'Create a new Theme';
 
     /**
      * Config.
      */
-    protected \Illuminate\Support\Facades\Config $config;
+    protected Repository $config;
 
     protected Filesystem $files;
 

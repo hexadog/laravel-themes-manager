@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 
-class Theme
+final class Theme
 {
     use HasTranslations;
     use HasViews;
@@ -82,7 +82,7 @@ class Theme
      */
     public static function make(...$arguments): self
     {
-        return new static(...$arguments);
+        return new self(...$arguments);
     }
 
     /**
@@ -354,7 +354,7 @@ class Theme
             }
 
             // Create target symlink public theme assets directory if required
-            if (! file_exists($publicThemeAssetsPath) && file_exists($themeAssetsPath)) {
+            if (! file_exists($publicThemeAssetsPath)) {
                 if (Config::get('themes-manager.symlink_relative', false)) {
                     app(Filesystem::class)->relativeLink($themeAssetsPath, rtrim($publicThemeAssetsPath, '/'));
                 } else {
