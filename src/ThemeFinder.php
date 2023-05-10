@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Hexadog\ThemesManager;
 
 use Hexadog\ThemesManager\Helpers\Json;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Symfony\Component\Finder\Finder;
 
 class ThemeFinder
 {
-    public static function find()
+    public static function find(): Collection
     {
         $path = base_path(Config::get('themes-manager.directory', 'themes'));
 
