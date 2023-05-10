@@ -17,12 +17,12 @@ class PageTitle extends Component
     /**
      * Create the component instance.
      *
-     * @param string     $type
-     * @param string     $message
-     * @param null|mixed $title
-     * @param mixed      $withAppName
-     * @param mixed      $separator
-     * @param mixed      $invert
+     * @param  string  $type
+     * @param  string  $message
+     * @param  null|mixed  $title
+     * @param  mixed  $withAppName
+     * @param  mixed  $separator
+     * @param  mixed  $invert
      */
     public function __construct($title = null, $withAppName = true, $separator = '-', $invert = false)
     {
@@ -30,7 +30,7 @@ class PageTitle extends Component
             $title = View::getSection('title');
         }
 
-        if (!empty($title) && $withAppName) {
+        if (! empty($title) && $withAppName) {
             if ($invert) {
                 $this->title = $title . ' ' . trim(e($separator)) . ' ' . config('app.name');
             } else {

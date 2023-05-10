@@ -22,7 +22,7 @@ trait HasViews
         do {
             $viewsPath = $theme->getPath('resources/views' . ($path ? "/{$path}" : ''));
 
-            if (!in_array($viewsPath, $paths)) {
+            if (! in_array($viewsPath, $paths)) {
                 $paths[] = $viewsPath;
             }
         } while ($theme = $theme->getParent());

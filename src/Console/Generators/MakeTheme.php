@@ -110,7 +110,7 @@ class MakeTheme extends Command
             }
         } else {
             if (Str::contains($this->theme['name'], '/')) {
-                list($vendor, $name) = explode('/', $this->theme['name']);
+                [$vendor, $name] = explode('/', $this->theme['name']);
                 $this->theme['vendor'] = mb_strtolower($vendor);
                 $this->theme['name'] = Str::kebab($name);
             } else {
@@ -131,8 +131,7 @@ class MakeTheme extends Command
     /**
      * Replace placeholders in generated file.
      *
-     * @param \Symfony\Component\Finder\SplFileInfo $file
-     *
+     * @param  \Symfony\Component\Finder\SplFileInfo  $file
      * @return string
      */
     protected function replacePlaceholders($file)
@@ -188,7 +187,7 @@ class MakeTheme extends Command
     {
         do {
             $this->theme['name'] = $this->ask('Theme Name');
-        } while (!strlen($this->theme['name']));
+        } while (! strlen($this->theme['name']));
     }
 
     /**
@@ -211,7 +210,7 @@ class MakeTheme extends Command
     {
         do {
             $this->theme['vendor'] = mb_strtolower($this->config->get('themes-manager.composer.vendor') ?? $this->ask('Vendor name'));
-        } while (!strlen($this->theme['vendor']));
+        } while (! strlen($this->theme['vendor']));
     }
 
     /**
@@ -221,7 +220,7 @@ class MakeTheme extends Command
     {
         $this->theme['version'] = $this->ask('Version number');
 
-        if (!strlen($this->theme['version'])) {
+        if (! strlen($this->theme['version'])) {
             $this->theme['version'] = null;
         }
     }

@@ -44,7 +44,7 @@ class ThemesManager
      */
     public function has(string $name = null, ?Collection $themes = null): bool
     {
-        return !is_null($this->findByName($name, null, $themes));
+        return ! is_null($this->findByName($name, null, $themes));
     }
 
     /**
@@ -60,7 +60,7 @@ class ThemesManager
      */
     public function set(string $name): ThemesManager
     {
-        if (!$this->has($name)) {
+        if (! $this->has($name)) {
             throw new ThemeNotFoundException($name);
         }
 
@@ -79,8 +79,7 @@ class ThemesManager
         return $this->themes
             ->filter(function ($theme) {
                 return $theme->enabled();
-            })->first()
-        ;
+            })->first();
     }
 
     /**
@@ -175,7 +174,7 @@ class ThemesManager
         }
 
         // If no Theme set, return /$asset
-        if (!$this->current()) {
+        if (! $this->current()) {
             return Str::start($asset, '/');
         }
 
@@ -211,11 +210,11 @@ class ThemesManager
     /**
      * Return attributes in html format.
      *
-     * @param array $attributes
+     * @param  array  $attributes
      */
     private function htmlAttributes($attributes): string
     {
-        return join(' ', array_map(function ($key) use ($attributes) {
+        return implode(' ', array_map(function ($key) use ($attributes) {
             if (is_bool($attributes[$key])) {
                 return $attributes[$key] ? $key : '';
             }

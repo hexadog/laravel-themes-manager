@@ -77,7 +77,7 @@ class PackageServiceProvider extends ServiceProvider
     /**
      * Get Package absolute path.
      *
-     * @param string $path
+     * @param  string  $path
      */
     protected function getPath($path = '')
     {
@@ -90,7 +90,7 @@ class PackageServiceProvider extends ServiceProvider
     /**
      * Get Module normalized namespace.
      *
-     * @param mixed $prefix
+     * @param  mixed  $prefix
      */
     protected function getNormalizedNamespace($prefix = '')
     {

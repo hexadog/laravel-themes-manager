@@ -10,9 +10,8 @@ class ThemeLoader
     /**
      * Handle an incoming request.
      *
-     * @param string $theme
-     * @param string $layout
-     *
+     * @param  string  $theme
+     * @param  string  $layout
      * @return mixed
      */
     public function handle(Request $request, \Closure $next, $theme = null)
@@ -22,7 +21,7 @@ class ThemeLoader
             return $next($request);
         }
 
-        if (!empty($theme)) {
+        if (! empty($theme)) {
             ThemesManager::set($theme);
         } else {
             if ($theme = config('themes-manager.fallback_theme')) {
