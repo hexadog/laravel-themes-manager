@@ -21,11 +21,11 @@ trait HasTranslations
         do {
             $translationsPath = $theme->getPath('lang' . ($path ? "/{$path}" : ''));
 
-            if (!file_exists($translationsPath)) {
+            if (! file_exists($translationsPath)) {
                 $translationsPath = $theme->getPath('resources/lang' . ($path ? "/{$path}" : ''));
             }
 
-            if (file_exists($translationsPath) && !in_array($translationsPath, $paths)) {
+            if (file_exists($translationsPath) && ! in_array($translationsPath, $paths)) {
                 $paths[] = $translationsPath;
             }
         } while ($theme = $theme->getParent());

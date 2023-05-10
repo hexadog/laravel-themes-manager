@@ -19,7 +19,7 @@ class Style extends Component
      */
     public function __construct(string $src, bool $absolute = true)
     {
-        if (!is_null($src)) {
+        if (! is_null($src)) {
             $this->source = ThemesManager::asset($src, $absolute);
         } else {
             $this->source = null;

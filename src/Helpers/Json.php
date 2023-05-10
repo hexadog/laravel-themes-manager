@@ -136,7 +136,7 @@ class Json
     /**
      * Convert the given array data to pretty json.
      *
-     * @param array $data
+     * @param  array  $data
      */
     public function toJsonPretty(?array $data = null): false|string
     {
@@ -178,7 +178,7 @@ class Json
     /**
      * Get the specified attribute from json file.
      *
-     * @param null $default
+     * @param  null  $default
      */
     public function get(mixed $key, $default = null): mixed
     {
