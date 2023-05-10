@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager\Components;
 
 use Hexadog\ThemesManager\Facades\ThemesManager;
@@ -9,10 +11,8 @@ class Image extends Component
 {
     /**
      * The style source url.
-     *
-     * @var string
      */
-    public $source;
+    public string $source;
 
     /**
      * Create the component instance.
@@ -24,10 +24,8 @@ class Image extends Component
 
     /**
      * Get the view / contents that represents the component.
-     *
-     * @return \Illuminate\View\View
      */
-    public function render()
+    public function render(): \Illuminate\View\View
     {
         return view('themes-manager::components.image');
     }

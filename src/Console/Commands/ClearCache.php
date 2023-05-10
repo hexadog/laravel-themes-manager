@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager\Console\Commands;
 
 use Hexadog\ThemesManager\Facades\ThemesManager;
@@ -8,17 +10,13 @@ class ClearCache extends AbstractCommand
 {
     /**
      * The console command name.
-     *
-     * @var string
      */
-    protected $name = 'theme:cache:clear';
+    protected string $name = 'theme:cache:clear';
 
     /**
      * The console command description.
-     *
-     * @var string
      */
-    protected $description = 'Clear themes cache';
+    protected string $description = 'Clear themes cache';
 
     /**
      * Create a new command instance.
@@ -31,7 +29,7 @@ class ClearCache extends AbstractCommand
     /**
      * Prompt for module's alias name.
      */
-    public function handle()
+    public function handle(): void
     {
         if (ThemesManager::clearCache()) {
             $this->sectionMessage('Themes Manager', 'Themes cache cleared succefully');

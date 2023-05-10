@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager\Traits;
 
 use Illuminate\Translation\Translator;
@@ -34,7 +36,7 @@ trait HasTranslations
     /**
      * Register theme's translations.
      */
-    protected function loadTranlastions()
+    protected function loadTranlastions(): void
     {
         // Register Translation paths
         $paths = $this->getTranslationPaths();

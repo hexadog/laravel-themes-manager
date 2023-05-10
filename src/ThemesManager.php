@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager;
 
 use Hexadog\ThemesManager\Exceptions\ThemeNotFoundException;
@@ -14,10 +16,8 @@ class ThemesManager
 
     /**
      * Scanned themes.
-     *
-     * @var \Illuminate\Support\Collection
      */
-    private $themes;
+    private Collection $themes;
 
     /**
      * The constructor.
@@ -42,7 +42,7 @@ class ThemesManager
     /**
      * Check if theme with given name exists.
      */
-    public function has(string $name = null, ?Collection $themes = null): bool
+    public function has(?string $name = null, ?Collection $themes = null): bool
     {
         return ! is_null($this->findByName($name, null, $themes));
     }
@@ -50,7 +50,7 @@ class ThemesManager
     /**
      * Get theme by name (or return all themes if no name given).
      */
-    public function get(string $name = null, ?Collection $themes = null): ?Theme
+    public function get(?string $name = null, ?Collection $themes = null): ?Theme
     {
         return $this->findByName($name, null, $themes);
     }
@@ -187,7 +187,7 @@ class ThemesManager
      * If no vendor provided and name not prefixed by vendor
      * the first theme with given name is returned.
      */
-    public function findByName(string $name, string $vendor = null): ?Theme
+    public function findByName(string $name, ?string $vendor = null): ?Theme
     {
         // normalize theme name
         $name = str_replace(['-theme', 'theme-'], '', $name);
@@ -209,10 +209,8 @@ class ThemesManager
 
     /**
      * Return attributes in html format.
-     *
-     * @param  array  $attributes
      */
-    private function htmlAttributes($attributes): string
+    private function htmlAttributes(array $attributes): string
     {
         return implode(' ', array_map(function ($key) use ($attributes) {
             if (is_bool($attributes[$key])) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager\Console\Commands;
 
 use Hexadog\ThemesManager\Console\Commands\Traits\BlockMessage;
@@ -11,12 +13,9 @@ abstract class AbstractCommand extends Command
     use BlockMessage;
     use SectionMessage;
 
-    /**
-     * @var mixed
-     */
-    protected $theme;
+    protected mixed $theme;
 
-    protected function validateName()
+    protected function validateName(): void
     {
         $name = $this->argument('name');
 

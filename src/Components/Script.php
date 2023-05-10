@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager\Components;
 
 use Hexadog\ThemesManager\Facades\ThemesManager;
@@ -9,15 +11,13 @@ class Script extends Component
 {
     /**
      * The script source url.
-     *
-     * @var string
      */
-    public $source;
+    public string $source;
 
     /**
      * Create the component instance.
      */
-    public function __construct(string $src = null, bool $absolute = true)
+    public function __construct(?string $src = null, bool $absolute = true)
     {
         if (! is_null($src)) {
             $this->source = ThemesManager::asset($src, $absolute);
@@ -28,10 +28,8 @@ class Script extends Component
 
     /**
      * Get the view / contents that represents the component.
-     *
-     * @return \Illuminate\View\View
      */
-    public function render()
+    public function render(): \Illuminate\View\View
     {
         return view('themes-manager::components.script');
     }

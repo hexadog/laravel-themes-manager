@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager\Events;
 
 class ThemeDisabling
 {
-    /**
-     * @var array|string
-     */
-    public $theme;
+    public array|string $theme;
 
     public function __construct($theme)
     {

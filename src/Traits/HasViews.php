@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager\Traits;
 
 use Illuminate\Mail\Markdown;
@@ -25,24 +27,26 @@ trait HasViews
             if (! in_array($viewsPath, $paths)) {
                 $paths[] = $viewsPath;
             }
-        } while ($theme = $theme->getParent());
+
+            $theme = $theme->getParent();
+        } while ($theme);
 
         return $paths;
     }
 
     /**
      * List theme's available layouts.
-     *
-     * @return \Illuminate\Support\Collection
      */
-    public function listLayouts()
+    public function listLayouts(): \Illuminate\Support\Collection
     {
         $layouts = collect();
 
         $layoutDirs = $this->getViewPaths('layouts');
 
         foreach ($layoutDirs as $layoutDir) {
-            if ($layoutFiles = glob($layoutDir . '/{**/*,*}.php', GLOB_BRACE)) {
+            $layoutFiles = glob($layoutDir . '/{**/*,*}.php', GLOB_BRACE);
+
+            if ($layoutFiles) {
                 foreach ($layoutFiles as $layout) {
                     $layouts->put($layout, basename($layout, '.blade.php'));
                 }
@@ -55,7 +59,7 @@ trait HasViews
     /**
      * Register theme's views in ViewFinder.
      */
-    protected function loadViews()
+    protected function loadViews(): void
     {
         $this->assertPublicAssetsPath();
 
@@ -81,7 +85,9 @@ trait HasViews
         $vendorViewsPath = $this->getPath('resources/views/vendor');
 
         if (file_exists($vendorViewsPath)) {
-            if ($directories = glob($vendorViewsPath . '/*', GLOB_ONLYDIR)) {
+            $directories = glob($vendorViewsPath . '/*', GLOB_ONLYDIR);
+
+            if ($directories) {
                 foreach ($directories as $path) {
                     View::prependNamespace(basename($path), $path);
                 }

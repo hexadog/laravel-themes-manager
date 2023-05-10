@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager\Console\Generators;
 
 use Hexadog\ThemesManager\Console\Commands\Traits\BlockMessage;
@@ -18,43 +20,30 @@ class MakeTheme extends Command
 
     /**
      * The console command name.
-     *
-     * @var string
      */
-    protected $name = 'theme:make';
+    protected string $name = 'theme:make';
 
     /**
      * The console command description.
-     *
-     * @var string
      */
-    protected $description = 'Create a new Theme';
+    protected string $description = 'Create a new Theme';
 
     /**
      * Config.
-     *
-     * @var \Illuminate\Support\Facades\Config
      */
-    protected $config;
+    protected \Illuminate\Support\Facades\Config $config;
 
-    /**
-     * @var Filesystem
-     */
-    protected $files;
+    protected Filesystem $files;
 
     /**
      * Create Theme Info.
-     *
-     * @var array
      */
-    protected $theme = [];
+    protected array $theme = [];
 
     /**
      * Theme folder path.
-     *
-     * @var string
      */
-    protected $themePath;
+    protected string $themePath;
 
     /**
      * Create a new command instance.
@@ -70,7 +59,7 @@ class MakeTheme extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $this->themePath = $this->config->get('themes-manager.directory', 'themes');
 
@@ -100,7 +89,7 @@ class MakeTheme extends Command
 
         if (Str::contains($this->theme['name'], '\\')) {
             $nameParts = explode('\\', str_replace('\\\\', '\\', $this->theme['name']));
-            if (2 === count($nameParts)) {
+            if (count($nameParts) === 2) {
                 $this->theme['vendor'] = mb_strtolower($nameParts[0]);
                 $this->theme['name'] = Str::kebab($nameParts[1]);
             } else {
@@ -130,11 +119,8 @@ class MakeTheme extends Command
 
     /**
      * Replace placeholders in generated file.
-     *
-     * @param  \Symfony\Component\Finder\SplFileInfo  $file
-     * @return string
      */
-    protected function replacePlaceholders($file)
+    protected function replacePlaceholders(\Symfony\Component\Finder\SplFileInfo $file): string
     {
         $this->sectionMessage('File generation', "{$file->getPathName()}");
 
@@ -166,7 +152,7 @@ class MakeTheme extends Command
      * Notice: if value is set in themes-manager.composer.author.name and themes-manager.composer.author.email config value
      * then this value will be used.
      */
-    protected function askAuthor()
+    protected function askAuthor(): void
     {
         $this->theme['author-name'] = $this->config->get('themes-manager.composer.author.name') ?? $this->ask('Author name');
         $this->theme['author-email'] = $this->config->get('themes-manager.composer.author.email') ?? $this->ask('Author email');
@@ -175,7 +161,7 @@ class MakeTheme extends Command
     /**
      * Ask for theme description.
      */
-    protected function askDescription()
+    protected function askDescription(): void
     {
         $this->theme['description'] = $this->ask('Description');
     }
@@ -183,7 +169,7 @@ class MakeTheme extends Command
     /**
      * Ask for theme name.
      */
-    protected function askName()
+    protected function askName(): void
     {
         do {
             $this->theme['name'] = $this->ask('Theme Name');
@@ -193,7 +179,7 @@ class MakeTheme extends Command
     /**
      * Ask for parent theme name.
      */
-    protected function askParent()
+    protected function askParent(): void
     {
         if ($this->confirm('Is it a child theme?')) {
             $this->theme['parent'] = $this->ask('Parent theme name');
@@ -206,7 +192,7 @@ class MakeTheme extends Command
      * Notice: if value is set in themes-manager.composer.vendor config value
      * then this value will be used.
      */
-    protected function askVendor()
+    protected function askVendor(): void
     {
         do {
             $this->theme['vendor'] = mb_strtolower($this->config->get('themes-manager.composer.vendor') ?? $this->ask('Vendor name'));
@@ -216,7 +202,7 @@ class MakeTheme extends Command
     /**
      * Ask for theme version.
      */
-    protected function askVersion()
+    protected function askVersion(): void
     {
         $this->theme['version'] = $this->ask('Version number');
 
@@ -228,7 +214,7 @@ class MakeTheme extends Command
     /**
      * Generate Theme structure in target directory.
      */
-    private function generateTheme()
+    private function generateTheme(): void
     {
         $this->sectionMessage('Files generation', 'start files generation process...');
 

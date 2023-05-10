@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager\Traits;
 
 use Hexadog\ThemesManager\ThemeFinder;
@@ -14,7 +16,7 @@ trait HasCache
      */
     public function clearCache(): bool
     {
-        if (true === Config::get('themes-manager.cache.enabled', false)) {
+        if (Config::get('themes-manager.cache.enabled', false) === true) {
             return Cache::forget(Config::get('themes-manager.cache.key', 'themes-manager'));
         }
 

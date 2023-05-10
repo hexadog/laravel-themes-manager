@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager;
 
 use Hexadog\ThemesManager\Helpers\Json;
@@ -29,7 +31,7 @@ class ThemeFinder
         $themes = collect();
 
         $themePackages->each(
-            function ($themePackage) use ($themes) {
+            function ($themePackage) use ($themes): void {
                 $info = Json::make($themePackage->getPathname(), app('files'));
 
                 $theme = Theme::make($info->get('name'), dirname($themePackage->getPathname()));

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager\Providers;
 
 use Illuminate\Support\Facades\Blade;
@@ -12,15 +14,13 @@ class BladeServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
      */
-    protected $defer = false;
+    protected bool $defer = false;
 
     /**
      * Register any misc. blade extensions.
      */
-    public function boot()
+    public function boot(): void
     {
         Blade::directive('pagetitle', function ($expression) {
             $expression = self::parseMultipleArgs($expression);
@@ -58,11 +58,8 @@ class BladeServiceProvider extends ServiceProvider
 
     /**
      * Parse expression.
-     *
-     * @param  string  $expression
-     * @return \Illuminate\Support\Collection
      */
-    public static function parseMultipleArgs($expression)
+    public static function parseMultipleArgs(string $expression): \Illuminate\Support\Collection
     {
         return collect(explode(',', $expression))->map(function ($item) {
             return trim($item);

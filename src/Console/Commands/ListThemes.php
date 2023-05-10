@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager\Console\Commands;
 
 use Hexadog\ThemesManager\Facades\ThemesManager;
@@ -30,7 +32,7 @@ class ListThemes extends Command
     /**
      * Prompt for module's alias name.
      */
-    public function handle()
+    public function handle(): void
     {
         $themes = ThemesManager::all();
 
@@ -45,7 +47,7 @@ class ListThemes extends Command
             ];
         }
 
-        if (0 == count($this->themes)) {
+        if (count($this->themes) === 0) {
             $this->error("Your application doesn't have any theme.");
         } else {
             $this->table($this->headers, $this->themes);

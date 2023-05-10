@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager;
 
 use Hexadog\ThemesManager\Events\ThemeDisabled;
@@ -86,7 +88,7 @@ class Theme
     /**
      * Get path.
      */
-    public function getPath(string $path = null): string
+    public function getPath(?string $path = null): string
     {
         return $this->path . $path;
     }
@@ -94,7 +96,7 @@ class Theme
     /**
      * Get assets path.
      */
-    public function getAssetsPath(string $path = null): string
+    public function getAssetsPath(?string $path = null): string
     {
         return Config::get('themes-manager.symlink_path', 'themes') . '/' . mb_strtolower($this->vendor) . '/' . mb_strtolower($this->name) . ($path ? '/' . $path : '');
     }
@@ -171,7 +173,7 @@ class Theme
     /**
      * Set theme vendor.
      */
-    public function setVendor(string $vendor = null): self
+    public function setVendor(?string $vendor = null): self
     {
         if (Str::contains($vendor, '/')) {
             $this->vendor = dirname($vendor);
@@ -338,7 +340,7 @@ class Theme
     /**
      * Create public assets directory path.
      */
-    protected function assertPublicAssetsPath()
+    protected function assertPublicAssetsPath(): void
     {
         $themeAssetsPath = $this->getPath('public');
 
