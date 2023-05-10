@@ -108,7 +108,7 @@ class PackageServiceProvider extends ServiceProvider
 
     protected function strapCommands(): void
     {
-        if ($this->app->runningInConsole() || config('app.env') === 'testing') {
+        if ($this->app->runningInConsole() || 'testing' === config('app.env')) {
             $this->commands([
                 Commands\ClearCache::class,
                 Commands\ListThemes::class,

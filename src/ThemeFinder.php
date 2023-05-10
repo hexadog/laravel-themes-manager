@@ -14,7 +14,7 @@ class ThemeFinder
     {
         $path = base_path(Config::get('themes-manager.directory', 'themes'));
 
-        if (! file_exists($path)) {
+        if (!file_exists($path)) {
             return collect();
         }
 
@@ -40,7 +40,8 @@ class ThemeFinder
                     ->setVersion($info->get('version', '0.1'))
                     ->setDescription($info->get('description', ''))
                     ->setParent($info->get('extra.theme.parent'))
-                    ->setExtra($info->get('extra.theme', []));
+                    ->setExtra($info->get('extra.theme', []))
+                ;
 
                 $themes->put($info->get('name'), $theme);
             }
