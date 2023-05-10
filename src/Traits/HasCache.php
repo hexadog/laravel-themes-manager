@@ -16,7 +16,7 @@ trait HasCache
      */
     public function clearCache(): bool
     {
-        if (Config::get('themes-manager.cache.enabled', false) === true) {
+        if (true === Config::get('themes-manager.cache.enabled', false)) {
             return Cache::forget(Config::get('themes-manager.cache.key', 'themes-manager'));
         }
 
