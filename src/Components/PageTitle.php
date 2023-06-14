@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager\Components;
 
 use Illuminate\Support\Facades\View;
@@ -9,28 +11,19 @@ class PageTitle extends Component
 {
     /**
      * The page title.
-     *
-     * @var string
      */
-    public $title;
+    public string $title;
 
     /**
      * Create the component instance.
-     *
-     * @param string     $type
-     * @param string     $message
-     * @param null|mixed $title
-     * @param mixed      $withAppName
-     * @param mixed      $separator
-     * @param mixed      $invert
      */
-    public function __construct($title = null, $withAppName = true, $separator = '-', $invert = false)
+    public function __construct(mixed $title = null, mixed $withAppName = true, mixed $separator = '-', mixed $invert = false)
     {
         if (View::hasSection('title')) {
             $title = View::getSection('title');
         }
 
-        if (!empty($title) && $withAppName) {
+        if (! empty($title) && $withAppName) {
             if ($invert) {
                 $this->title = $title . ' ' . trim(e($separator)) . ' ' . config('app.name');
             } else {
@@ -43,10 +36,8 @@ class PageTitle extends Component
 
     /**
      * Get the view / contents that represents the component.
-     *
-     * @return \Illuminate\View\View
      */
-    public function render()
+    public function render(): \Illuminate\View\View
     {
         return view('themes-manager::components.page-title');
     }

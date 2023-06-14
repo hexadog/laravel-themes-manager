@@ -1,18 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager;
 
 use Hexadog\ThemesManager\Helpers\Json;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Symfony\Component\Finder\Finder;
 
 class ThemeFinder
 {
-    public static function find()
+    public static function find(): Collection
     {
         $path = base_path(Config::get('themes-manager.directory', 'themes'));
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             return collect();
         }
 
@@ -29,7 +32,7 @@ class ThemeFinder
         $themes = collect();
 
         $themePackages->each(
-            function ($themePackage) use ($themes) {
+            function ($themePackage) use ($themes): void {
                 $info = Json::make($themePackage->getPathname(), app('files'));
 
                 $theme = Theme::make($info->get('name'), dirname($themePackage->getPathname()));
@@ -38,8 +41,7 @@ class ThemeFinder
                     ->setVersion($info->get('version', '0.1'))
                     ->setDescription($info->get('description', ''))
                     ->setParent($info->get('extra.theme.parent'))
-                    ->setExtra($info->get('extra.theme', []))
-                ;
+                    ->setExtra($info->get('extra.theme', []));
 
                 $themes->put($info->get('name'), $theme);
             }

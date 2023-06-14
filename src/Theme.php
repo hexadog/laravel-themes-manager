@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager;
 
 use Hexadog\ThemesManager\Events\ThemeDisabled;
@@ -16,7 +18,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 
-class Theme
+final class Theme
 {
     use HasTranslations;
     use HasViews;
@@ -80,13 +82,13 @@ class Theme
      */
     public static function make(...$arguments): self
     {
-        return new static(...$arguments);
+        return new self(...$arguments);
     }
 
     /**
      * Get path.
      */
-    public function getPath(string $path = null): string
+    public function getPath(?string $path = null): string
     {
         return $this->path . $path;
     }
@@ -94,7 +96,7 @@ class Theme
     /**
      * Get assets path.
      */
-    public function getAssetsPath(string $path = null): string
+    public function getAssetsPath(?string $path = null): string
     {
         return Config::get('themes-manager.symlink_path', 'themes') . '/' . mb_strtolower($this->vendor) . '/' . mb_strtolower($this->name) . ($path ? '/' . $path : '');
     }
@@ -171,7 +173,7 @@ class Theme
     /**
      * Set theme vendor.
      */
-    public function setVendor(string $vendor = null): self
+    public function setVendor(?string $vendor = null): self
     {
         if (Str::contains($vendor, '/')) {
             $this->vendor = dirname($vendor);
@@ -192,7 +194,7 @@ class Theme
      */
     public function hasParent(): bool
     {
-        return !is_null($this->parent);
+        return ! is_null($this->parent);
     }
 
     /**
@@ -230,7 +232,7 @@ class Theme
      */
     public function disabled(): bool
     {
-        return !$this->enabled();
+        return ! $this->enabled();
     }
 
     /**
@@ -338,7 +340,7 @@ class Theme
     /**
      * Create public assets directory path.
      */
-    protected function assertPublicAssetsPath()
+    protected function assertPublicAssetsPath(): void
     {
         $themeAssetsPath = $this->getPath('public');
 
@@ -347,12 +349,12 @@ class Theme
             $publicThemeVendorPath = dirname($publicThemeAssetsPath);
 
             // Create target public theme vendor directory if required
-            if (!file_exists($publicThemeVendorPath)) {
+            if (! file_exists($publicThemeVendorPath)) {
                 app(Filesystem::class)->makeDirectory($publicThemeVendorPath, 0755, true);
             }
 
             // Create target symlink public theme assets directory if required
-            if (!file_exists($publicThemeAssetsPath) && file_exists($themeAssetsPath)) {
+            if (! file_exists($publicThemeAssetsPath)) {
                 if (Config::get('themes-manager.symlink_relative', false)) {
                     app(Filesystem::class)->relativeLink($themeAssetsPath, rtrim($publicThemeAssetsPath, '/'));
                 } else {

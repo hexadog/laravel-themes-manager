@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager\Traits;
 
 use Illuminate\Translation\Translator;
@@ -19,11 +21,11 @@ trait HasTranslations
         do {
             $translationsPath = $theme->getPath('lang' . ($path ? "/{$path}" : ''));
 
-            if (!file_exists($translationsPath)) {
+            if (! file_exists($translationsPath)) {
                 $translationsPath = $theme->getPath('resources/lang' . ($path ? "/{$path}" : ''));
             }
 
-            if (file_exists($translationsPath) && !in_array($translationsPath, $paths)) {
+            if (file_exists($translationsPath) && ! in_array($translationsPath, $paths)) {
                 $paths[] = $translationsPath;
             }
         } while ($theme = $theme->getParent());
@@ -34,7 +36,7 @@ trait HasTranslations
     /**
      * Register theme's translations.
      */
-    protected function loadTranlastions()
+    protected function loadTranlastions(): void
     {
         // Register Translation paths
         $paths = $this->getTranslationPaths();

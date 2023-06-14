@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager\Http\Middleware;
 
 use Hexadog\ThemesManager\Facades\ThemesManager;
@@ -9,20 +11,15 @@ class ThemeLoader
 {
     /**
      * Handle an incoming request.
-     *
-     * @param string $theme
-     * @param string $layout
-     *
-     * @return mixed
      */
-    public function handle(Request $request, \Closure $next, $theme = null)
+    public function handle(Request $request, \Closure $next, ?string $theme = null)
     {
         // Do not load theme if API request or App is running in console
         if ($request->expectsJson() || app()->runningInConsole()) {
             return $next($request);
         }
 
-        if (!empty($theme)) {
+        if (! is_null($theme)) {
             ThemesManager::set($theme);
         } else {
             if ($theme = config('themes-manager.fallback_theme')) {

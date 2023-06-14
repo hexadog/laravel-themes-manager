@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager\Providers;
 
 use Hexadog\ThemesManager\Components\Image;
@@ -31,7 +33,7 @@ class PackageServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application events.
      */
-    public function boot(Router $router)
+    public function boot(Router $router): void
     {
         $this->loadViewsFrom($this->getPath('resources/views'), 'themes-manager');
         $this->loadViewComponentsAs('theme', [
@@ -66,33 +68,27 @@ class PackageServiceProvider extends ServiceProvider
 
     /**
      * Get the services provided by the provider.
-     *
-     * @return array
      */
-    public function provides()
+    public function provides(): array
     {
         return [ThemesManager::class];
     }
 
     /**
      * Get Package absolute path.
-     *
-     * @param string $path
      */
-    protected function getPath($path = '')
+    protected function getPath(string $path = '')
     {
         // We get the child class
-        $rc = new \ReflectionClass(get_class($this));
+        $rc = new \ReflectionClass(static::class);
 
         return dirname($rc->getFileName()) . '/../../' . $path;
     }
 
     /**
      * Get Module normalized namespace.
-     *
-     * @param mixed $prefix
      */
-    protected function getNormalizedNamespace($prefix = '')
+    protected function getNormalizedNamespace(mixed $prefix = '')
     {
         return Str::start(Str::lower(self::PACKAGE_NAME), $prefix);
     }
@@ -100,7 +96,7 @@ class PackageServiceProvider extends ServiceProvider
     /**
      * Bootstrap our Configs.
      */
-    protected function registerConfigs()
+    protected function registerConfigs(): void
     {
         $configPath = $this->getPath('config');
 
@@ -110,9 +106,9 @@ class PackageServiceProvider extends ServiceProvider
         );
     }
 
-    protected function strapCommands()
+    protected function strapCommands(): void
     {
-        if ($this->app->runningInConsole() || 'testing' == config('app.env')) {
+        if ($this->app->runningInConsole() || config('app.env') === 'testing') {
             $this->commands([
                 Commands\ClearCache::class,
                 Commands\ListThemes::class,
@@ -124,7 +120,7 @@ class PackageServiceProvider extends ServiceProvider
     /**
      * Bootstrap our Publishers.
      */
-    protected function strapPublishers()
+    protected function strapPublishers(): void
     {
         $configPath = $this->getPath('config');
 

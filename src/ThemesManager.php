@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Hexadog\ThemesManager;
 
 use Hexadog\ThemesManager\Exceptions\ThemeNotFoundException;
@@ -14,10 +16,8 @@ class ThemesManager
 
     /**
      * Scanned themes.
-     *
-     * @var \Illuminate\Support\Collection
      */
-    private $themes;
+    private Collection $themes;
 
     /**
      * The constructor.
@@ -42,17 +42,17 @@ class ThemesManager
     /**
      * Check if theme with given name exists.
      */
-    public function has(string $name = null, ?Collection $themes = null): bool
+    public function has(?string $name = null): bool
     {
-        return !is_null($this->findByName($name, null, $themes));
+        return ! is_null($this->findByName($name, null));
     }
 
     /**
      * Get theme by name (or return all themes if no name given).
      */
-    public function get(string $name = null, ?Collection $themes = null): ?Theme
+    public function get(?string $name = null): ?Theme
     {
-        return $this->findByName($name, null, $themes);
+        return $this->findByName($name, null);
     }
 
     /**
@@ -60,11 +60,11 @@ class ThemesManager
      */
     public function set(string $name): ThemesManager
     {
-        if (!$this->has($name)) {
+        if (! $this->has($name)) {
             throw new ThemeNotFoundException($name);
         }
 
-        $this->current()?->disable();
+        optional($this->current())->disable();
 
         $this->enable($name);
 
@@ -79,8 +79,7 @@ class ThemesManager
         return $this->themes
             ->filter(function ($theme) {
                 return $theme->enabled();
-            })->first()
-        ;
+            })->first();
     }
 
     /**
@@ -171,11 +170,11 @@ class ThemesManager
         if (Str::contains($asset, '::')) {
             $assetParts = explode('::', $asset);
 
-            return $this->findByName($assetParts[0])?->url($assetParts[1], $absolute);
+            return optional($this->findByName($assetParts[0]))->url($assetParts[1], $absolute);
         }
 
         // If no Theme set, return /$asset
-        if (!$this->current()) {
+        if (! $this->current()) {
             return Str::start($asset, '/');
         }
 
@@ -188,7 +187,7 @@ class ThemesManager
      * If no vendor provided and name not prefixed by vendor
      * the first theme with given name is returned.
      */
-    public function findByName(string $name, string $vendor = null): ?Theme
+    public function findByName(string $name, ?string $vendor = null): ?Theme
     {
         // normalize theme name
         $name = str_replace(['-theme', 'theme-'], '', $name);
@@ -210,12 +209,10 @@ class ThemesManager
 
     /**
      * Return attributes in html format.
-     *
-     * @param array $attributes
      */
-    private function htmlAttributes($attributes): string
+    private function htmlAttributes(array $attributes): string
     {
-        return join(' ', array_map(function ($key) use ($attributes) {
+        return implode(' ', array_map(function ($key) use ($attributes) {
             if (is_bool($attributes[$key])) {
                 return $attributes[$key] ? $key : '';
             }

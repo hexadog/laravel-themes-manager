@@ -20,8 +20,10 @@
         "illuminate/view": "^7.0|^8.0|^9.0|^10.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.14",
-        "phpunit/phpunit": "^7.0|^8.0|^9.0|^10.0"
+        "phpunit/phpunit": "^7.0|^8.0|^9.0|^10.0",
+        "laravel/pint": "^1.10",
+        "nunomaduro/larastan": "^2.0",
+        "orchestra/testbench": "^8.3"
     },
     "autoload": {
         "psr-4": {
@@ -38,7 +40,8 @@
     },
     "config": {
         "allow-plugins": {
-            "hexadog/laravel-theme-installer": true
+            "hexadog/laravel-theme-installer": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "extra": {
