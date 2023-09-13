@@ -88,7 +88,7 @@ final class Theme
     /**
      * Get path.
      */
-    public function getPath(?string $path = null): string
+    public function getPath(string $path = null): string
     {
         return $this->path . $path;
     }
@@ -96,7 +96,7 @@ final class Theme
     /**
      * Get assets path.
      */
-    public function getAssetsPath(?string $path = null): string
+    public function getAssetsPath(string $path = null): string
     {
         return Config::get('themes-manager.symlink_path', 'themes') . '/' . mb_strtolower($this->vendor) . '/' . mb_strtolower($this->name) . ($path ? '/' . $path : '');
     }
@@ -173,7 +173,7 @@ final class Theme
     /**
      * Set theme vendor.
      */
-    public function setVendor(?string $vendor = null): self
+    public function setVendor(string $vendor = null): self
     {
         if (Str::contains($vendor, '/')) {
             $this->vendor = dirname($vendor);
@@ -210,7 +210,7 @@ final class Theme
     /**
      * Get parent Theme.
      */
-    public function getParent(): Theme|null
+    public function getParent(): ?Theme
     {
         if (is_string($this->parent)) {
             $this->parent = ThemesManager::findByName($this->parent);

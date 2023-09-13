@@ -29,7 +29,7 @@ final class Json
     /**
      * The constructor.
      */
-    public function __construct(string $path, ?Filesystem $filesystem = null)
+    public function __construct(string $path, Filesystem $filesystem = null)
     {
         $this->path = $path;
         $this->filesystem = $filesystem ? $filesystem : new Filesystem();
@@ -103,7 +103,7 @@ final class Json
     /**
      * Make new instance.
      */
-    public static function make(string $path, ?Filesystem $filesystem = null): Json
+    public static function make(string $path, Filesystem $filesystem = null): Json
     {
         return new self($path, $filesystem);
     }
@@ -136,7 +136,7 @@ final class Json
     /**
      * Convert the given array data to pretty json.
      */
-    public function toJsonPretty(?array $data = null): false|string
+    public function toJsonPretty(array $data = null): false|string
     {
         return json_encode($data ? $data : $this->attributes, JSON_PRETTY_PRINT);
     }
