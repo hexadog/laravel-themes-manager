@@ -24,7 +24,7 @@ trait HasViews
         do {
             $viewsPath = $theme->getPath('resources/views' . ($path ? "/{$path}" : ''));
 
-            if (! in_array($viewsPath, $paths)) {
+            if (!in_array($viewsPath, $paths)) {
                 $paths[] = $viewsPath;
             }
 
@@ -64,14 +64,14 @@ trait HasViews
         $this->assertPublicAssetsPath();
 
         // Register theme views path
-        $paths = $this->getViewPaths();
+        $paths = array_reverse($this->getViewPaths());
 
         foreach ($paths as $path) {
             View::getFinder()->prependLocation("{$path}");
         }
 
         // Update config view.paths to work with errors views
-        Config::set('view.paths', Arr::prepend(Arr::wrap(Config::get('view.paths')), ...$paths));
+        Config::set('view.paths', array_merge($paths, Arr::wrap(Config::get('view.paths'))));
 
         $this->loadVendorViews();
         $this->loadMailComponentPaths();
