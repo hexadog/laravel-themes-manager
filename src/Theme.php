@@ -13,11 +13,11 @@ use Hexadog\ThemesManager\Traits\HasTranslations;
 use Hexadog\ThemesManager\Traits\HasViews;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\File;
 
 final class Theme
 {
@@ -57,8 +57,7 @@ final class Theme
     /**
      * The theme screenshot.
      */
-
-    protected string $screenshot = "";
+    protected string $screenshot = '';
 
     /**
      * The theme statud (enabled or not).
@@ -226,11 +225,9 @@ final class Theme
         return $this->parent;
     }
 
-
     /**
      * Set theme screenshot.
      */
-
     public function setScreenshot(string $screenshot): self
     {
 
@@ -239,7 +236,7 @@ final class Theme
         return $this;
     }
 
-    public function getScreenshotName(): string|null
+    public function getScreenshotName(): ?string
     {
         return $this->screenshot;
     }
@@ -249,11 +246,11 @@ final class Theme
         return $this->url($this->screenshot);
     }
 
-    public function getScreenshotImageBase64(): string|null
+    public function getScreenshotImageBase64(): ?string
     {
         $screenshotImage = $this->getAssetsPath($this->screenshot);
 
-        if (!is_file($screenshotImage)) {
+        if (! is_file($screenshotImage)) {
             return null;
         }
 
