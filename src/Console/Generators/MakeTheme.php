@@ -143,7 +143,7 @@ class MakeTheme extends Command
             Arr::get($this->theme, 'parent', ''),
             Arr::get($this->theme, 'vendor', ''),
             Arr::get($this->theme, 'version', '1.0'),
-            Arr::get($this->theme, 'screenshot', ''),
+            Arr::get($this->theme, 'screenshot', 'screenshot.png'),
         ];
 
         return str_replace($find, $replace, $file->getContents());
