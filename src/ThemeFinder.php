@@ -41,7 +41,8 @@ class ThemeFinder
                     ->setVersion($info->get('version', '0.1'))
                     ->setDescription($info->get('description', ''))
                     ->setParent($info->get('extra.theme.parent'))
-                    ->setExtra($info->get('extra.theme', []));
+                    ->setExtra($info->get('extra.theme', []))
+                    ->setScreenshot($info->get('extra.theme.screenshot', ''));
 
                 $themes->put($info->get('name'), $theme);
             }
