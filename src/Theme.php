@@ -244,9 +244,16 @@ final class Theme
         return $this->screenshot;
     }
 
-    public function getScreenshotImage(): string
+    public function getScreenshotImageUrl(): string
     {
-        $screenshotImage = $this->getPath() . '/' . $this->screenshot;
+        $screenshotImagePath = $this->getAssetsPath($this->screenshot);
+
+        return $screenshotImagePath;
+    }
+
+    public function getScreenshotImageBase64(): string|null
+    {
+        $screenshotImage = $this->getAssetsPath($this->screenshot);
 
         if (!is_file($screenshotImage)) {
             return null;
