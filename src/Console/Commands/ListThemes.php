@@ -22,7 +22,7 @@ class ListThemes extends Command
     /**
      * The table headers for the command.
      */
-    protected $headers = ['Name', 'Vendor', 'Version', 'Description', 'Extends', 'Default', 'Active'];
+    protected $headers = ['Name', 'Vendor', 'Version', 'Description', 'Screenshot', 'Extends', 'Default', 'Active'];
 
     /**
      * List of existing themes.
@@ -42,6 +42,7 @@ class ListThemes extends Command
                 'vendor'      => $theme->getVendor(),
                 'version'     => $theme->getVersion(),
                 'description' => $theme->getDescription(),
+                'screenshot'  => $theme->getScreenshotName(),
                 'extends'     => $theme->getParent() ? $theme->getParent()->getName() : '',
                 'default'     => $theme->getName() === config('themes-manager.fallback_theme') ? 'X' : '',
             ];

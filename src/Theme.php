@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 final class Theme
 {
@@ -52,6 +53,12 @@ final class Theme
      * The Parent theme.
      */
     protected string|Theme|null $parent = null;
+
+    /**
+     * The theme screenshot.
+     */
+
+    protected string $screenshot = "";
 
     /**
      * The theme statud (enabled or not).
@@ -217,6 +224,40 @@ final class Theme
         }
 
         return $this->parent;
+    }
+
+
+    /**
+     * Set theme screenshot.
+     */
+
+    public function setScreenshot(string $screenshot): self
+    {
+
+        $this->screenshot = $screenshot;
+
+        return $this;
+    }
+
+    public function getScreenshotName(): string|null
+    {
+        return $this->screenshot;
+    }
+
+    public function getScreenshotImageUrl(): string
+    {
+        return $this->url($this->screenshot);
+    }
+
+    public function getScreenshotImageBase64(): string|null
+    {
+        $screenshotImage = $this->getAssetsPath($this->screenshot);
+
+        if (!is_file($screenshotImage)) {
+            return null;
+        }
+
+        return 'data:image/png;base64,' . base64_encode(File::get($screenshotImage));
     }
 
     /**
