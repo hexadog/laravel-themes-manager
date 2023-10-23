@@ -246,9 +246,7 @@ final class Theme
 
     public function getScreenshotImageUrl(): string
     {
-        $screenshotImagePath = $this->getAssetsPath($this->screenshot);
-
-        return $screenshotImagePath;
+        return $this->url($this->screenshot);
     }
 
     public function getScreenshotImageBase64(): string|null
