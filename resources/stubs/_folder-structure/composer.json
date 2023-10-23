@@ -13,7 +13,8 @@
     "extra": {
         "theme": {
             "parent": "DummyParent",
-            "active": true
+            "active": true,
+            "screenshot": "DummyScreenshot"
         }
     }
 }

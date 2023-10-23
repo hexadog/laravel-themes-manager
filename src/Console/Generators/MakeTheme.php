@@ -132,6 +132,7 @@ class MakeTheme extends Command
             'DummyParent',
             'DummyVendor',
             'DummyVersion',
+            'DummyScreenshot',
         ];
 
         $replace = [
@@ -142,6 +143,7 @@ class MakeTheme extends Command
             Arr::get($this->theme, 'parent', ''),
             Arr::get($this->theme, 'vendor', ''),
             Arr::get($this->theme, 'version', '1.0'),
+            Arr::get($this->theme, 'screenshot', ''),
         ];
 
         return str_replace($find, $replace, $file->getContents());
