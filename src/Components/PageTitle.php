@@ -23,8 +23,10 @@ class PageTitle extends Component
             $title = View::getSection('title');
         }
 
-        if (! empty($title) && $withAppName) {
-            if ($invert) {
+        if (! empty($title)) {
+            if (!filter_var($withAppName, FILTER_VALIDATE_BOOLEAN)) {
+                $this->title = $title;
+            } else if ($invert) {
                 $this->title = $title . ' ' . trim(e($separator)) . ' ' . config('app.name');
             } else {
                 $this->title = config('app.name') . ' ' . trim(e($separator)) . ' ' . $title;
