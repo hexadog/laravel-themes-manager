@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Hexadog\ThemesManager\Events;
 
+use Hexadog\ThemesManager\Theme;
+
 class ThemeDisabled
 {
-    public array|string $theme;
+    public Theme $theme;
 
-    public function __construct($theme)
+    public function __construct(Theme $theme)
     {
         $this->theme = $theme;
     }
