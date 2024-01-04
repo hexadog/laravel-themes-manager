@@ -30,7 +30,7 @@ if (! function_exists('theme')) {
     /**
      * Set theme.
      */
-    function theme(string $themeName = null): Hexadog\ThemesManager\Theme
+    function theme(?string $themeName = null): Hexadog\ThemesManager\Theme
     {
         if ($themeName) {
             \Theme::set($themeName);

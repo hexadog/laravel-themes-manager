@@ -24,9 +24,9 @@ class PageTitle extends Component
         }
 
         if (! empty($title)) {
-            if (!filter_var($withAppName, FILTER_VALIDATE_BOOLEAN)) {
+            if (! filter_var($withAppName, FILTER_VALIDATE_BOOLEAN)) {
                 $this->title = $title;
-            } else if ($invert) {
+            } elseif ($invert) {
                 $this->title = $title . ' ' . trim(e($separator)) . ' ' . config('app.name');
             } else {
                 $this->title = config('app.name') . ' ' . trim(e($separator)) . ' ' . $title;

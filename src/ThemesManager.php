@@ -42,7 +42,7 @@ class ThemesManager
     /**
      * Check if theme with given name exists.
      */
-    public function has(string $name = null): bool
+    public function has(?string $name = null): bool
     {
         return ! is_null($this->findByName($name, null));
     }
@@ -50,7 +50,7 @@ class ThemesManager
     /**
      * Get theme by name (or return all themes if no name given).
      */
-    public function get(string $name = null): ?Theme
+    public function get(?string $name = null): ?Theme
     {
         return $this->findByName($name, null);
     }
@@ -187,7 +187,7 @@ class ThemesManager
      * If no vendor provided and name not prefixed by vendor
      * the first theme with given name is returned.
      */
-    public function findByName(string $name, string $vendor = null): ?Theme
+    public function findByName(string $name, ?string $vendor = null): ?Theme
     {
         // normalize theme name
         $name = str_replace(['-theme', 'theme-'], '', $name);
