@@ -200,7 +200,7 @@ final class Theme
      */
     public function hasParent(): bool
     {
-        return !is_null($this->parent);
+        return ! is_null($this->parent);
     }
 
     /**
@@ -250,7 +250,7 @@ final class Theme
     {
         $screenshotImage = $this->getAssetsPath($this->screenshot);
 
-        if (!is_file($screenshotImage)) {
+        if (! is_file($screenshotImage)) {
             return null;
         }
 
@@ -270,7 +270,7 @@ final class Theme
      */
     public function disabled(): bool
     {
-        return !$this->enabled();
+        return ! $this->enabled();
     }
 
     /**
@@ -387,12 +387,12 @@ final class Theme
             $publicThemeVendorPath = dirname($publicThemeAssetsPath);
 
             // Create target public theme vendor directory if required
-            if (!file_exists($publicThemeVendorPath)) {
+            if (! file_exists($publicThemeVendorPath)) {
                 app(Filesystem::class)->makeDirectory($publicThemeVendorPath, 0755, true);
             }
 
             // Create target symlink public theme assets directory if required
-            if (!file_exists($publicThemeAssetsPath)) {
+            if (! file_exists($publicThemeAssetsPath)) {
                 if (Config::get('themes-manager.symlink_relative', false)) {
                     app(Filesystem::class)->relativeLink($themeAssetsPath, rtrim($publicThemeAssetsPath, '/'));
                 } else {
