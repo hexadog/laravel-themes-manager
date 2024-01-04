@@ -12,7 +12,7 @@ class ThemeLoader
     /**
      * Handle an incoming request.
      */
-    public function handle(Request $request, \Closure $next, string $theme = null)
+    public function handle(Request $request, \Closure $next, ?string $theme = null)
     {
         // Do not load theme if API request or App is running in console
         if ($request->expectsJson() || app()->runningInConsole()) {

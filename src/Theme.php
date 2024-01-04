@@ -13,11 +13,11 @@ use Hexadog\ThemesManager\Traits\HasTranslations;
 use Hexadog\ThemesManager\Traits\HasViews;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\File;
 
 final class Theme
 {
@@ -57,8 +57,7 @@ final class Theme
     /**
      * The theme screenshot.
      */
-
-    protected string $screenshot = "";
+    protected string $screenshot = '';
 
     /**
      * The theme statud (enabled or not).
@@ -95,7 +94,7 @@ final class Theme
     /**
      * Get path.
      */
-    public function getPath(string $path = null): string
+    public function getPath(?string $path = null): string
     {
         return $this->path . $path;
     }
@@ -103,7 +102,7 @@ final class Theme
     /**
      * Get assets path.
      */
-    public function getAssetsPath(string $path = null): string
+    public function getAssetsPath(?string $path = null): string
     {
         return Config::get('themes-manager.symlink_path', 'themes') . '/' . mb_strtolower($this->vendor) . '/' . mb_strtolower($this->name) . ($path ? '/' . $path : '');
     }
@@ -180,7 +179,7 @@ final class Theme
     /**
      * Set theme vendor.
      */
-    public function setVendor(string $vendor = null): self
+    public function setVendor(?string $vendor = null): self
     {
         if (Str::contains($vendor, '/')) {
             $this->vendor = dirname($vendor);
@@ -226,11 +225,9 @@ final class Theme
         return $this->parent;
     }
 
-
     /**
      * Set theme screenshot.
      */
-
     public function setScreenshot(string $screenshot): self
     {
 
@@ -239,7 +236,7 @@ final class Theme
         return $this;
     }
 
-    public function getScreenshotName(): string|null
+    public function getScreenshotName(): ?string
     {
         return $this->screenshot;
     }
@@ -249,11 +246,11 @@ final class Theme
         return $this->url($this->screenshot);
     }
 
-    public function getScreenshotImageBase64(): string|null
+    public function getScreenshotImageBase64(): ?string
     {
         $screenshotImage = $this->getAssetsPath($this->screenshot);
 
-        if (!is_file($screenshotImage)) {
+        if (! is_file($screenshotImage)) {
             return null;
         }
 
@@ -284,13 +281,13 @@ final class Theme
         // Check if current is active and currently enabled
         if ($this->enabled()) {
             if ($withEvent) {
-                event(new ThemeDisabling($this->name));
+                event(new ThemeDisabling($this));
             }
 
             $this->enabled = false;
 
             if ($withEvent) {
-                event(new ThemeDisabled($this->name));
+                event(new ThemeDisabled($this));
             }
         }
 
@@ -305,7 +302,7 @@ final class Theme
         // Check if current is active and currently disabled
         if ($this->disabled()) {
             if ($withEvent) {
-                event(new ThemeEnabling($this->name));
+                event(new ThemeEnabling($this));
             }
 
             $this->enabled = true;
@@ -313,7 +310,7 @@ final class Theme
             $this->loadTranlastions();
 
             if ($withEvent) {
-                event(new ThemeEnabled($this->name));
+                event(new ThemeEnabled($this));
             }
         }
 
