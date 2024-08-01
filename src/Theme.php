@@ -118,6 +118,14 @@ final class Theme
     }
 
     /**
+     * Get extra data.
+     */
+    public function getExtra(): array
+    {
+        return $this->extra;
+    }
+
+    /**
      * Set theme version.
      */
     public function setVersion(string $version): self
