@@ -57,7 +57,7 @@ class PackageServiceProvider extends ServiceProvider
         $this->registerConfigs();
 
         $this->app->singleton('themes-manager', function () {
-            return new ThemesManager();
+            return new ThemesManager;
         });
 
         AliasLoader::getInstance()->alias('ThemesManager', ThemesManagerFacade::class);
