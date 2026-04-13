@@ -6,6 +6,7 @@ namespace Hexadog\ThemesManager\Components;
 
 use Hexadog\ThemesManager\Facades\ThemesManager;
 use Illuminate\View\Component;
+use Illuminate\View\View;
 
 class Style extends Component
 {
@@ -25,7 +26,7 @@ class Style extends Component
     /**
      * Get the view / contents that represents the component.
      */
-    public function render(): \Illuminate\View\View
+    public function render(): View
     {
         return view('themes-manager::components.style');
     }

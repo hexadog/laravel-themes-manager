@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Hexadog\ThemesManager\Theme;
 use Illuminate\Support\Facades\View;
 
 if (! function_exists('page_title')) {
@@ -30,7 +31,7 @@ if (! function_exists('theme')) {
     /**
      * Set theme.
      */
-    function theme(?string $themeName = null): Hexadog\ThemesManager\Theme
+    function theme(?string $themeName = null): Theme
     {
         if ($themeName) {
             \Theme::set($themeName);

@@ -12,6 +12,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Symfony\Component\Finder\SplFileInfo;
 
 class MakeTheme extends Command
 {
@@ -120,7 +121,7 @@ class MakeTheme extends Command
     /**
      * Replace placeholders in generated file.
      */
-    protected function replacePlaceholders(\Symfony\Component\Finder\SplFileInfo $file): string
+    protected function replacePlaceholders(SplFileInfo $file): string
     {
         $this->sectionMessage('File generation', "{$file->getPathName()}");
 

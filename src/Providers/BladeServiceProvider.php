@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Hexadog\ThemesManager\Providers;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -59,7 +60,7 @@ class BladeServiceProvider extends ServiceProvider
     /**
      * Parse expression.
      */
-    public static function parseMultipleArgs(string $expression): \Illuminate\Support\Collection
+    public static function parseMultipleArgs(string $expression): Collection
     {
         return collect(explode(',', $expression))->map(function ($item) {
             return trim($item);

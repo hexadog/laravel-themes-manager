@@ -6,6 +6,7 @@ namespace Hexadog\ThemesManager\Traits;
 
 use Illuminate\Mail\Markdown;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
 
@@ -37,7 +38,7 @@ trait HasViews
     /**
      * List theme's available layouts.
      */
-    public function listLayouts(): \Illuminate\Support\Collection
+    public function listLayouts(): Collection
     {
         $layouts = collect();
 
